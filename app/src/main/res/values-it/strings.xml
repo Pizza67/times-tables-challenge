@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Gara di Tabelline</string>
+    <string name="home_intro">Sfida i tuoi amici per vedere chi riesce a dare più risposte corrette in 30 secondi</string>
+    <string name="start_button">inizia</string>
+    <string name="time_remaining">Tempo:</string>
+    <string name="score">Punteggio:</string>
+    <string name="back_not_allowed">Non puoi tornare indietro durante un round</string>
+    <string name="retry_button">riprova</string>
+    <string name="home_button">home</string>
+    <string name="desc_score_low">Passa ancora un po\' di tempo a studiare le tabelline e presto raggiungerai il prossimo livello</string>
+    <string name="desc_score_medium">Continua ad allenarti e di sicuro passerai la prossima verifica in classe</string>
+    <string name="desc_score_high">Ora sei un vero campione di tabelline</string>
+    <string name="desc_score_top">Sei il Supereroe delle tabelline</string>
+    <string name="desc_score_max">Leggenda Cosmica! Ora puoi dominare l\'universo</string>
+    <string name="game_over">TEMPO SCADUTO!</string>
+    <string name="final_score">Punti totali:</string>
+</resources>

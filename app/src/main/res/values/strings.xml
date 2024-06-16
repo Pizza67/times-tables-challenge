@@ -1,0 +1,17 @@
+<resources>
+    <string name="app_name">Times Tables Challenge</string>
+    <string name="home_intro">Challenge your friends to see how many correct answers you can give in 30 seconds</string>
+    <string name="start_button">new game</string>
+    <string name="time_remaining">Time:</string>
+    <string name="score">Score:</string>
+    <string name="back_not_allowed">Back not allowed during round</string>
+    <string name="retry_button">retry</string>
+    <string name="home_button">home</string>
+    <string name="desc_score_low">Spend some more time studying times tables and you\'ll reach the next level soon</string>
+    <string name="desc_score_medium">Keep training and you\'ll easily pass the class test</string>
+    <string name="desc_score_high">Now you are a real times tables champion!</string>
+    <string name="desc_score_top">You\'re the Superhero of times tables!</string>
+    <string name="desc_score_max">Cosmic Legend! You can rule the universe</string>
+    <string name="game_over">TIME IS UP!</string>
+    <string name="final_score">Your Score is:</string>
+</resources>
