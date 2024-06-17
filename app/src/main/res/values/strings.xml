@@ -14,4 +14,10 @@
     <string name="desc_score_max">Cosmic Legend! You can rule the universe</string>
     <string name="game_over">TIME IS UP!</string>
     <string name="final_score">Your Score is:</string>
+    <string name="menu">Menu</string>
+    <string name="menu_start_new_game">Start new round</string>
+    <string name="menu_play_last_game">Retry last round</string>
+    <string name="menu_share_new_game">Issue a challenge</string>
+    <string name="menu_your_scores">Your scores</string>
+    <string name="menu_settings">Settings</string>
 </resources>

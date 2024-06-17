@@ -19,6 +19,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.delay
 import java.util.Locale
@@ -27,22 +28,34 @@ import java.util.Locale
 fun RoundButton(
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
-    text: String
+    text: String,
+    uppercase: Boolean = true
 ) {
+    val btnText = if (uppercase)
+        text.uppercase(Locale.getDefault())
+    else
+        text.replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString() }
     Button(
         onClick = onClick,
         shape = CircleShape,
         modifier = modifier
+            .padding(8.dp)
             .clip(CircleShape)
             .background(MaterialTheme.colorScheme.primary)
-            .padding(8.dp)
+            .padding(4.dp)
     ) {
         Text(
-            text = text.uppercase(locale = Locale.getDefault()),
+            text = btnText,
             textAlign = TextAlign.Center,
             style = MaterialTheme.typography.headlineMedium
         )
     }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun RoundButtonPreview() {
+    RoundButton(onClick = {}, text = "hello")
 }
 
 @Composable

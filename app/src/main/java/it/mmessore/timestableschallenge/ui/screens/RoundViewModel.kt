@@ -4,15 +4,19 @@ import android.media.MediaPlayer
 import android.os.CountDownTimer
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import dagger.hilt.android.lifecycle.HiltViewModel
 import it.mmessore.timestableschallenge.R
 import it.mmessore.timestableschallenge.data.Quest
 import it.mmessore.timestableschallenge.data.RoundGenerator
+import it.mmessore.timestableschallenge.data.RoundRepository
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class RoundViewModel: ViewModel() {
+@HiltViewModel
+class RoundViewModel @Inject constructor(private val repository: RoundRepository): ViewModel() {
     enum class RoundState {
         STARTING,
         IN_PROGRESS,

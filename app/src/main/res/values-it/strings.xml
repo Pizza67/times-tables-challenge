@@ -15,4 +15,10 @@
     <string name="desc_score_max">Leggenda Cosmica! Ora puoi dominare l\'universo</string>
     <string name="game_over">TEMPO SCADUTO!</string>
     <string name="final_score">Punti totali:</string>
+    <string name="menu">Menu</string>
+    <string name="menu_start_new_game">Avvia nuovo round</string>
+    <string name="menu_play_last_game">Ritenta ultimo round</string>
+    <string name="menu_share_new_game">Lancia una sfida</string>
+    <string name="menu_your_scores">I tuoi punteggi</string>
+    <string name="menu_settings">Impostazioni</string>
 </resources>

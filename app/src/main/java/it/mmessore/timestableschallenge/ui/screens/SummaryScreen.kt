@@ -23,8 +23,7 @@ import it.mmessore.timestableschallenge.ui.RoundButton
 @Composable
 fun SummaryScreen(
     viewModel: RoundViewModel,
-    onHomeButtonClick: () -> Unit = {},
-    onRetryButtonClick: () -> Unit = {},
+    onMenuButtonClick: () -> Unit = {},
     modifier: Modifier = Modifier
 ) {
     val score = viewModel.score.value
@@ -70,12 +69,8 @@ fun SummaryScreen(
                 .padding(8.dp)
         ){
             RoundButton(
-                onClick = onHomeButtonClick,
-                text = stringResource(id = R.string.home_button),
-            )
-            RoundButton(
-                onClick = onRetryButtonClick,
-                text = stringResource(id = R.string.retry_button),
+                onClick = onMenuButtonClick,
+                text = stringResource(id = R.string.menu),
             )
         }
     }

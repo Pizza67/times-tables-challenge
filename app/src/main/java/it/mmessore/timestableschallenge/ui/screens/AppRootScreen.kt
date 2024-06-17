@@ -16,11 +16,11 @@ import androidx.navigation.compose.rememberNavController
 import it.mmessore.timestableschallenge.R
 
 enum class AppScreen() {
-    Home, Round, Summary
+    Home, Menu, Round, Summary
 }
 
 @Composable
-fun TimeTablesChallengeApp(
+fun AppRootScreen(
     viewModel: RoundViewModel = viewModel(),
     navController: NavHostController = rememberNavController()
 ) {
@@ -35,9 +35,35 @@ fun TimeTablesChallengeApp(
             composable(route = AppScreen.Home.name) {
                 HomeScreen(
                     onStartButtonClick = {
-                        viewModel.resetRound()
-                        navController.navigate(AppScreen.Round.name)
+                        navController.navigate(AppScreen.Menu.name) {
+                            popUpTo(AppScreen.Home.name) { inclusive = true }
+                        }
                 })
+            }
+
+            composable(route = AppScreen.Menu.name) {
+                MenuScreen(
+                    onMenuButtonClick = { action ->
+                        when(action) {
+                            MenuAction.NEW_GAME -> {
+                                viewModel.resetRound()
+                                navController.navigate(AppScreen.Round.name)
+                            }
+                            MenuAction.LAST_GAME -> {
+                                viewModel.resetRound(newRound = false)
+                                navController.navigate(AppScreen.Round.name)
+                            }
+                            MenuAction.SHARE_GAME -> {
+
+                            }
+                            MenuAction.YOUR_SCORES -> {
+
+                            }
+                            MenuAction.SETTINGS -> {
+
+                            }
+                        }
+                    })
             }
 
             composable(route = AppScreen.Round.name) {
@@ -56,11 +82,9 @@ fun TimeTablesChallengeApp(
             composable(route = AppScreen.Summary.name) {
                 SummaryScreen(
                     viewModel,
-                    onHomeButtonClick = { navController.navigate(AppScreen.Home.name) },
-                    onRetryButtonClick = {
-                        navController.navigate(AppScreen.Round.name)
-                        viewModel.resetRound(newRound = false)
-                    }
+                    onMenuButtonClick = { navController.navigate(AppScreen.Menu.name) {
+                        popUpTo(AppScreen.Summary.name) { inclusive = true }
+                    } },
                 )
             }
         }
