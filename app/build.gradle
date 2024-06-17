@@ -1,8 +1,10 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
+    alias(libs.plugins.compose.compiler)
     alias(libs.plugins.ksp)
     id 'androidx.room'
+    id "dagger.hilt.android.plugin"
 }
 
 android {
@@ -71,7 +73,10 @@ dependencies {
     ksp libs.androidx.room.compiler
 
     implementation libs.android.hilt.runtime
+    implementation libs.androidx.hilt.common
+    implementation libs.androidx.hilt.navigation
     ksp libs.android.hilt.compiler
+    ksp libs.androidx.hilt.compiler
 
     testImplementation libs.junit
     testImplementation libs.junit.jupiter.api

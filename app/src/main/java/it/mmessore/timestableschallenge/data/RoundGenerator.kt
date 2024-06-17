@@ -1,5 +1,7 @@
 package it.mmessore.timestableschallenge.data
 
+import java.util.Base64
+
 class RoundGenerator (
     val minTable: Int = 1,
     val maxTable: Int = 9,
@@ -33,4 +35,54 @@ class RoundGenerator (
         return quests
     }
 
+    companion object {
+        fun encodeQuestsToBase64(quests: List<Quest>): String {
+            val sb = StringBuilder()
+            quests.forEach {
+                sb.append(it.toHex())
+            }
+            return hexToBase64(sb.toString())
+        }
+
+        fun decodeQuestsFromBase64(base64String: String): List<Quest> {
+            val quests = mutableListOf<Quest>()
+            val hexString = base64ToHex(base64String)
+            for (i in hexString.indices step 2) {
+                quests.add(Quest.fromHex(hexString.substring(i, i + 2)))
+            }
+            return quests
+        }
+
+        private fun hexToBase64(hexString: String): String {
+            val byteArray = hexStringToByteArray(hexString)
+            return Base64.getEncoder().encodeToString(byteArray)
+        }
+
+        private fun hexStringToByteArray(hexString: String): ByteArray {
+            val len = hexString.length
+            val data = ByteArray(len / 2)
+            var i = 0
+            while (i < len) {
+                data[i / 2] = ((Character.digit(hexString[i], 16) shl 4)
+                        + Character.digit(hexString[i + 1], 16)).toByte()
+                i += 2
+            }
+            return data
+        }
+
+        private fun base64ToHex(base64String: String): String {
+            val byteArray = Base64.getDecoder().decode(base64String)
+            return byteArrayToHexString(byteArray)
+        }
+
+        private fun byteArrayToHexString(byteArray: ByteArray): String {
+            val hexChars = CharArray(byteArray.size * 2)
+            for (i in byteArray.indices) {
+                val v = byteArray[i].toInt() and 0xFF
+                hexChars[i * 2] = "0123456789abcdef"[v ushr 4]
+                hexChars[i * 2 + 1] = "0123456789abcdef"[v and 0x0F]
+            }
+            return String(hexChars)
+        }
+    }
 }

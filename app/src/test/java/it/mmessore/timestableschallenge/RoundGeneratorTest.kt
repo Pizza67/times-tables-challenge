@@ -53,4 +53,12 @@ class RoundGeneratorTest {
             RoundGenerator(minTable = 8, maxTable = 3)
         }
     }
+    @Test
+    fun encode_decode_quests() {
+        val questsNum = 20
+        val quests = RoundGenerator(minTable = 1, maxTable = 9).generate(questsNum)
+        val encodedQuests = RoundGenerator.encodeQuestsToBase64(quests)
+        val decodedQuests = RoundGenerator.decodeQuestsFromBase64(encodedQuests)
+        assertEquals(quests, decodedQuests)
+    }
 }

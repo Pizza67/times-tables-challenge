@@ -23,12 +23,6 @@ class RoundViewModel @Inject constructor(private val repository: RoundRepository
         FINISHED
     }
 
-    enum class AnswerResponse {
-        CORRECT,
-        WRONG,
-        WAITING
-    }
-
     companion object {
         const val NO_ANSWER = "_"
         private const val DEFAULT_SCORE = 0

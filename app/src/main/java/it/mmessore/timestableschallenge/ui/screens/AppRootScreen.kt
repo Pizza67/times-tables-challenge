@@ -8,7 +8,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -21,7 +21,7 @@ enum class AppScreen() {
 
 @Composable
 fun AppRootScreen(
-    viewModel: RoundViewModel = viewModel(),
+    viewModel: RoundViewModel = hiltViewModel(),
     navController: NavHostController = rememberNavController()
 ) {
     val context = LocalContext.current

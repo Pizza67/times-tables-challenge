@@ -35,7 +35,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.hilt.navigation.compose.hiltViewModel
 import it.mmessore.timestableschallenge.R
 import it.mmessore.timestableschallenge.data.Quest
 import it.mmessore.timestableschallenge.ui.DelayedFadeInContent
@@ -44,7 +44,7 @@ import kotlinx.coroutines.delay
 
 @Composable
 fun RoundScreen(
-    viewModel: RoundViewModel = viewModel(),
+    viewModel: RoundViewModel = hiltViewModel(),
     onRoundFinished: () -> Unit = {},
     modifier: Modifier = Modifier
 ) {
