@@ -60,7 +60,7 @@ class RoundViewModel @Inject constructor(private val repository: RoundRepository
     fun startRound() {
         viewModelScope.launch {
             _roundState.value = RoundState.IN_PROGRESS
-            delay(1500)
+            delay(1000)
             timer.start()
         }
     }
@@ -85,19 +85,20 @@ class RoundViewModel @Inject constructor(private val repository: RoundRepository
     fun onAnswer(answer: String, playerSuccess: MediaPlayer, playerError: MediaPlayer) {
         if (_roundState.value != RoundState.IN_PROGRESS)
             return
+
         if (answer != NO_ANSWER && answer.toInt() == _currentQuest.value.answer()) {
             playSound(playerSuccess)
             _score.value++
-            _currentQuest.value = quests[++currentQuestIdx]
+            if (currentQuestIdx < quests.size - 1) {
+                currentQuestIdx++
+                _currentQuest.value = quests[currentQuestIdx]
+            } else {
+                finishRound()
+            }
         } else {
             playSound(playerError)
         }
-
-        if (currentQuestIdx < quests.size - 1) {
-            _answer.value = NO_ANSWER
-        } else {
-            finishRound()
-        }
+        _answer.value = NO_ANSWER
     }
 
     fun onBackspace() {

@@ -18,7 +18,7 @@ import androidx.navigation.navArgument
 import it.mmessore.timestableschallenge.R
 
 enum class AppScreen() {
-    Home, Menu, Round, Summary
+    Home, Menu, Round, Summary, Stats
 }
 
 @Composable
@@ -59,7 +59,7 @@ fun AppRootScreen(
 
                             }
                             MenuAction.YOUR_SCORES -> {
-
+                                navController.navigate(AppScreen.Stats.name)
                             }
                             MenuAction.SETTINGS -> {
 
@@ -92,6 +92,10 @@ fun AppRootScreen(
                         popUpTo(AppScreen.Summary.name) { inclusive = true }
                     } },
                 )
+            }
+
+            composable(route = AppScreen.Stats.name) {
+                StatsScreen()
             }
         }
     }
