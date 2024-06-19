@@ -90,16 +90,16 @@ class RoundViewModel: ViewModel() {
         if (answer != NO_ANSWER && answer.toInt() == _currentQuest.value.answer()) {
             playSound(playerSuccess)
             _score.value++
-            _currentQuest.value = quests[++currentQuestIdx]
+            if (currentQuestIdx < quests.size - 1) {
+                currentQuestIdx++
+                _currentQuest.value = quests[currentQuestIdx]
+            } else {
+                _roundState.value = RoundState.FINISHED
+            }
         } else {
             playSound(playerError)
         }
-
-        if (currentQuestIdx < quests.size - 1) {
-            _answer.value = NO_ANSWER
-        } else {
-            _roundState.value = RoundState.FINISHED
-        }
+        _answer.value = NO_ANSWER
     }
 
     fun onBackspace() {
