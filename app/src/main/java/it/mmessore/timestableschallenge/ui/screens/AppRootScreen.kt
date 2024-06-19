@@ -10,9 +10,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import it.mmessore.timestableschallenge.R
 
 enum class AppScreen() {
@@ -72,16 +74,20 @@ fun AppRootScreen(
                 }
                 RoundScreen(
                     viewModel = viewModel,
-                    onRoundFinished = {
-                        navController.navigate(AppScreen.Summary.name) {
+                    onRoundFinished = { roundId ->
+                        navController.navigate("${AppScreen.Summary.name}/$roundId") {
                             popUpTo(AppScreen.Round.name) { inclusive = true }
                         }
                     })
             }
 
-            composable(route = AppScreen.Summary.name) {
+            composable(
+                route = "${AppScreen.Summary.name}/{roundId}",
+                arguments = listOf(navArgument("roundId") { type = NavType.StringType })
+            ) { backStackEntry ->
+                val roundId = backStackEntry.arguments?.getString("roundId") ?: ""
                 SummaryScreen(
-                    viewModel,
+                    roundId = roundId,
                     onMenuButtonClick = { navController.navigate(AppScreen.Menu.name) {
                         popUpTo(AppScreen.Summary.name) { inclusive = true }
                     } },

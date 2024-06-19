@@ -8,11 +8,16 @@
     <string name="back_not_allowed">Non puoi tornare indietro durante un round</string>
     <string name="retry_button">riprova</string>
     <string name="home_button">home</string>
-    <string name="desc_score_low">Passa ancora un po\' di tempo a studiare le tabelline e presto raggiungerai il prossimo livello</string>
+    <string name="name_score_low">Studente</string>
+    <string name="name_score_medium">Esperto</string>
+    <string name="name_score_high">Campione</string>
+    <string name="name_score_top">Supereroe</string>
+    <string name="name_score_max">Leggenda Cosmica</string>
+    <string name="desc_score_low">Studia ancora un po\' le tabelline e presto raggiungerai il prossimo livello</string>
     <string name="desc_score_medium">Continua ad allenarti e di sicuro passerai la prossima verifica in classe</string>
     <string name="desc_score_high">Ora sei un vero campione di tabelline</string>
     <string name="desc_score_top">Sei il Supereroe delle tabelline</string>
-    <string name="desc_score_max">Leggenda Cosmica! Ora puoi dominare l\'universo</string>
+    <string name="desc_score_max">Ora sei pronto per dominare l\'universo!</string>
     <string name="game_over">TEMPO SCADUTO!</string>
     <string name="final_score">Punti totali:</string>
     <string name="menu">Menu</string>
@@ -21,4 +26,5 @@
     <string name="menu_share_new_game">Lancia una sfida</string>
     <string name="menu_your_scores">I tuoi punteggi</string>
     <string name="menu_settings">Impostazioni</string>
+    <string name="your_level">Livello:</string>
 </resources>

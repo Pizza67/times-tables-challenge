@@ -45,7 +45,7 @@ import kotlinx.coroutines.delay
 @Composable
 fun RoundScreen(
     viewModel: RoundViewModel = hiltViewModel(),
-    onRoundFinished: () -> Unit = {},
+    onRoundFinished: (String) -> Unit = {},
     modifier: Modifier = Modifier
 ) {
     val context = LocalContext.current
@@ -76,7 +76,7 @@ fun RoundScreen(
             RoundViewModel.RoundState.FINISHED -> {
                 DelayedFadeInContent (
                     endDelayMillis = 3000,
-                    onAnimationEnd = onRoundFinished
+                    onAnimationEnd = { onRoundFinished(viewModel.getRoundId()) }
                 ) {
                     Text(
                         text = stringResource(id = R.string.game_over),

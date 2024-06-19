@@ -5,8 +5,8 @@ import androidx.room.PrimaryKey
 
 @Entity
 data class Round(
-    @PrimaryKey(autoGenerate = true) val id: Int = 0,
+    @PrimaryKey
+    val roundId: String,
     val timestamp: Long,
-    val roundData: String,
     val score: Int
 )
