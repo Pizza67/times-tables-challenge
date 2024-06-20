@@ -17,6 +17,15 @@
     <string name="desc_score_high">Now you are a real times tables champion!</string>
     <string name="desc_score_top">You\'re the Superhero of times tables!</string>
     <string name="desc_score_max">You\'re ready to rule the universe!</string>
+    <string name="name_rank_low">Novice Learner</string>
+    <string name="name_rank_medium">Rising Genius</string>
+    <string name="name_rank_high">Sparkling Champion</string>
+    <string name="name_rank_top">Supereme Hero</string>
+    <string name="name_rank_max">Galactic Master</string>
+    <string name="desc_rank_low">Your journey has just begun. Get ready to uncover the secrets of multiplication, one step at a time. With a little practice and dedication, you\'ll become a  master in no time!</string>
+    <string name="desc_rank_medium">Congratulations! You\'ve conquered the first challenges and are now ready to embark on new adventures. Train your memory and keep testing your skills, and soon you\'ll be ready to ace any exam!</string>
+    <string name="desc_rank_high">Wow! Your knowledge shines like gold! You\'ve shown great skill and speed, but the challenges aren\'t over yet. Get ready to test your mastery with even more complex and rapid multiplications. Will you be able to overcome every obstacle and reach the top?</string>
+    <string name="desc_rank_max">Welcome to the Mount Olympus of multiplication! You have reached the pinnacle of knowledge, demonstrating absolute mastery of multiplication. Your speed and accuracy are unmatched, and your name will forever echo through the galaxy as a symbol of mathematical excellence. Now enjoy the view from the summit and continue to explore the infinite universe of numbers!</string>
     <string name="game_over">TIME IS UP!</string>
     <string name="final_score">Your Score is:</string>
     <string name="menu">Menu</string>
@@ -29,4 +38,5 @@
     <string name="stat_num_rounds">Rounds:</string>
     <string name="stat_total_score">Score:</string>
     <string name="stat_avg_score">Avarage:</string>
+    <string name="desc_rank_top">Incredible! Your mastery is legendary! You have faced every challenge with courage and determination, proving yourself a true hero. But your adventure is not over yet. Prepare for the final, epic trial that awaits you. Only the most skilled and swift will conquer the summit and become true legends!</string>
 </resources>

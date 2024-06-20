@@ -8,5 +8,6 @@ data class Round(
     @PrimaryKey
     val roundId: String,
     val timestamp: Long,
-    val score: Int
+    val score: Int,
+    val timeLeft: Int
 )

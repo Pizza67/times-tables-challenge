@@ -33,6 +33,8 @@ class RoundViewModel @Inject constructor(private val repository: RoundRepository
 
     private var quests: List<Quest> = RoundGenerator().generate()
     private var currentQuestIdx = 0
+    private var timeLeftMillis: Long = 0
+    private var lastTickTime: Long = 0
 
     private val _answer = MutableStateFlow(NO_ANSWER)
     val answer: StateFlow<String> = _answer
@@ -47,13 +49,15 @@ class RoundViewModel @Inject constructor(private val repository: RoundRepository
     val level = score.transform { score -> emit (Levels.getLevelByScore(score)) }
 
 
-    private val timer = object : CountDownTimer((ROUND_TIME_SECONDS * 1000).toLong(), 1000) { // 30 secondi (30000 millisecondi), aggiornamento ogni secondo (1000 millisecondi)
+    private val timer = object : CountDownTimer((ROUND_TIME_SECONDS * 1000).toLong(), 1000) {
         override fun onTick(millisUntilFinished: Long) {
             _timeLeft.value = (millisUntilFinished / 1000).toInt()
+            timeLeftMillis = millisUntilFinished
+            lastTickTime = System.currentTimeMillis()
         }
 
         override fun onFinish() {
-            finishRound()
+            finishRound(0)
         }
     }
 
@@ -69,7 +73,6 @@ class RoundViewModel @Inject constructor(private val repository: RoundRepository
         viewModelScope.launch {
             _score.value = DEFAULT_SCORE
             _answer.value = NO_ANSWER
-            timer.cancel()
             _timeLeft.value = ROUND_TIME_SECONDS
             _roundState.value = RoundState.STARTING
             currentQuestIdx = 0
@@ -89,11 +92,13 @@ class RoundViewModel @Inject constructor(private val repository: RoundRepository
         if (answer != NO_ANSWER && answer.toInt() == _currentQuest.value.answer()) {
             playSound(playerSuccess)
             _score.value++
-            if (currentQuestIdx < quests.size - 1) {
+            if (currentQuestIdx == quests.size - 1) {
+                timer.cancel()
+                val timeleft = (timeLeftMillis - (System.currentTimeMillis() - lastTickTime)).toInt()
+                finishRound(timeleft)
+            } else {
                 currentQuestIdx++
                 _currentQuest.value = quests[currentQuestIdx]
-            } else {
-                finishRound()
             }
         } else {
             playSound(playerError)
@@ -120,15 +125,18 @@ class RoundViewModel @Inject constructor(private val repository: RoundRepository
             player.start()
     }
 
-    private fun finishRound() {
+    private fun finishRound(timeLeft: Int = 0) {
         viewModelScope.launch {
-            val finishedRound = Round(
-                timestamp = System.currentTimeMillis(),
-                roundId = RoundGenerator.serialize(quests),
-                score = _score.value
-            )
-            repository.insertRound(finishedRound)
-            _roundState.emit(RoundState.FINISHED)
+            if (roundState.value == RoundState.IN_PROGRESS) {
+                _roundState.value = RoundState.FINISHED
+                val finishedRound = Round(
+                    timestamp = System.currentTimeMillis(),
+                    roundId = RoundGenerator.serialize(quests),
+                    score = _score.value,
+                    timeLeft = timeLeft
+                )
+                repository.insertRound(finishedRound)
+            }
         }
     }
 

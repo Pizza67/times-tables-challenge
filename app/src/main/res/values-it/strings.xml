@@ -27,4 +27,17 @@
     <string name="menu_your_scores">I tuoi progressi</string>
     <string name="menu_settings">Impostazioni</string>
     <string name="your_level">Livello:</string>
+    <string name="stat_num_rounds">Sfide:</string>
+    <string name="stat_total_score">Punteggio:</string>
+    <string name="stat_avg_score">Media:</string>
+    <string name="name_rank_low">Allievo Novizio</string>
+    <string name="name_rank_medium">Genio Nascente</string>
+    <string name="name_rank_high">Campione Scintillante</string>
+    <string name="name_rank_top">Eroe Supremo</string>
+    <string name="name_rank_max">Maestro Galattico</string>
+    <string name="desc_rank_medium">Complimenti! Hai superato le prime sfide e ora sei pronto per affrontare nuove avventure. Allena la tua memoria e continua a mettere alla prova le tue abilità, e presto sarai pronto a superare ogni esame!</string>
+    <string name="desc_rank_high">Wow! La tua conoscenza brilla come l\'oro! Hai dimostrato grande abilità e velocità, ma le sfide non sono finite. Preparati a mettere alla prova la tua maestria con moltiplicazioni ancora più complesse e veloci. Riuscirai a superare ogni ostacolo e a raggiungere la vetta?</string>
+    <string name="desc_rank_top">Incredibile! La tua padronanza è leggendaria! Hai affrontato ogni sfida con coraggio e determinazione, dimostrando di essere un vero eroe. Ma la tua avventura non è ancora finita. Preparati per l\'ultima, epica prova che ti attende. Solo i più abili e veloci riusciranno a conquistare la vetta e a diventare vere leggende!</string>
+    <string name="desc_rank_max">Benvenuto nell\'Olimpo delle tabelline! Hai raggiunto l\'apice della conoscenza, dimostrando una padronanza assoluta della moltiplicazione. La tua velocità e precisione sono ineguagliabili, e il tuo nome risuonerà per sempre nella galassia come simbolo di eccellenza matematica. Ora goditi il panorama dalla vetta e continua a esplorare l\'infinito universo dei numeri!</string>
+    <string name="desc_rank_low">Il tuo viaggio è appena cominciato. Preparati a scoprire i segreti della moltiplicazione, un passo alla volta. Con un po\' di pratica e impegno, diventerai un maestro in men che non si dica!</string>
 </resources>
