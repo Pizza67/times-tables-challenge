@@ -39,4 +39,12 @@
     <string name="stat_total_score">Score:</string>
     <string name="stat_avg_score">Avarage:</string>
     <string name="desc_rank_top">Incredible! Your mastery is legendary! You have faced every challenge with courage and determination, proving yourself a true hero. But your adventure is not over yet. Prepare for the final, epic trial that awaits you. Only the most skilled and swift will conquer the summit and become true legends!</string>
+    <string name="your_best_round">Your best round:</string>
+    <string name="replay_your_worst_round">Replay this round:</string>
+    <string name="your_achievements">Your achievements:</string>
+    <string name="current_rank">Current rank:</string>
+    <string name="stats_round_level">Level:</string>
+    <string name="stats_round_score">Score:</string>
+    <string name="stats_round_time_left">Time left:</string>
+    <string name="stats_round_sec" translatable="false">s</string>
 </resources>

@@ -19,17 +19,23 @@ interface RoundDao {
     @Query("SELECT * FROM Round WHERE roundId = :id")
     fun getRound(id: String): Flow<Round>
 
+    @Query("SELECT * FROM Round ORDER BY timeLeft DESC, score DESC, timestamp ASC LIMIT 1")
+    suspend fun getBestRound(): Round?
+
     @Query("SELECT * FROM Round ORDER BY score ASC LIMIT 1")
-    fun getWorstRound(): Flow<Round>
+    suspend fun getWorstRound(): Round?
 
     @Query("SELECT * FROM Round ORDER BY timestamp DESC LIMIT 1")
     suspend fun getLastRound(): Round?
 
     @Query("SELECT COUNT(*) FROM Round")
-    fun getRoundNum(): Flow<Int>
+    suspend fun getRoundNum(): Int
 
     @Query("SELECT AVG(score) FROM Round")
-    fun getAvgScore(): Flow<Double>
+    suspend fun getAvgScore(): Double
+
+    @Query("SELECT SUM(score) FROM Round")
+    suspend fun getTotalScore(): Int
 
     @Query("DELETE FROM Round")
     suspend fun deleteAllRounds()

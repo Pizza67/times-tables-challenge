@@ -69,19 +69,25 @@ class RoundViewModel @Inject constructor(private val repository: RoundRepository
         }
     }
 
-    fun resetRound(newRound: Boolean = true) {
+    fun setRound(roundId: String? = null) {
         viewModelScope.launch {
             _score.value = DEFAULT_SCORE
             _answer.value = NO_ANSWER
             _timeLeft.value = ROUND_TIME_SECONDS
             _roundState.value = RoundState.STARTING
             currentQuestIdx = 0
-            quests = if (newRound) {
+            quests = if (roundId != null) {
+                RoundGenerator.deserialize(roundId)
+            } else  {
                 RoundGenerator().generate()
-            } else {
-                repository.lastRoundQuests()
             }
             _currentQuest.value = quests[currentQuestIdx]
+        }
+    }
+
+    fun setLastRound() {
+        viewModelScope.launch {
+            setRound(repository.lastRound()?.roundId)
         }
     }
 

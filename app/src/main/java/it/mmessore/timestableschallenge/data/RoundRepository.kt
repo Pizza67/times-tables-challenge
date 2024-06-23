@@ -16,6 +16,10 @@ class RoundRepository(private val roundDao: RoundDao) {
         roundDao.deleteAllRounds()
     }
 
+    suspend fun lastRound(): Round? {
+        return roundDao.getLastRound()
+    }
+
     suspend fun lastRoundQuests(): List<Quest> {
         val lastRound = roundDao.getLastRound()
         return if (lastRound != null)
@@ -26,4 +30,25 @@ class RoundRepository(private val roundDao: RoundDao) {
     fun getRound(roundId: String): Flow<Round> {
         return roundDao.getRound(roundId)
     }
+
+    suspend fun getAvgScore(): Double {
+        return roundDao.getAvgScore()
+    }
+
+    suspend fun getTotalScore(): Int {
+        return roundDao.getTotalScore()
+    }
+
+    suspend fun getRoundNum(): Int {
+        return roundDao.getRoundNum()
+    }
+
+    suspend fun getBestRound(): Round? {
+        return roundDao.getBestRound()
+    }
+
+    suspend fun getWorstRound(): Round? {
+        return roundDao.getWorstRound()
+    }
+
 }

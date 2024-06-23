@@ -40,4 +40,11 @@
     <string name="desc_rank_top">Incredibile! La tua padronanza è leggendaria! Hai affrontato ogni sfida con coraggio e determinazione, dimostrando di essere un vero eroe. Ma la tua avventura non è ancora finita. Preparati per l\'ultima, epica prova che ti attende. Solo i più abili e veloci riusciranno a conquistare la vetta e a diventare vere leggende!</string>
     <string name="desc_rank_max">Benvenuto nell\'Olimpo delle tabelline! Hai raggiunto l\'apice della conoscenza, dimostrando una padronanza assoluta della moltiplicazione. La tua velocità e precisione sono ineguagliabili, e il tuo nome risuonerà per sempre nella galassia come simbolo di eccellenza matematica. Ora goditi il panorama dalla vetta e continua a esplorare l\'infinito universo dei numeri!</string>
     <string name="desc_rank_low">Il tuo viaggio è appena cominciato. Preparati a scoprire i segreti della moltiplicazione, un passo alla volta. Con un po\' di pratica e impegno, diventerai un maestro in men che non si dica!</string>
+    <string name="your_best_round">Il tuo record:</string>
+    <string name="replay_your_worst_round">Rigioca questo round:</string>
+    <string name="your_achievements">I tuoi traguardi:</string>
+    <string name="current_rank">Livello attuale:</string>
+    <string name="stats_round_level">Livello:</string>
+    <string name="stats_round_score">Punti:</string>
+    <string name="stats_round_time_left">Restanti:</string>
 </resources>

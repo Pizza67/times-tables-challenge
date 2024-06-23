@@ -1,8 +1,7 @@
 package it.mmessore.timestableschallenge.ui.screens
 
-import android.util.Log
-import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
+import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -14,7 +13,10 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Card
 import androidx.compose.material3.Icon
@@ -22,19 +24,23 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.PathEffect
+import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import it.mmessore.timestableschallenge.R
+import it.mmessore.timestableschallenge.data.Badges
 import it.mmessore.timestableschallenge.data.Levels
-import it.mmessore.timestableschallenge.ui.theme.AppTheme
+import it.mmessore.timestableschallenge.data.persistency.Round
 import it.mmessore.timestableschallenge.utils.formatTimestamp
 import java.text.NumberFormat
 import java.util.Locale
@@ -42,9 +48,19 @@ import java.util.Locale
 @Composable
 fun StatsScreen(
     viewModel: StatsViewModel = hiltViewModel(),
+    onRetryRoundButtonClick: (String) -> Unit,
     modifier: Modifier = Modifier
 ){
     val scrollState = rememberScrollState()
+
+    val currentRank = viewModel.currentRank.collectAsState()
+    val currentRankImg = viewModel.currentRankImg.collectAsState()
+    val numRounds = viewModel.numRounds.collectAsState()
+    val avgScore = viewModel.avgRounds.collectAsState()
+    val totalScore = viewModel.totScore.collectAsState()
+    val bestRound = viewModel.bestRound.collectAsState()
+    val worstRound = viewModel.worstRound.collectAsState()
+
     Column(
         modifier = modifier
             .verticalScroll(scrollState)
@@ -60,14 +76,14 @@ fun StatsScreen(
                 .fillMaxWidth()
                 .padding(vertical = 16.dp)
         )
-        CurrentRank(0)
+        CurrentRank(currentRank.value)
         Row(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(vertical = 8.dp)
         ) {
             Image(
-                painter = painterResource(R.drawable.img_rank_high),
+                painter = painterResource(currentRankImg.value),
                 contentDescription = null,
                 Modifier
                     .clip(MaterialTheme.shapes.small)
@@ -79,57 +95,88 @@ fun StatsScreen(
             ) {
                 Stat(stringResource(
                     id = R.string.stat_num_rounds),
-                    formatNumber(149.toDouble()),
+                    formatNumber(numRounds.value.toDouble()),
                     Modifier.padding(vertical = 8.dp)
                 )
                 Stat(stringResource(
                     id = R.string.stat_total_score),
-                    formatNumber(15259.toDouble()),
+                    formatNumber(totalScore.value.toDouble()),
                     Modifier.padding(vertical = 8.dp)
                 )
                 Stat(stringResource(
                     id = R.string.stat_avg_score),
-                    formatNumber(15.3),
+                    formatNumber(avgScore.value),
                     Modifier.padding(vertical = 8.dp)
                 )
             }
         }
         Text(
-            text = "Best round:",
-            style = MaterialTheme.typography.bodyLarge
+            text = stringResource(R.string.your_achievements),
+            style = MaterialTheme.typography.bodyLarge,
+            modifier = Modifier.padding(top = 8.dp)
         )
-        StatsRoundCard(
-            level = stringResource(id = Levels.list[4].name),
-            image = Levels.list[4].image,
-            timeLeft = 345/1000
+        val items = listOf(
+            ItemType.Image(0),
+            ItemType.Image(1),
+            ItemType.Image(2),
+            ItemType.DashedCircle,
+            ItemType.DashedCircle
         )
-        Spacer(modifier = Modifier.height(8.dp))
-        Text(
-            text = "Try to improve this score:",
-            style = MaterialTheme.typography.bodyLarge
-        )
-        StatsRoundCard(
-            level = stringResource(id = Levels.list[1].name),
-            image = Levels.list[1].image,
-            score = 12,
-            timestamp = System.currentTimeMillis() - 100000000,
-            onReplayButtonClick = { Log.d("StatsScreen", "Replay your worst round") }
-        )
+        LazyRow (
+            horizontalArrangement = Arrangement.SpaceEvenly,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(vertical = 8.dp)
+        ) {
+            items(items) { item ->
+                when (item) {
+                    is ItemType.Image-> {
+                        Image(
+                            painter = painterResource(id = Badges.list[item.badgeId].image),
+                            contentDescription = null,
+                            modifier = Modifier
+                                .size(85.dp)
+                                .padding(8.dp)
+                                .clip(CircleShape)
+                        )
+                    }
+                    is ItemType.DashedCircle -> {
+                        DashedCircle(
+                            circleColor = MaterialTheme.colorScheme.primary,
+                            modifier = Modifier
+                                .size(85.dp)
+                                .padding(10.dp)
+                        )
+                    }
+                }
+            }
+        }
+        bestRound.value?.let { bestRound ->
+            Text(
+                text = stringResource(R.string.your_best_round),
+                style = MaterialTheme.typography.bodyLarge
+            )
+            StatsRoundCard(bestRound)
+        }
+        worstRound.value?.let { worstRound ->
+            Spacer(modifier = Modifier.height(8.dp))
+            Text(
+                text = stringResource(R.string.replay_your_worst_round),
+                style = MaterialTheme.typography.bodyLarge
+            )
+            StatsRoundCard(worstRound, onRetryRoundButtonClick)
+        }
     }
 }
 
 @Composable
 private fun StatsRoundCard(
-    level: String = "Cosmic Legend",
-    @DrawableRes image: Int = R.drawable.img_score_max,
-    score: Int = 20,
-    timestamp: Long = System.currentTimeMillis(),
-    timeLeft: Long = 0,
-    onReplayButtonClick: (() -> Unit)? = null,
+    round: Round,
+    onReplayButtonClick: ((String) -> Unit)? = null,
     modifier: Modifier = Modifier
 ) {
     Card(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
             .padding(vertical = 8.dp)
     ) {
@@ -139,7 +186,7 @@ private fun StatsRoundCard(
                 modifier = Modifier.fillMaxWidth()
             ) {
                 Image(
-                    painter = painterResource(image),
+                    painter = painterResource(Levels.getLevelByScore(round.score).image),
                     contentDescription = null,
                     modifier = Modifier
                         .size(120.dp)
@@ -150,43 +197,45 @@ private fun StatsRoundCard(
                     verticalArrangement = Arrangement.Center,
                     modifier = Modifier.weight(1f)
                 ) {
-                    Text(text = formatTimestamp(timestamp), style = MaterialTheme.typography.bodySmall)
+                    Text(text = formatTimestamp(round.timestamp), style = MaterialTheme.typography.bodySmall)
                     Spacer(modifier = Modifier.height(8.dp))
                     Text(
-                        text = "Level:",
+                        text = stringResource(R.string.stats_round_level),
                         style = MaterialTheme.typography.bodyMedium
                     )
                     Text(
-                        text = level,
+                        text = stringResource(Levels.getLevelByScore(round.score).name),
                         style = MaterialTheme.typography.headlineMedium
                     )
                     Row(
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Text(
-                            text = "Score:",
+                            text = stringResource(R.string.stats_round_score),
                             style = MaterialTheme.typography.bodyMedium,
                             modifier = Modifier.padding(end = 8.dp)
                         )
                         Text(
-                            text = score.toString(),
+                            text = round.score.toString(),
                             style = MaterialTheme.typography.titleLarge,
                             modifier = Modifier.padding(end = 16.dp)
                         )
-                        Text(
-                            text = "Time left:",
-                            style = MaterialTheme.typography.bodyMedium,
-                            modifier = Modifier.padding(end = 8.dp)
-                        )
-                        Text(
-                            text = timeLeft.toString(),
-                            style = MaterialTheme.typography.titleLarge,
-                            modifier = Modifier.padding(end = 4.dp)
-                        )
-                        Text(
-                            text = "s",
-                            style = MaterialTheme.typography.titleSmall
-                        )
+                        if (round.timeLeft > 0) {
+                            Text(
+                                text = stringResource(R.string.stats_round_time_left),
+                                style = MaterialTheme.typography.bodyMedium,
+                                modifier = Modifier.padding(end = 8.dp)
+                            )
+                            Text(
+                                text = formatNumber(round.timeLeft/1000.0, 3),
+                                style = MaterialTheme.typography.titleLarge,
+                                modifier = Modifier.padding(end = 4.dp)
+                            )
+                            Text(
+                                text = stringResource(R.string.stats_round_sec),
+                                style = MaterialTheme.typography.titleSmall
+                            )
+                        }
                     }
                 }
             }
@@ -198,7 +247,7 @@ private fun StatsRoundCard(
                 ) {
                     IconButton(
                         modifier = Modifier.padding(horizontal = 4.dp),
-                        onClick = onReplayButtonClick
+                        onClick = { onReplayButtonClick (round.roundId) }
                     ) {
                         Icon(
                             painter = painterResource(id = R.drawable.ic_replay_circle_filled_24),
@@ -214,6 +263,21 @@ private fun StatsRoundCard(
 }
 
 @Composable
+fun DashedCircle(circleColor: Color, modifier: Modifier) {
+    Canvas(modifier = modifier) {
+        val radius = size.minDimension / 2
+        drawCircle(
+            color = circleColor,
+            radius = radius,
+            style = Stroke(
+                width = 2.dp.toPx(),
+                pathEffect = PathEffect.dashPathEffect(floatArrayOf(20f, 10f)),
+            )
+        )
+    }
+}
+
+@Composable
 private fun CurrentRank(
     @StringRes rank: Int,
     modifier: Modifier = Modifier
@@ -222,7 +286,7 @@ private fun CurrentRank(
         modifier = modifier.fillMaxWidth()
     ) {
         Text(
-            text = "Current rank:",
+            text = stringResource(R.string.current_rank),
             style = MaterialTheme.typography.bodyLarge
         )
         Row (
@@ -230,7 +294,7 @@ private fun CurrentRank(
             modifier = Modifier.padding(top = 4.dp)
         ) {
             Text(
-                text = "Sparkling Champion",
+                text = stringResource(id = rank),
                 style = MaterialTheme.typography.headlineLarge
             )
             IconButton(
@@ -249,9 +313,9 @@ private fun CurrentRank(
     }
 }
 
-private fun formatNumber(number: Double, locale: Locale = Locale.getDefault()): String {
+private fun formatNumber(number: Double, maximumFractionDigits: Int = 1, locale: Locale = Locale.getDefault()): String {
     val formatter = NumberFormat.getNumberInstance(locale)
-    formatter.maximumFractionDigits = 1
+    formatter.maximumFractionDigits = maximumFractionDigits
     return formatter.format(number)
 }
 
@@ -270,10 +334,7 @@ fun Stat(title: String, stat: String, modifier: Modifier = Modifier) {
     }
 }
 
-@Preview(showBackground = true, showSystemUi = true)
-@Composable
-fun StatsScreenPreview() {
-    AppTheme {
-        StatsScreen()
-    }
+sealed class ItemType {
+    data class Image(val badgeId: Int) : ItemType()
+    data object DashedCircle : ItemType()
 }

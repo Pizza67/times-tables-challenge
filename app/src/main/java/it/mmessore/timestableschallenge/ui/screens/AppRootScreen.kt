@@ -48,11 +48,11 @@ fun AppRootScreen(
                     onMenuButtonClick = { action ->
                         when(action) {
                             MenuAction.NEW_GAME -> {
-                                viewModel.resetRound()
+                                viewModel.setRound()
                                 navController.navigate(AppScreen.Round.name)
                             }
                             MenuAction.LAST_GAME -> {
-                                viewModel.resetRound(newRound = false)
+                                viewModel.setLastRound()
                                 navController.navigate(AppScreen.Round.name)
                             }
                             MenuAction.SHARE_GAME -> {
@@ -95,7 +95,13 @@ fun AppRootScreen(
             }
 
             composable(route = AppScreen.Stats.name) {
-                StatsScreen()
+                StatsScreen(
+                    onRetryRoundButtonClick = { roundId ->
+                        viewModel.setRound(roundId = roundId)
+                        navController.navigate(AppScreen.Round.name) {
+                            popUpTo(AppScreen.Stats.name) { inclusive = true }
+                        }
+                    })
             }
         }
     }
