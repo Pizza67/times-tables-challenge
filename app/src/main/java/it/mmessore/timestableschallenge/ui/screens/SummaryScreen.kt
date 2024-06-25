@@ -41,7 +41,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import it.mmessore.timestableschallenge.R
-import it.mmessore.timestableschallenge.ui.RewardDialog
+import it.mmessore.timestableschallenge.ui.SFXDialog
 import it.mmessore.timestableschallenge.ui.RoundButton
 import kotlinx.coroutines.delay
 
@@ -136,8 +136,9 @@ fun SummaryScreen(
             )
     }
 
-    RewardDialog(
+    SFXDialog(
         showDialog = showDialog,
+        audioResource = R.raw.reveal,
         onDismissRequest = { showDialog = false }
     ) {
         RewardDialogContent(
@@ -145,6 +146,7 @@ fun SummaryScreen(
             message = stringResource(id = rewardDialogInfo.value!!.message),
             painter = painterResource(id = rewardDialogInfo.value!!.image),
             contentDescription = stringResource(rewardDialogInfo.value!!.contentDescription),
+            okBtnText = stringResource(id = R.string.details),
             onDismissRequest = { showDialog = false },
             onOkButtonClick = onRewardOkButtonClick
         )
@@ -157,8 +159,10 @@ fun RewardDialogContent(
     contentDescription: String? = null,
     title: String,
     message: String,
-    onDismissRequest: () -> Unit,
-    onOkButtonClick: () -> Unit
+    okBtnText: String? = null,
+    closeBtnText: String = stringResource(id = R.string.close),
+    onDismissRequest: () -> Unit = {},
+    onOkButtonClick: () -> Unit = {}
 ) {
     Column(Modifier.background(MaterialTheme.colorScheme.surface)) {
 
@@ -207,33 +211,38 @@ fun RewardDialogContent(
                     .padding(vertical = 20.dp),
                 contentAlignment = Alignment.Center
             ) {
-                Text(text = stringResource(R.string.cancel).uppercase(), fontWeight = FontWeight.Bold)
+                Text(text = closeBtnText.uppercase(), fontWeight = FontWeight.Bold)
             }
+            okBtnText?.let {
+                Box(
+                    modifier = Modifier
+                        .padding(vertical = 10.dp)
+                        .width(2.dp)
+                        .fillMaxHeight()
+                        .background(
+                            MaterialTheme.colorScheme.onSurface.copy(alpha = .08f),
+                            shape = RoundedCornerShape(10.dp)
+                        )
+                )
 
-            Box(
-                modifier = Modifier
-                    .padding(vertical = 10.dp)
-                    .width(2.dp)
-                    .fillMaxHeight()
-                    .background(
-                        MaterialTheme.colorScheme.onSurface.copy(alpha = .08f),
-                        shape = RoundedCornerShape(10.dp)
+                Box(
+                    modifier = Modifier
+                        .padding(8.dp)
+                        .clip(RoundedCornerShape(8.dp))
+                        .clickable {
+                            onDismissRequest()
+                            onOkButtonClick()
+                        }
+                        .weight(1f)
+                        .padding(vertical = 20.dp),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text(
+                        text = okBtnText.uppercase(),
+                        fontWeight = FontWeight.Bold,
+                        color = MaterialTheme.colorScheme.primary
                     )
-            )
-
-            Box(
-                modifier = Modifier
-                    .padding(8.dp)
-                    .clip(RoundedCornerShape(8.dp))
-                    .clickable {
-                        onDismissRequest()
-                        onOkButtonClick()
-                    }
-                    .weight(1f)
-                    .padding(vertical = 20.dp),
-                contentAlignment = Alignment.Center
-            ) {
-                Text(text = stringResource(R.string.details).uppercase(), fontWeight = FontWeight.Bold, color = MaterialTheme.colorScheme.primary)
+                }
             }
         }
     }

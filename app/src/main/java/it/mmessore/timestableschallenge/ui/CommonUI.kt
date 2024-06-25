@@ -48,7 +48,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import androidx.compose.ui.window.DialogWindowProvider
-import it.mmessore.timestableschallenge.R
 import kotlinx.coroutines.delay
 import java.util.Locale
 
@@ -115,9 +114,9 @@ fun DelayedFadeInContent(
 
 /* Credits: https://gist.github.com/sinasamaki/daa825d96235a18822177a2b1b323f49?ref=sinasamaki.com */
 @Composable
-fun RewardDialog(
+fun SFXDialog(
     showDialog: Boolean,
-    audioResource: Int = R.raw.reveal,
+    audioResource: Int? = null,
     onDismissRequest: () -> Unit,
     content: @Composable () -> Unit,
 ) {
@@ -145,14 +144,16 @@ fun RewardDialog(
                 }
             }
 
-            LaunchedEffect(Unit) {
-                try {
-                    MediaPlayer.create(context, audioResource).apply {
-                        start()
-                        setOnCompletionListener { release() }
+            audioResource?.let {
+                LaunchedEffect(Unit) {
+                    try {
+                        MediaPlayer.create(context, audioResource).apply {
+                            start()
+                            setOnCompletionListener { release() }
+                        }
+                    } catch (e: Exception) {
+                        Log.e("ExpandingDialog", "Error in playing dialog sfx", e)
                     }
-                } catch (e: Exception) {
-                    Log.e("ExpandingDialog", "Errore durante la riproduzione dell'audio", e)
                 }
             }
 

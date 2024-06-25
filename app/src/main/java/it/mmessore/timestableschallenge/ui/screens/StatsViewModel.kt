@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import it.mmessore.timestableschallenge.data.Badges
 import it.mmessore.timestableschallenge.data.AppRepository
+import it.mmessore.timestableschallenge.data.BadgeInfo
 import it.mmessore.timestableschallenge.data.persistency.Round
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -30,6 +31,8 @@ class StatsViewModel @Inject constructor(
     val bestRound: StateFlow<Round?> = _bestRound
     private val _worstRound: MutableStateFlow<Round?> = MutableStateFlow(null)
     val worstRound: StateFlow<Round?> = _worstRound
+    private val _badges: MutableStateFlow<List<BadgeInfo?>> = MutableStateFlow(emptyList())
+    val badges: StateFlow<List<BadgeInfo?>> = _badges
 
     init {
         viewModelScope.launch {
@@ -41,6 +44,27 @@ class StatsViewModel @Inject constructor(
             _currentRankImg.value = currentRank.image
             _bestRound.value = repository.getBestRound()
             _worstRound.value = repository.getWorstRound()
+            _badges.value = getBadges()
         }
+    }
+
+    private suspend fun getBadges(): List<BadgeInfo?> {
+        val achievements = repository.getAchievements()
+        val listCount = Badges.list.size
+        val badges: MutableList<BadgeInfo?> = achievements.map { achievement ->
+            val badge = Badges.list[achievement.id]
+            BadgeInfo(nameStrId = badge.nameStrId,
+                avgScore = achievement.avgScore,
+                numRounds = achievement.numRounds,
+                timestamp = achievement.timestamp,
+                image = badge.image,
+                description = badge.description
+            )
+        }.toMutableList()
+
+        while (badges.size < listCount) {
+            badges.add(null)
+        }
+        return badges
     }
 }

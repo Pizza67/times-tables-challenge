@@ -3,6 +3,7 @@ package it.mmessore.timestableschallenge.ui.screens
 import androidx.annotation.StringRes
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -25,6 +26,11 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.derivedStateOf
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -38,9 +44,10 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import it.mmessore.timestableschallenge.R
-import it.mmessore.timestableschallenge.data.Badges
+import it.mmessore.timestableschallenge.data.BadgeInfo
 import it.mmessore.timestableschallenge.data.Levels
 import it.mmessore.timestableschallenge.data.persistency.Round
+import it.mmessore.timestableschallenge.ui.SFXDialog
 import it.mmessore.timestableschallenge.utils.formatTimestamp
 import java.text.NumberFormat
 import java.util.Locale
@@ -60,6 +67,21 @@ fun StatsScreen(
     val totalScore = viewModel.totScore.collectAsState()
     val bestRound = viewModel.bestRound.collectAsState()
     val worstRound = viewModel.worstRound.collectAsState()
+    val badges = viewModel.badges.collectAsState()
+
+    val items by remember {
+        derivedStateOf {
+            badges.value.map { badge ->
+                if (badge == null) {
+                    ItemType.DashedCircle
+                } else {
+                    ItemType.BadgeItem(badge) {
+
+                    }
+                }
+            }
+        }
+    }
 
     Column(
         modifier = modifier
@@ -110,47 +132,9 @@ fun StatsScreen(
                 )
             }
         }
-        Text(
-            text = stringResource(R.string.your_achievements),
-            style = MaterialTheme.typography.bodyLarge,
-            modifier = Modifier.padding(top = 8.dp)
-        )
-        val items = listOf(
-            ItemType.Image(0),
-            ItemType.Image(1),
-            ItemType.Image(2),
-            ItemType.DashedCircle,
-            ItemType.DashedCircle
-        )
-        LazyRow (
-            horizontalArrangement = Arrangement.SpaceEvenly,
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(vertical = 8.dp)
-        ) {
-            items(items) { item ->
-                when (item) {
-                    is ItemType.Image-> {
-                        Image(
-                            painter = painterResource(id = Badges.list[item.badgeId].image),
-                            contentDescription = null,
-                            modifier = Modifier
-                                .size(85.dp)
-                                .padding(8.dp)
-                                .clip(CircleShape)
-                        )
-                    }
-                    is ItemType.DashedCircle -> {
-                        DashedCircle(
-                            circleColor = MaterialTheme.colorScheme.primary,
-                            modifier = Modifier
-                                .size(85.dp)
-                                .padding(10.dp)
-                        )
-                    }
-                }
-            }
-        }
+
+        AchievementList(items, modifier = Modifier.padding(top = 8.dp))
+
         bestRound.value?.let { bestRound ->
             Text(
                 text = stringResource(R.string.your_best_round),
@@ -165,6 +149,68 @@ fun StatsScreen(
                 style = MaterialTheme.typography.bodyLarge
             )
             StatsRoundCard(worstRound, onRetryRoundButtonClick)
+        }
+    }
+}
+
+@Composable
+private fun AchievementList(
+    items : List<ItemType>,
+    modifier: Modifier = Modifier
+) {
+    var selectedBadge by remember { mutableStateOf<BadgeInfo?>(null) }
+    var isDialogVisible by remember { mutableStateOf(false) }
+
+    Column(modifier = modifier) {
+        Text(
+            text = stringResource(R.string.your_achievements),
+            style = MaterialTheme.typography.bodyLarge
+        )
+
+        LazyRow(
+            horizontalArrangement = Arrangement.SpaceEvenly,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(vertical = 8.dp)
+        ) {
+            items(items) { item ->
+                when (item) {
+                    is ItemType.BadgeItem -> {
+                        Image(
+                            painter = painterResource(item.badgeInfo.image),
+                            contentDescription = stringResource(item.badgeInfo.nameStrId),
+                            modifier = Modifier
+                                .size(85.dp)
+                                .padding(8.dp)
+                                .clip(CircleShape)
+                                .clickable {
+                                    selectedBadge = item.badgeInfo
+                                    isDialogVisible = true
+                                }
+                        )
+                    }
+
+                    is ItemType.DashedCircle -> {
+                        DashedCircle(
+                            circleColor = MaterialTheme.colorScheme.primary,
+                            modifier = Modifier
+                                .size(85.dp)
+                                .padding(10.dp)
+                        )
+                    }
+                }
+            }
+        }
+    }
+
+    selectedBadge?.let { badge ->
+        SFXDialog(showDialog = isDialogVisible, onDismissRequest = { isDialogVisible = false }) {
+            RewardDialogContent(
+                title = stringResource(id = badge.nameStrId),
+                message = stringResource(id = badge.description),
+                painter = painterResource(id = badge.image),
+                onDismissRequest = { isDialogVisible = false }
+            )
         }
     }
 }
@@ -335,6 +381,6 @@ fun Stat(title: String, stat: String, modifier: Modifier = Modifier) {
 }
 
 sealed class ItemType {
-    data class Image(val badgeId: Int) : ItemType()
+    data class BadgeItem (val badgeInfo: BadgeInfo, val onClick: () -> Unit) : ItemType()
     data object DashedCircle : ItemType()
 }
