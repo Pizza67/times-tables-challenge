@@ -47,4 +47,7 @@
     <string name="stats_round_level">Livello:</string>
     <string name="stats_round_score">Punti:</string>
     <string name="stats_round_time_left">Restanti:</string>
+    <string name="new_achievement">Nuovo traguardo</string>
+    <string name="cancel">Annulla</string>
+    <string name="details">Dettagli</string>
 </resources>

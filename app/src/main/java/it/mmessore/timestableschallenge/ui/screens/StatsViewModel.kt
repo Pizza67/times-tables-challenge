@@ -4,7 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import it.mmessore.timestableschallenge.data.Badges
-import it.mmessore.timestableschallenge.data.RoundRepository
+import it.mmessore.timestableschallenge.data.AppRepository
 import it.mmessore.timestableschallenge.data.persistency.Round
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -13,7 +13,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class StatsViewModel @Inject constructor(
-    private val repository: RoundRepository,
+    private val repository: AppRepository,
 ): ViewModel() {
 
     private val _currentRank = MutableStateFlow(Badges.list[0].nameStrId)

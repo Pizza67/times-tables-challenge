@@ -18,7 +18,7 @@ object Badges {
         Badge(
             nameStrId = R.string.name_rank_low,
             minAvgScore = 0f,
-            minRounds = 0,
+            minRounds = 1,
             description = R.string.desc_rank_low,
             image = R.drawable.img_rank_low
         ),

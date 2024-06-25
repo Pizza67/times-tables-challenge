@@ -13,9 +13,6 @@ interface RoundDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertRound(round: Round)
 
-    @Query("SELECT * FROM Round ORDER BY timestamp DESC")
-    fun getAllRounds(): Flow<List<Round>>
-
     @Query("SELECT * FROM Round WHERE roundId = :id")
     fun getRound(id: String): Flow<Round>
 

@@ -8,7 +8,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import it.mmessore.timestableschallenge.data.Levels
 import it.mmessore.timestableschallenge.data.Quest
 import it.mmessore.timestableschallenge.data.RoundGenerator
-import it.mmessore.timestableschallenge.data.RoundRepository
+import it.mmessore.timestableschallenge.data.AppRepository
 import it.mmessore.timestableschallenge.data.persistency.Constants.Companion.ROUND_TIME_SECONDS
 import it.mmessore.timestableschallenge.data.persistency.Round
 import kotlinx.coroutines.delay
@@ -19,7 +19,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class RoundViewModel @Inject constructor(private val repository: RoundRepository): ViewModel() {
+class RoundViewModel @Inject constructor(private val repository: AppRepository): ViewModel() {
     enum class RoundState {
         STARTING,
         IN_PROGRESS,
