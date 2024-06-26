@@ -11,11 +11,13 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import it.mmessore.timestableschallenge.R
 import it.mmessore.timestableschallenge.ui.RoundButton
 
@@ -29,9 +31,12 @@ enum class MenuAction {
 @Composable
 fun MenuScreen(
     onMenuButtonClick: (MenuAction) -> Unit,
+    viewModel: MenuViewModel = hiltViewModel(),
     modifier: Modifier = Modifier
 ) {
+    val hasPlayedRounds = viewModel.hasPlayedRounds.collectAsState()
     val scrollState = rememberScrollState()
+
     Column(
         modifier = modifier
             .verticalScroll(scrollState)
@@ -49,6 +54,7 @@ fun MenuScreen(
         )
         GameMenu(
             onMenuButtonClick = onMenuButtonClick,
+            hasPlayedRounds = hasPlayedRounds.value,
             modifier = Modifier
                 .fillMaxWidth()
                 .widthIn(max = 600.dp))
@@ -58,6 +64,7 @@ fun MenuScreen(
 @Composable
 fun GameMenu(
     onMenuButtonClick: (MenuAction) -> Unit,
+    hasPlayedRounds: Boolean = true,
     modifier: Modifier = Modifier)
 {
     Column(
@@ -65,9 +72,11 @@ fun GameMenu(
         verticalArrangement = Arrangement.SpaceBetween
     ) {
         MenuButton(onClick = { onMenuButtonClick(MenuAction.NEW_GAME) }, text = stringResource(R.string.menu_start_new_game) )
-        MenuButton(onClick = { onMenuButtonClick(MenuAction.LAST_GAME) }, text = stringResource(R.string.menu_play_last_game) )
+        if (hasPlayedRounds)
+            MenuButton(onClick = { onMenuButtonClick(MenuAction.LAST_GAME) }, text = stringResource(R.string.menu_play_last_game))
         MenuButton(onClick = { onMenuButtonClick(MenuAction.SHARE_GAME) }, text = stringResource(R.string.menu_share_new_game) )
-        MenuButton(onClick = { onMenuButtonClick(MenuAction.YOUR_SCORES) }, text = stringResource(R.string.menu_your_scores) )
+        if (hasPlayedRounds)
+            MenuButton(onClick = { onMenuButtonClick(MenuAction.YOUR_SCORES) }, text = stringResource(R.string.menu_your_scores) )
         MenuButton(onClick = { onMenuButtonClick(MenuAction.SETTINGS) }, text = stringResource(R.string.menu_settings) )
     }
 }
@@ -76,6 +85,7 @@ fun GameMenu(
 fun MenuButton(
     onClick: () -> Unit,
     text: String,
+    enabled: Boolean = true,
     modifier: Modifier = Modifier
         .padding(16.dp)
         .fillMaxWidth()
@@ -84,6 +94,7 @@ fun MenuButton(
         onClick = onClick,
         text = text,
         modifier = modifier,
+        enabled = enabled,
         uppercase = false
     )
 }

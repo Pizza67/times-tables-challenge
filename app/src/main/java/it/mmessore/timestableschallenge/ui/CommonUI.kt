@@ -80,6 +80,7 @@ fun RoundButton(
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
     text: String,
+    enabled: Boolean = true,
     uppercase: Boolean = true
 ) {
     val btnText = if (uppercase)
@@ -88,6 +89,7 @@ fun RoundButton(
         text.replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString() }
     Button(
         onClick = onClick,
+        enabled = enabled,
         shape = CircleShape,
         modifier = modifier
             .padding(8.dp)
@@ -98,6 +100,7 @@ fun RoundButton(
         Text(
             text = btnText,
             textAlign = TextAlign.Center,
+            fontWeight = FontWeight.Bold,
             style = MaterialTheme.typography.headlineMedium
         )
     }
