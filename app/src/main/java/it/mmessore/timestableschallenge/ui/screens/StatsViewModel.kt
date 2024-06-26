@@ -3,10 +3,11 @@ package it.mmessore.timestableschallenge.ui.screens
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import it.mmessore.timestableschallenge.data.Badges
 import it.mmessore.timestableschallenge.data.AppRepository
 import it.mmessore.timestableschallenge.data.BadgeInfo
+import it.mmessore.timestableschallenge.data.Badges
 import it.mmessore.timestableschallenge.data.persistency.Round
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
@@ -15,6 +16,7 @@ import javax.inject.Inject
 @HiltViewModel
 class StatsViewModel @Inject constructor(
     private val repository: AppRepository,
+    private val coroutineScope: CoroutineScope
 ): ViewModel() {
 
     private val _currentRank = MutableStateFlow(Badges.list[0].nameStrId)
@@ -35,7 +37,7 @@ class StatsViewModel @Inject constructor(
     val badges: StateFlow<List<BadgeInfo>> = _badges
 
     init {
-        viewModelScope.launch {
+        viewModelScope.launch(context = coroutineScope.coroutineContext) {
             _avgRounds.value = repository.getAvgScore()
             _numRounds.value = repository.getRoundNum()
             _totScore.value = repository.getTotalScore()

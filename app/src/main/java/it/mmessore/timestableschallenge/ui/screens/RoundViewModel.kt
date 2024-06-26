@@ -5,21 +5,23 @@ import android.os.CountDownTimer
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import it.mmessore.timestableschallenge.data.Levels
+import it.mmessore.timestableschallenge.data.AppRepository
 import it.mmessore.timestableschallenge.data.Quest
 import it.mmessore.timestableschallenge.data.RoundGenerator
-import it.mmessore.timestableschallenge.data.AppRepository
 import it.mmessore.timestableschallenge.data.persistency.Constants.Companion.ROUND_TIME_SECONDS
 import it.mmessore.timestableschallenge.data.persistency.Round
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.transform
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class RoundViewModel @Inject constructor(private val repository: AppRepository): ViewModel() {
+class RoundViewModel @Inject constructor(
+    private val repository: AppRepository,
+    private val coroutineScope: CoroutineScope
+): ViewModel() {
     enum class RoundState {
         STARTING,
         IN_PROGRESS,
@@ -46,8 +48,6 @@ class RoundViewModel @Inject constructor(private val repository: AppRepository):
     val roundState: StateFlow<RoundState> = _roundState
     private val _currentQuest = MutableStateFlow(quests[currentQuestIdx])
     val currentQuest: StateFlow<Quest> = _currentQuest
-    val level = score.transform { score -> emit (Levels.getLevelByScore(score)) }
-
 
     private val timer = object : CountDownTimer((ROUND_TIME_SECONDS * 1000).toLong(), 1000) {
         override fun onTick(millisUntilFinished: Long) {
@@ -70,23 +70,21 @@ class RoundViewModel @Inject constructor(private val repository: AppRepository):
     }
 
     fun setRound(roundId: String? = null) {
-        viewModelScope.launch {
-            _score.value = DEFAULT_SCORE
-            _answer.value = NO_ANSWER
-            _timeLeft.value = ROUND_TIME_SECONDS
-            _roundState.value = RoundState.STARTING
-            currentQuestIdx = 0
-            quests = if (roundId != null) {
-                RoundGenerator.deserialize(roundId)
-            } else  {
-                RoundGenerator().generate()
-            }
-            _currentQuest.value = quests[currentQuestIdx]
+        _score.value = DEFAULT_SCORE
+        _answer.value = NO_ANSWER
+        _timeLeft.value = ROUND_TIME_SECONDS
+        _roundState.value = RoundState.STARTING
+        currentQuestIdx = 0
+        quests = if (roundId != null) {
+            RoundGenerator.deserialize(roundId)
+        } else  {
+            RoundGenerator().generate()
         }
+        _currentQuest.value = quests[currentQuestIdx]
     }
 
     fun setLastRound() {
-        viewModelScope.launch {
+        viewModelScope.launch (context = coroutineScope.coroutineContext) {
             setRound(repository.lastRound()?.roundId)
         }
     }
@@ -132,7 +130,7 @@ class RoundViewModel @Inject constructor(private val repository: AppRepository):
     }
 
     private fun finishRound(timeLeft: Int = 0) {
-        viewModelScope.launch {
+        viewModelScope.launch (context = coroutineScope.coroutineContext) {
             if (roundState.value == RoundState.IN_PROGRESS) {
                 _roundState.value = RoundState.FINISHED
                 val finishedRound = Round(

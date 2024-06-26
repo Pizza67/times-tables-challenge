@@ -11,6 +11,8 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import it.mmessore.timestableschallenge.data.AppRepository
 import it.mmessore.timestableschallenge.data.persistency.RoundDatabase
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import javax.inject.Singleton
 
 @Module
@@ -47,4 +49,8 @@ object ApplicationModule {
     fun provideAppRepository(@ApplicationContext context: Context, database: RoundDatabase): AppRepository {
         return AppRepository(context, database.roundDao(), database.achievementDao())
     }
+
+    @Singleton
+    @Provides
+    fun providesCoroutineScope() = CoroutineScope(Dispatchers.IO)
 }

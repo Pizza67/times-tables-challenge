@@ -9,6 +9,7 @@ import it.mmessore.timestableschallenge.data.RoundInfo
 import it.mmessore.timestableschallenge.data.AppRepository
 import it.mmessore.timestableschallenge.data.Badges
 import it.mmessore.timestableschallenge.data.RewardDialogInfo
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
@@ -17,6 +18,7 @@ import javax.inject.Inject
 @HiltViewModel
 class SummaryViewModel @Inject constructor(
     private val repository: AppRepository,
+    private val coroutineScope: CoroutineScope
 ): ViewModel() {
     private val _roundInfo: MutableStateFlow<RoundInfo> = MutableStateFlow(RoundInfo(0, Levels.list.first()))
     val roundInfo: StateFlow<RoundInfo> = _roundInfo
@@ -24,7 +26,7 @@ class SummaryViewModel @Inject constructor(
     val rewardDialogInfo: StateFlow<RewardDialogInfo?> = _rewardDialogInfo
 
     fun fetchRoundInfo(roundId: String) {
-        viewModelScope.launch {
+        viewModelScope.launch(context = coroutineScope.coroutineContext) {
             repository.getRound(roundId).collect { round ->
                 _roundInfo.emit(RoundInfo(round.score, Levels.getLevelByScore(round.score)))
             }
@@ -32,7 +34,7 @@ class SummaryViewModel @Inject constructor(
     }
 
     fun checkRewards() {
-        viewModelScope.launch {
+        viewModelScope.launch(context = coroutineScope.coroutineContext) {
             repository.getCurrentAchievement()?.let { achievement ->
                 if (!repository.isAchievementUnlocked(achievement.id)) {
                     repository.insertAchievement(achievement)
