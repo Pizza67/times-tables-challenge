@@ -1,13 +1,12 @@
 package it.mmessore.timestableschallenge.data
 
-import androidx.annotation.DrawableRes
-import androidx.annotation.StringRes
-
 data class BadgeInfo(
-    @StringRes val nameStrId: Int,
-    @StringRes val description: Int,
-    @DrawableRes val image: Int,
-    val timestamp: Long,
-    val avgScore: Double,
-    val numRounds: Int,
-)
+    val id: Int,
+    val timestamp: Long = 0,
+    val avgScore: Double = 0.0,
+    val numRounds: Int = 0
+) {
+    fun isAchieved(): Boolean {
+        return timestamp != 0L
+    }
+}

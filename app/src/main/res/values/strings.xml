@@ -51,4 +51,9 @@
     <string name="cancel">Cancel</string>
     <string name="details">Details</string>
     <string name="close">Close</string>
+    <string name="achieved_on">Achieved on:</string>
+    <string name="round_number">Round number:</string>
+    <string name="avarage_score">Avarage score:</string>
+    <string name="achievement_requirements_desc">This achievement requires you to play at least %1$s rounds with an average score of %2$s.</string>
+    <string name="requirements">Requirements</string>
 </resources>

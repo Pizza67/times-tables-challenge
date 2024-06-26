@@ -51,4 +51,9 @@
     <string name="cancel">Annulla</string>
     <string name="details">Dettagli</string>
     <string name="close">Chiudi</string>
+    <string name="achieved_on">Raggiunto il:</string>
+    <string name="round_number">Sfida numero:</string>
+    <string name="avarage_score">Media punteggio:</string>
+    <string name="achievement_requirements_desc">Per raggiungere questo traguardo dovrai completare almeno %1$s sfide e avere una media punteggio di almeno %2$s.</string>
+    <string name="requirements">Requisiti</string>
 </resources>

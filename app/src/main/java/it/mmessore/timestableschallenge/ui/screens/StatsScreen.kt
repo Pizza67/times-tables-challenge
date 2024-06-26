@@ -26,7 +26,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -34,20 +33,30 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.PathEffect
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.AnnotatedString
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.drawText
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.rememberTextMeasurer
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import it.mmessore.timestableschallenge.R
 import it.mmessore.timestableschallenge.data.BadgeInfo
+import it.mmessore.timestableschallenge.data.Badges
 import it.mmessore.timestableschallenge.data.Levels
 import it.mmessore.timestableschallenge.data.persistency.Round
+import it.mmessore.timestableschallenge.ui.DialogScaffold
 import it.mmessore.timestableschallenge.ui.SFXDialog
+import it.mmessore.timestableschallenge.ui.DialogPager
 import it.mmessore.timestableschallenge.utils.formatTimestamp
 import java.text.NumberFormat
 import java.util.Locale
@@ -68,20 +77,6 @@ fun StatsScreen(
     val bestRound = viewModel.bestRound.collectAsState()
     val worstRound = viewModel.worstRound.collectAsState()
     val badges = viewModel.badges.collectAsState()
-
-    val items by remember {
-        derivedStateOf {
-            badges.value.map { badge ->
-                if (badge == null) {
-                    ItemType.DashedCircle
-                } else {
-                    ItemType.BadgeItem(badge) {
-
-                    }
-                }
-            }
-        }
-    }
 
     Column(
         modifier = modifier
@@ -133,7 +128,7 @@ fun StatsScreen(
             }
         }
 
-        AchievementList(items, modifier = Modifier.padding(top = 8.dp))
+        AchievementList(badges.value, modifier = Modifier.padding(top = 8.dp))
 
         bestRound.value?.let { bestRound ->
             Text(
@@ -155,7 +150,7 @@ fun StatsScreen(
 
 @Composable
 private fun AchievementList(
-    items : List<ItemType>,
+    badges : List<BadgeInfo>,
     modifier: Modifier = Modifier
 ) {
     var selectedBadge by remember { mutableStateOf<BadgeInfo?>(null) }
@@ -173,45 +168,131 @@ private fun AchievementList(
                 .fillMaxWidth()
                 .padding(vertical = 8.dp)
         ) {
-            items(items) { item ->
-                when (item) {
-                    is ItemType.BadgeItem -> {
-                        Image(
-                            painter = painterResource(item.badgeInfo.image),
-                            contentDescription = stringResource(item.badgeInfo.nameStrId),
-                            modifier = Modifier
-                                .size(85.dp)
-                                .padding(8.dp)
-                                .clip(CircleShape)
-                                .clickable {
-                                    selectedBadge = item.badgeInfo
-                                    isDialogVisible = true
-                                }
+            items(badges) { badge ->
+                if (badge.isAchieved()) {
+                    Image(
+                        painter = painterResource(Badges.list[badge.id].image),
+                        contentDescription = stringResource(Badges.list[badge.id].nameStrId),
+                        modifier = Modifier
+                            .size(85.dp)
+                            .padding(8.dp)
+                            .clip(CircleShape)
+                            .clickable {
+                                selectedBadge = badge
+                                isDialogVisible = true
+                            }
                         )
-                    }
-
-                    is ItemType.DashedCircle -> {
+                    } else {
                         DashedCircle(
                             circleColor = MaterialTheme.colorScheme.primary,
                             modifier = Modifier
                                 .size(85.dp)
                                 .padding(10.dp)
+                                .clickable {
+                                    selectedBadge = badge
+                                    isDialogVisible = true
+                                }
                         )
                     }
                 }
             }
         }
-    }
 
     selectedBadge?.let { badge ->
         SFXDialog(showDialog = isDialogVisible, onDismissRequest = { isDialogVisible = false }) {
-            RewardDialogContent(
-                title = stringResource(id = badge.nameStrId),
-                message = stringResource(id = badge.description),
-                painter = painterResource(id = badge.image),
+            DialogScaffold(
+                content = if (badge.isAchieved()) {
+                    {
+                        DialogPager(
+                            listOf(
+                                { AchievedBadgeDescription(badgeInfo = badge) },
+                                { AchievedBadgeInfo(badgeInfo = badge) }
+                            )
+                        )
+                    }
+                } else {
+                    { NotAchievedBadgeInfo(badgeInfo = badge) }
+                },
+                painter = painterResource(id =
+                    if (badge.isAchieved())
+                        Badges.list[badge.id].image
+                    else
+                        R.drawable.img_badge_not_achieved
+                ),
                 onDismissRequest = { isDialogVisible = false }
             )
         }
+    }
+}
+
+@Composable
+fun AchievedBadgeDescription(badgeInfo: BadgeInfo) {
+    Column(modifier = Modifier.padding(16.dp)) {
+        Spacer(modifier = Modifier.height(8.dp))
+        Text(
+            text = stringResource(id = Badges.list[badgeInfo.id].nameStrId),
+            style = MaterialTheme.typography.titleLarge,
+            fontWeight = FontWeight.Bold,
+        )
+        Spacer(modifier = Modifier.height(8.dp))
+        Text(text = stringResource(id = Badges.list[badgeInfo.id].description))
+    }
+}
+
+@Composable
+fun AchievedBadgeInfo(badgeInfo: BadgeInfo) {
+    Column(modifier = Modifier.padding(16.dp)) {
+        Spacer(modifier = Modifier.height(8.dp))
+        Text(
+            text = stringResource(R.string.achieved_on),
+            style = MaterialTheme.typography.bodyLarge,
+        )
+        Spacer(modifier = Modifier.height(8.dp))
+        Text(
+            text = formatTimestamp(badgeInfo.timestamp, showTime = true),
+            style = MaterialTheme.typography.titleLarge,
+        )
+        Spacer(modifier = Modifier.height(8.dp))
+        Text(
+            text = stringResource(R.string.round_number),
+            style = MaterialTheme.typography.bodyLarge,
+        )
+        Spacer(modifier = Modifier.height(8.dp))
+        Text(
+            text = formatNumber(badgeInfo.numRounds.toDouble()),
+            style = MaterialTheme.typography.titleLarge,
+        )
+        Spacer(modifier = Modifier.height(8.dp))
+        Text(
+            text = stringResource(R.string.avarage_score),
+            style = MaterialTheme.typography.bodyLarge,
+        )
+        Spacer(modifier = Modifier.height(8.dp))
+        Text(
+            text = formatNumber(badgeInfo.avgScore),
+            style = MaterialTheme.typography.titleLarge,
+        )
+    }
+}
+
+@Composable
+fun NotAchievedBadgeInfo(badgeInfo: BadgeInfo) {
+    Column(modifier = Modifier.padding(16.dp)) {
+        Spacer(modifier = Modifier.height(8.dp))
+        Text(
+            text = stringResource(R.string.requirements),
+            style = MaterialTheme.typography.titleLarge,
+            fontWeight = FontWeight.Bold
+        )
+        Spacer(modifier = Modifier.height(8.dp))
+        Text(
+            text = stringResource(
+                R.string.achievement_requirements_desc,
+                Badges.list[badgeInfo.id].minRounds,
+                Badges.list[badgeInfo.id].minAvgScore
+            ),
+            style = MaterialTheme.typography.bodyMedium
+        )
     }
 }
 
@@ -236,7 +317,7 @@ private fun StatsRoundCard(
                     contentDescription = null,
                     modifier = Modifier
                         .size(120.dp)
-                        .padding(end = 8.dp),
+                        .padding(end = 16.dp),
                     contentScale = ContentScale.Crop
                 )
                 Column(
@@ -309,7 +390,11 @@ private fun StatsRoundCard(
 }
 
 @Composable
-fun DashedCircle(circleColor: Color, modifier: Modifier) {
+fun DashedCircle(
+    circleColor: Color,
+    modifier: Modifier
+) {
+    val textMeasurer = rememberTextMeasurer()
     Canvas(modifier = modifier) {
         val radius = size.minDimension / 2
         drawCircle(
@@ -318,6 +403,22 @@ fun DashedCircle(circleColor: Color, modifier: Modifier) {
             style = Stroke(
                 width = 2.dp.toPx(),
                 pathEffect = PathEffect.dashPathEffect(floatArrayOf(20f, 10f)),
+            )
+        )
+        val text = "?"
+        val textLayoutResult = textMeasurer.measure(
+            text = AnnotatedString(text),
+            style = TextStyle(
+                color = circleColor,
+                fontSize = (radius / 2).sp,
+                textAlign = TextAlign.Center
+            )
+        )
+        drawText(
+            textLayoutResult = textLayoutResult,
+            topLeft = Offset(
+                x = center.x - textLayoutResult.size.width / 2,
+                y = center.y - textLayoutResult.size.height / 2
             )
         )
     }
@@ -343,17 +444,6 @@ private fun CurrentRank(
                 text = stringResource(id = rank),
                 style = MaterialTheme.typography.headlineLarge
             )
-            IconButton(
-                modifier = Modifier.padding(horizontal = 16.dp),
-                onClick = { /*TODO*/ }
-            ) {
-                Icon(
-                    painter = painterResource(id = R.drawable.ic_info_24),
-                    contentDescription = "ranking information",
-                    tint = MaterialTheme.colorScheme.primary,
-                    modifier = Modifier.size(32.dp)
-                )
-            }
         }
 
     }

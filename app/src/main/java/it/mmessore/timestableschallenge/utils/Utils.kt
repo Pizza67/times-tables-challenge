@@ -7,11 +7,11 @@ import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 
-fun formatTimestamp(timestamp: Long): String {
+fun formatTimestamp(timestamp: Long, showTime: Boolean = false): String {
     val now = System.currentTimeMillis()
     val yesterday = now - DAY_IN_MILLIS
 
-    return if (timestamp >= yesterday) {
+    val ret = if (timestamp >= yesterday) {
         getRelativeTimeSpanString(
             timestamp,
             now,
@@ -23,4 +23,15 @@ fun formatTimestamp(timestamp: Long): String {
         val dateFormat = SimpleDateFormat("d MMMM yyyy", Locale.getDefault())
         dateFormat.format(date)
     }
+
+    return if (showTime) {
+        "$ret, ${formatTimestampToTime(timestamp)}"
+    } else {
+        ret
+    }
+}
+
+fun formatTimestampToTime(timestamp: Long): String {
+    val timeFormat = SimpleDateFormat("HH:mm", Locale.getDefault())
+    return timeFormat.format(Date(timestamp))
 }

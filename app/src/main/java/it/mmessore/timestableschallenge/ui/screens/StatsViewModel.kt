@@ -31,8 +31,8 @@ class StatsViewModel @Inject constructor(
     val bestRound: StateFlow<Round?> = _bestRound
     private val _worstRound: MutableStateFlow<Round?> = MutableStateFlow(null)
     val worstRound: StateFlow<Round?> = _worstRound
-    private val _badges: MutableStateFlow<List<BadgeInfo?>> = MutableStateFlow(emptyList())
-    val badges: StateFlow<List<BadgeInfo?>> = _badges
+    private val _badges: MutableStateFlow<List<BadgeInfo>> = MutableStateFlow(emptyList())
+    val badges: StateFlow<List<BadgeInfo>> = _badges
 
     init {
         viewModelScope.launch {
@@ -48,22 +48,24 @@ class StatsViewModel @Inject constructor(
         }
     }
 
-    private suspend fun getBadges(): List<BadgeInfo?> {
+    private suspend fun getBadges(): List<BadgeInfo> {
         val achievements = repository.getAchievements()
-        val listCount = Badges.list.size
-        val badges: MutableList<BadgeInfo?> = achievements.map { achievement ->
-            val badge = Badges.list[achievement.id]
-            BadgeInfo(nameStrId = badge.nameStrId,
-                avgScore = achievement.avgScore,
-                numRounds = achievement.numRounds,
-                timestamp = achievement.timestamp,
-                image = badge.image,
-                description = badge.description
-            )
-        }.toMutableList()
+        val achievementIds = achievements.map { it.id }
+        val badges = mutableListOf<BadgeInfo>()
 
-        while (badges.size < listCount) {
-            badges.add(null)
+        Badges.list.forEachIndexed { index, _ ->
+            if (index in achievementIds) {
+                // Badge achieved
+                badges.add(BadgeInfo(
+                    id = index,
+                    avgScore = achievements[index].avgScore,
+                    numRounds = achievements[index].numRounds,
+                    timestamp = achievements[index].timestamp)
+                )
+            } else {
+                // Badge not achieved
+                badges.add(BadgeInfo(id = index))
+            }
         }
         return badges
     }

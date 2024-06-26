@@ -8,19 +8,36 @@ import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.spring
 import androidx.compose.animation.core.tween
+import androidx.compose.animation.expandVertically
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.scaleIn
 import androidx.compose.animation.scaleOut
 import androidx.compose.animation.slideOutVertically
+import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.detectTapGestures
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.IntrinsicSize
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.rememberPagerState
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -39,15 +56,21 @@ import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import androidx.compose.ui.window.DialogWindowProvider
+import it.mmessore.timestableschallenge.R
 import kotlinx.coroutines.delay
 import java.util.Locale
 
@@ -214,3 +237,136 @@ fun SFXDialog(
 @ReadOnlyComposable
 @Composable
 fun getDialogWindow(): Window? = (LocalView.current.parent as? DialogWindowProvider)?.window
+
+@Composable
+fun DialogScaffold(
+    painter: Painter = painterResource(id = R.drawable.img_rank_medium),
+    contentDescription: String? = null,
+    content: @Composable () -> Unit = {},
+    okBtnText: String? = null,
+    closeBtnText: String = stringResource(id = R.string.close),
+    onDismissRequest: () -> Unit = {},
+    onOkButtonClick: () -> Unit = {}
+) {
+    Column(Modifier.background(MaterialTheme.colorScheme.surface)) {
+
+        var graphicVisible by remember { mutableStateOf(false) }
+
+        LaunchedEffect(Unit) { graphicVisible = true }
+
+        AnimatedVisibility(
+            visible = graphicVisible,
+            enter = expandVertically(
+                animationSpec = spring(stiffness = Spring.StiffnessMediumLow),
+                expandFrom = Alignment.CenterVertically,
+            )
+        ) {
+            Image(
+                painter = painter,
+                contentDescription = contentDescription,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(180.dp),
+                contentScale = ContentScale.FillWidth
+            )
+        }
+
+        content()
+
+        Row(
+            modifier = Modifier.height(IntrinsicSize.Min)
+        ) {
+            Box(
+                modifier = Modifier
+                    .padding(8.dp)
+                    .clip(RoundedCornerShape(8.dp))
+                    .clickable { onDismissRequest() }
+                    .weight(1f)
+                    .padding(vertical = 20.dp),
+                contentAlignment = Alignment.Center
+            ) {
+                Text(text = closeBtnText.uppercase(), fontWeight = FontWeight.Bold)
+            }
+            okBtnText?.let {
+                Box(
+                    modifier = Modifier
+                        .padding(vertical = 10.dp)
+                        .width(2.dp)
+                        .fillMaxHeight()
+                        .background(
+                            MaterialTheme.colorScheme.onSurface.copy(alpha = .08f),
+                            shape = RoundedCornerShape(10.dp)
+                        )
+                )
+
+                Box(
+                    modifier = Modifier
+                        .padding(8.dp)
+                        .clip(RoundedCornerShape(8.dp))
+                        .clickable {
+                            onDismissRequest()
+                            onOkButtonClick()
+                        }
+                        .weight(1f)
+                        .padding(vertical = 20.dp),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text(
+                        text = okBtnText.uppercase(),
+                        fontWeight = FontWeight.Bold,
+                        color = MaterialTheme.colorScheme.primary
+                    )
+                }
+            }
+        }
+    }
+}
+
+@OptIn(ExperimentalFoundationApi::class)
+@Composable
+fun DialogPager(
+    pages: List<@Composable () -> Unit>,
+    modifier: Modifier = Modifier
+) {
+    val pagerState = rememberPagerState(pageCount = { pages.size })
+
+    Column(modifier = modifier.padding(16.dp)) {
+        HorizontalPager(
+            state = pagerState,
+            modifier = Modifier.wrapContentHeight()
+        ) { page ->
+            val scrollState = rememberScrollState()
+            Box (Modifier.height(250.dp).verticalScroll(scrollState)){
+                pages[page]()
+            }
+        }
+
+        // Pager indicators
+        if (pages.size > 1) {
+            Row(
+                Modifier
+                    .wrapContentHeight()
+                    .fillMaxWidth()
+                    .padding(top = 16.dp)
+                    .align(Alignment.CenterHorizontally),
+                horizontalArrangement = Arrangement.Center
+            ) {
+                repeat(pagerState.pageCount) { iteration ->
+                    val color =
+                        if (pagerState.currentPage == iteration)
+                            MaterialTheme.colorScheme.primary
+                        else
+                            MaterialTheme.colorScheme.onSurface.copy(alpha = .2f)
+
+                    Box(
+                        modifier = Modifier
+                            .padding(2.dp)
+                            .clip(CircleShape)
+                            .background(color)
+                            .size(16.dp)
+                    )
+                }
+            }
+        }
+    }
+}
