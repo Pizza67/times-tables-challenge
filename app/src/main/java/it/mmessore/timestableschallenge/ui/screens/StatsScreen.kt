@@ -102,13 +102,11 @@ fun StatsScreen(
             Image(
                 painter = painterResource(currentRankImg.value),
                 contentDescription = null,
-                Modifier
-                    .clip(MaterialTheme.shapes.small)
-                    .weight(1f)
+                Modifier.clip(MaterialTheme.shapes.small)
             )
             Column (
                 verticalArrangement = Arrangement.Center,
-                modifier = Modifier.padding(start = 16.dp)
+                modifier = Modifier.padding(start = 16.dp).weight(1f)
             ) {
                 Stat(stringResource(
                     id = R.string.stat_num_rounds),
@@ -469,7 +467,3 @@ fun Stat(title: String, stat: String, modifier: Modifier = Modifier) {
     }
 }
 
-sealed class ItemType {
-    data class BadgeItem (val badgeInfo: BadgeInfo, val onClick: () -> Unit) : ItemType()
-    data object DashedCircle : ItemType()
-}
