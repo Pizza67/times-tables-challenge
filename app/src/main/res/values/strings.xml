@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Times Tables Challenge</string>
+    <string name="app_name">Times Tables Race</string>
     <string name="home_intro">Challenge your friends to see how many correct answers you can give in 30 seconds</string>
     <string name="start_button">new game</string>
     <string name="time_remaining">Time:</string>
@@ -31,7 +31,7 @@
     <string name="menu">Menu</string>
     <string name="menu_start_new_game">Start new round</string>
     <string name="menu_play_last_game">Retry last round</string>
-    <string name="menu_share_new_game">Issue a challenge</string>
+    <string name="menu_share_new_game">Challenge mode</string>
     <string name="menu_your_scores">Your progress</string>
     <string name="menu_settings">Settings</string>
     <string name="your_level">Level:</string>
@@ -56,4 +56,10 @@
     <string name="avarage_score">Avarage score:</string>
     <string name="achievement_requirements_desc">This achievement requires you to play at least %1$s rounds with an average score of %2$s.</string>
     <string name="requirements">Requirements</string>
+    <string name="share_round_desc">"Challenge your friends to play the same round and see who comes out on top!"</string>
+    <string name="share_round_howto">Get your friends in on the action! Scan the QR code or share it with your preferred app to invite them.</string>
+    <string name="round_code">Round code:</string>
+    <string name="round_code_received">Received round code</string>
+    <string name="received_round_code_quest">I received a challenge code</string>
+    <string name="share_round_msg">Wanna challenge me to a times tables duel? Go to challenge mode in the \"Times Tables Race\" app and enter this code: %1$s</string>
 </resources>

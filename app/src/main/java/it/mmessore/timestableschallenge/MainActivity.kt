@@ -1,5 +1,6 @@
 package it.mmessore.timestableschallenge
 
+import android.net.Uri
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -14,8 +15,13 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
+            val data: Uri? = intent?.data
+            var roundId: String? = null
+            if (data?.scheme == "ttchallenge") {
+                roundId = data.getQueryParameter("roundId")
+            }
             AppTheme {
-                AppRootScreen()
+                AppRootScreen(challengeId = roundId)
             }
         }
     }

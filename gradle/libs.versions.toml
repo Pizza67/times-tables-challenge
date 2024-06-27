@@ -15,6 +15,7 @@ room = "2.6.1"
 hilt = "2.49"
 androidx-hilt = "1.2.0"
 lifecycleRuntimeComposeAndroid = "2.8.2"
+zxing = "3.5.1"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -44,6 +45,7 @@ androidx-hilt-common = { group = "androidx.hilt", name ="hilt-common", version.r
 androidx-hilt-compiler = { group = "androidx.hilt", name ="hilt-compiler", version.ref = "androidx-hilt" }
 androidx-hilt-navigation = { group = "androidx.hilt", name ="hilt-navigation-compose", version.ref = "androidx-hilt" }
 androidx-lifecycle-runtime-compose-android = { group = "androidx.lifecycle", name = "lifecycle-runtime-compose-android", version.ref = "lifecycleRuntimeComposeAndroid" }
+android-zxing = { group = "com.google.zxing", name = "core", version.ref = "zxing" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
