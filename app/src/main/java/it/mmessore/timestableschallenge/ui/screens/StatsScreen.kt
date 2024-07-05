@@ -57,9 +57,8 @@ import it.mmessore.timestableschallenge.data.persistency.Round
 import it.mmessore.timestableschallenge.ui.DialogPager
 import it.mmessore.timestableschallenge.ui.DialogScaffold
 import it.mmessore.timestableschallenge.ui.SFXDialog
+import it.mmessore.timestableschallenge.utils.formatNumber
 import it.mmessore.timestableschallenge.utils.formatTimestamp
-import java.text.NumberFormat
-import java.util.Locale
 
 @Composable
 fun StatsScreen(
@@ -444,12 +443,6 @@ private fun CurrentRank(
             )
         }
     }
-}
-
-private fun formatNumber(number: Double, maximumFractionDigits: Int = 1, locale: Locale = Locale.getDefault()): String {
-    val formatter = NumberFormat.getNumberInstance(locale)
-    formatter.maximumFractionDigits = maximumFractionDigits
-    return formatter.format(number)
 }
 
 @Composable

@@ -31,13 +31,14 @@ import it.mmessore.timestableschallenge.R
 import it.mmessore.timestableschallenge.ui.DialogScaffold
 import it.mmessore.timestableschallenge.ui.RoundButton
 import it.mmessore.timestableschallenge.ui.SFXDialog
+import it.mmessore.timestableschallenge.utils.formatNumber
 import kotlinx.coroutines.delay
 
 @Composable
 fun SummaryScreen(
     roundId: String,
     viewModel: SummaryViewModel = hiltViewModel(),
-    onMenuButtonClick: () -> Unit = {},
+    onStatsButtonClick: () -> Unit = {},
     onRewardOkButtonClick: () -> Unit = {},
     modifier: Modifier = Modifier
 ) {
@@ -83,6 +84,24 @@ fun SummaryScreen(
                     style = MaterialTheme.typography.displayLarge,
                 )
             }
+            if (roundInfo.value.timeLeft > 0) {
+                Row(
+                    horizontalArrangement = Arrangement.Center,
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Text(
+                        text = stringResource(R.string.stats_round_time_left),
+                        style = MaterialTheme.typography.displaySmall,
+                        modifier = Modifier.padding(end = 8.dp)
+                    )
+                    Text(
+                        text = formatNumber(roundInfo.value.timeLeft/1000.0),
+                        style = MaterialTheme.typography.displayMedium,
+                    )
+                }
+            }
+
             Spacer(modifier = Modifier.height(8.dp))
             Row(
                 horizontalArrangement = Arrangement.Center,
@@ -116,8 +135,8 @@ fun SummaryScreen(
             )
         }
         RoundButton(
-            onClick = onMenuButtonClick,
-            text = stringResource(id = R.string.menu),
+            onClick = onStatsButtonClick,
+            text = stringResource(id = R.string.menu_your_scores),
             modifier = Modifier
                 .padding(vertical = 16.dp)
                 .align(alignment = Alignment.CenterHorizontally)

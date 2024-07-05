@@ -16,7 +16,7 @@ class MenuViewModel @Inject constructor(
     private val _hasPlayedRounds: MutableStateFlow<Boolean> = MutableStateFlow(false)
     val hasPlayedRounds = _hasPlayedRounds.asStateFlow()
 
-    init {
+    fun getRoundNum() {
         viewModelScope.launch {
             _hasPlayedRounds.emit(repository.getRoundNum() > 0)
         }

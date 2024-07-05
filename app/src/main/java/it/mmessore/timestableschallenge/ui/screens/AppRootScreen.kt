@@ -118,7 +118,7 @@ fun AppRootScreen(
                 val roundId = backStackEntry.arguments?.getString("roundId") ?: ""
                 SummaryScreen(
                     roundId = roundId,
-                    onMenuButtonClick = { navController.navigate(AppScreen.Menu.name) {
+                    onStatsButtonClick = { navController.navigate(AppScreen.Stats.name) {
                         popUpTo("${AppScreen.Summary.name}/{roundId}") { inclusive = true }
                     }},
                     onRewardOkButtonClick = { navController.navigate(AppScreen.Stats.name) {

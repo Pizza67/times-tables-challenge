@@ -3,6 +3,7 @@ package it.mmessore.timestableschallenge.utils
 import android.text.format.DateUtils.DAY_IN_MILLIS
 import android.text.format.DateUtils.FORMAT_ABBREV_RELATIVE
 import android.text.format.DateUtils.getRelativeTimeSpanString
+import java.text.NumberFormat
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -34,4 +35,10 @@ fun formatTimestamp(timestamp: Long, showTime: Boolean = false): String {
 fun formatTimestampToTime(timestamp: Long): String {
     val timeFormat = SimpleDateFormat("HH:mm", Locale.getDefault())
     return timeFormat.format(Date(timestamp))
+}
+
+fun formatNumber(number: Double, maximumFractionDigits: Int = 1, locale: Locale = Locale.getDefault()): String {
+    val formatter = NumberFormat.getNumberInstance(locale)
+    formatter.maximumFractionDigits = maximumFractionDigits
+    return formatter.format(number)
 }

@@ -4,17 +4,18 @@ kotlin = "2.0.0"
 ksp = "2.0.0-1.0.22"
 coreKtx = "1.13.1"
 junit = "4.13.2"
-junitVersion = "1.1.5"
+junitVersion = "1.2.1"
 junit-jupiter-api = "5.9.2"
-espressoCore = "3.5.1"
-lifecycleRuntimeKtx = "2.8.2"
+espressoCore = "3.6.1"
+lifecycleRuntimeKtx = "2.8.3"
 activityCompose = "1.9.0"
 composeBom = "2024.06.00"
 navigationCompose = "2.7.7"
 room = "2.6.1"
 hilt = "2.49"
 androidx-hilt = "1.2.0"
-lifecycleRuntimeComposeAndroid = "2.8.2"
+lifecycleRuntimeComposeAndroid = "2.8.3"
+monitor = "1.7.1"
 zxing = "3.5.1"
 
 [libraries]
@@ -45,6 +46,7 @@ androidx-hilt-common = { group = "androidx.hilt", name ="hilt-common", version.r
 androidx-hilt-compiler = { group = "androidx.hilt", name ="hilt-compiler", version.ref = "androidx-hilt" }
 androidx-hilt-navigation = { group = "androidx.hilt", name ="hilt-navigation-compose", version.ref = "androidx-hilt" }
 androidx-lifecycle-runtime-compose-android = { group = "androidx.lifecycle", name = "lifecycle-runtime-compose-android", version.ref = "lifecycleRuntimeComposeAndroid" }
+androidx-monitor = { group = "androidx.test", name = "monitor", version.ref = "monitor" }
 android-zxing = { group = "com.google.zxing", name = "core", version.ref = "zxing" }
 
 [plugins]

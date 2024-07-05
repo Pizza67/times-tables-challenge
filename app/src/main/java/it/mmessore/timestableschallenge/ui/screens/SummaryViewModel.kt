@@ -20,7 +20,7 @@ class SummaryViewModel @Inject constructor(
     private val repository: AppRepository,
     private val coroutineScope: CoroutineScope
 ): ViewModel() {
-    private val _roundInfo: MutableStateFlow<RoundInfo> = MutableStateFlow(RoundInfo(0, Levels.list.first()))
+    private val _roundInfo: MutableStateFlow<RoundInfo> = MutableStateFlow(RoundInfo())
     val roundInfo: StateFlow<RoundInfo> = _roundInfo
     private val _rewardDialogInfo: MutableStateFlow<RewardDialogInfo?> = MutableStateFlow(null)
     val rewardDialogInfo: StateFlow<RewardDialogInfo?> = _rewardDialogInfo
@@ -28,7 +28,7 @@ class SummaryViewModel @Inject constructor(
     fun fetchRoundInfo(roundId: String) {
         viewModelScope.launch(context = coroutineScope.coroutineContext) {
             repository.getRound(roundId)?.let { round ->
-                _roundInfo.emit(RoundInfo(round.score, Levels.getLevelByScore(round.score)))
+                _roundInfo.emit(RoundInfo(round.score, round.timeLeft, Levels.getLevelByScore(round.score)))
             }
         }
     }
