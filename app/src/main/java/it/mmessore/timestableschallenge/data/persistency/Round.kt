@@ -10,4 +10,8 @@ data class Round(
     val timestamp: Long,
     val score: Int,
     val timeLeft: Int
-)
+) {
+    fun hasBetterOrEqualsScore(other: Round): Boolean {
+        return (score >= other.score) && (timeLeft >= other.timeLeft)
+    }
+}

@@ -54,6 +54,7 @@ object Badges {
 
     fun getBadgebyStats(avgScore: Double, rounds: Int): Badge {
         Log.d("StatsViewModel", "avgScore: $avgScore, rounds: $rounds")
-        return list.last { avgScore >= it.minAvgScore && rounds >= it.minRounds }
+        val roundedAvgScore = Math.round(avgScore * 10.0) / 10.0
+        return list.last { roundedAvgScore >= it.minAvgScore && rounds >= it.minRounds }
     }
 }

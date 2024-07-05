@@ -10,7 +10,7 @@ import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import it.mmessore.timestableschallenge.data.AppRepository
-import it.mmessore.timestableschallenge.data.persistency.RoundDatabase
+import it.mmessore.timestableschallenge.data.persistency.AppDatabase
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import javax.inject.Singleton
@@ -20,10 +20,10 @@ import javax.inject.Singleton
 object ApplicationModule {
     @Provides
     @Singleton
-    fun provideRoundDatabase(@ApplicationContext context: Context): RoundDatabase {
+    fun provideRoundDatabase(@ApplicationContext context: Context): AppDatabase {
         return Room.databaseBuilder(
             context,
-            RoundDatabase::class.java,
+            AppDatabase::class.java,
             "app_database"
         ).addMigrations(
             object : Migration(1, 2) {
@@ -46,7 +46,7 @@ object ApplicationModule {
 
     @Provides
     @Singleton
-    fun provideAppRepository(@ApplicationContext context: Context, database: RoundDatabase): AppRepository {
+    fun provideAppRepository(@ApplicationContext context: Context, database: AppDatabase): AppRepository {
         return AppRepository(context, database.roundDao(), database.achievementDao())
     }
 

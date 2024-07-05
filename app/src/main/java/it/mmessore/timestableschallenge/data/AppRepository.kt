@@ -14,7 +14,7 @@ class AppRepository(
 ) {
 
     suspend fun insertRound(round: Round) {
-        roundDao.insertRound(round)
+        roundDao.insertRoundIfBetterOrEquals(round)
     }
 
     suspend fun deleteAppData() {
@@ -26,7 +26,7 @@ class AppRepository(
         return roundDao.getLastRound()
     }
 
-    fun getRound(roundId: String): Flow<Round> {
+    suspend fun getRound(roundId: String): Round? {
         return roundDao.getRound(roundId)
     }
 

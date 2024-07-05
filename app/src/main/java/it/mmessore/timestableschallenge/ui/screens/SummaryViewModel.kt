@@ -27,7 +27,7 @@ class SummaryViewModel @Inject constructor(
 
     fun fetchRoundInfo(roundId: String) {
         viewModelScope.launch(context = coroutineScope.coroutineContext) {
-            repository.getRound(roundId).collect { round ->
+            repository.getRound(roundId)?.let { round ->
                 _roundInfo.emit(RoundInfo(round.score, Levels.getLevelByScore(round.score)))
             }
         }

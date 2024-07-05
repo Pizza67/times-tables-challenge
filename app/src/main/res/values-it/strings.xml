@@ -28,7 +28,7 @@
     <string name="menu_settings">Impostazioni</string>
     <string name="your_level">Livello:</string>
     <string name="stat_num_rounds">Sfide:</string>
-    <string name="stat_total_score">Punteggio:</string>
+    <string name="stat_total_score">Punti:</string>
     <string name="stat_avg_score">Media:</string>
     <string name="name_rank_low">Allievo Novizio</string>
     <string name="name_rank_medium">Genio Nascente</string>

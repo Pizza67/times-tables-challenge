@@ -54,7 +54,7 @@ fun SummaryScreen(
     }
 
     LaunchedEffect(rewardDialogInfo.value) {
-        delay(1500)
+        delay(800)
         showDialog = rewardDialogInfo.value != null
     }
 
