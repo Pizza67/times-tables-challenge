@@ -92,12 +92,17 @@ fun SummaryScreen(
                 ) {
                     Text(
                         text = stringResource(R.string.stats_round_time_left),
-                        style = MaterialTheme.typography.displaySmall,
+                        style = MaterialTheme.typography.titleMedium,
                         modifier = Modifier.padding(end = 8.dp)
                     )
                     Text(
                         text = formatNumber(roundInfo.value.timeLeft/1000.0),
-                        style = MaterialTheme.typography.displayMedium,
+                        style = MaterialTheme.typography.titleLarge,
+                        modifier = Modifier.padding(end = 4.dp)
+                    )
+                    Text(
+                        text = stringResource(R.string.stats_round_sec),
+                        style = MaterialTheme.typography.titleMedium
                     )
                 }
             }
