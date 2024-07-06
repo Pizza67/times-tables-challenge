@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">Times Tables Race</string>
     <string name="home_intro">Challenge your friends to see how many correct answers you can give in 30 seconds</string>
-    <string name="start_button">new game</string>
+    <string name="start_button">start</string>
     <string name="time_remaining">Time:</string>
     <string name="score">Score:</string>
     <string name="back_not_allowed">Back not allowed during round</string>

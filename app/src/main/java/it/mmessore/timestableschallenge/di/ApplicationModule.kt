@@ -9,6 +9,7 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
+import it.mmessore.timestableschallenge.data.AppRepositoryImpl
 import it.mmessore.timestableschallenge.data.AppRepository
 import it.mmessore.timestableschallenge.data.persistency.AppDatabase
 import kotlinx.coroutines.CoroutineScope
@@ -47,7 +48,7 @@ object ApplicationModule {
     @Provides
     @Singleton
     fun provideAppRepository(@ApplicationContext context: Context, database: AppDatabase): AppRepository {
-        return AppRepository(context, database.roundDao(), database.achievementDao())
+        return AppRepositoryImpl(context, database.roundDao(), database.achievementDao())
     }
 
     @Singleton

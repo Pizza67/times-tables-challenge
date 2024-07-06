@@ -14,7 +14,7 @@ import org.junit.Test
 import org.junit.runner.RunWith
 
 @RunWith(AndroidJUnit4::class)
-class RoundDaoTest {
+class RoundDaoInstrumentedTest {
 
     private lateinit var roundDao: RoundDao
     private lateinit var db: AppDatabase

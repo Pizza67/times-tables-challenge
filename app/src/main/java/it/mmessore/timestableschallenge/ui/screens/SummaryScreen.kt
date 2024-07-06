@@ -1,5 +1,6 @@
 package it.mmessore.timestableschallenge.ui.screens
 
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -62,6 +63,7 @@ fun SummaryScreen(
         delay(500)
         showRewardDialog = rewardDialogInfo.value != null
         showBestScoreDialog = !showRewardDialog && bestScoreDialogInfo.value != null
+        Log.d("showRewardDialog", showRewardDialog.toString())
     }
 
     Column(
@@ -161,7 +163,9 @@ fun SummaryScreen(
         DialogScaffold(
             content = { DialogBody(stringResource(id = rewardDialogInfo.value!!.title), stringResource(id = rewardDialogInfo.value!!.message)) },
             painter = painterResource(id = rewardDialogInfo.value!!.image),
-            contentDescription = stringResource(rewardDialogInfo.value!!.contentDescription)
+            contentDescription = stringResource(rewardDialogInfo.value!!.contentDescription),
+            okBtnText = if (bestScoreDialogInfo.value == null) stringResource(id = R.string.details) else null,
+            onOkButtonClick = onStatsButtonClick
         ) {
             showRewardDialog = false
             showBestScoreDialog = bestScoreDialogInfo.value != null
@@ -177,8 +181,9 @@ fun SummaryScreen(
             content = { DialogBody(stringResource(id = bestScoreDialogInfo.value!!.title), stringResource(id = bestScoreDialogInfo.value!!.message)) },
             painter = painterResource(id = bestScoreDialogInfo.value!!.image),
             contentDescription = stringResource(bestScoreDialogInfo.value!!.contentDescription),
-            onDismissRequest = { showBestScoreDialog = false },
-        )
+            okBtnText = stringResource(id = R.string.details),
+            onOkButtonClick = onStatsButtonClick
+        ) { showBestScoreDialog = false }
     }
 }
 
