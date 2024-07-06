@@ -247,9 +247,9 @@ fun DialogScaffold(
     contentDescription: String? = null,
     content: @Composable () -> Unit = {},
     okBtnText: String? = null,
+    onOkButtonClick: () -> Unit = {},
     closeBtnText: String = stringResource(id = R.string.close),
-    onDismissRequest: () -> Unit = {},
-    onOkButtonClick: () -> Unit = {}
+    onDismissRequest: () -> Unit = {}
 ) {
     Column(Modifier.background(MaterialTheme.colorScheme.surface)) {
 

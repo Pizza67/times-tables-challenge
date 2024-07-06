@@ -38,14 +38,18 @@ import kotlinx.coroutines.delay
 fun SummaryScreen(
     roundId: String,
     viewModel: SummaryViewModel = hiltViewModel(),
+    onMenuButtonClick: () -> Unit = {},
     onStatsButtonClick: () -> Unit = {},
-    onRewardOkButtonClick: () -> Unit = {},
     modifier: Modifier = Modifier
 ) {
     val roundInfo = viewModel.roundInfo.collectAsStateWithLifecycle()
     val rewardDialogInfo = viewModel.rewardDialogInfo.collectAsStateWithLifecycle()
+    val bestScoreDialogInfo = viewModel.bestScoreDialogInfo.collectAsStateWithLifecycle()
 
-    var showDialog by remember {
+    var showRewardDialog by remember {
+        mutableStateOf(false)
+    }
+    var showBestScoreDialog by remember {
         mutableStateOf(false)
     }
 
@@ -54,9 +58,10 @@ fun SummaryScreen(
         viewModel.checkRewards()
     }
 
-    LaunchedEffect(rewardDialogInfo.value) {
-        delay(800)
-        showDialog = rewardDialogInfo.value != null
+    LaunchedEffect(rewardDialogInfo.value, bestScoreDialogInfo.value) {
+        delay(500)
+        showRewardDialog = rewardDialogInfo.value != null
+        showBestScoreDialog = !showRewardDialog && bestScoreDialogInfo.value != null
     }
 
     Column(
@@ -140,8 +145,8 @@ fun SummaryScreen(
             )
         }
         RoundButton(
-            onClick = onStatsButtonClick,
-            text = stringResource(id = R.string.menu_your_scores),
+            onClick = onMenuButtonClick,
+            text = stringResource(id = R.string.menu),
             modifier = Modifier
                 .padding(vertical = 16.dp)
                 .align(alignment = Alignment.CenterHorizontally)
@@ -149,17 +154,30 @@ fun SummaryScreen(
     }
 
     SFXDialog(
-        showDialog = showDialog,
+        showDialog = showRewardDialog,
         audioResource = R.raw.reveal,
-        onDismissRequest = { showDialog = false }
+        onDismissRequest = { showRewardDialog = false }
     ) {
         DialogScaffold(
             content = { DialogBody(stringResource(id = rewardDialogInfo.value!!.title), stringResource(id = rewardDialogInfo.value!!.message)) },
             painter = painterResource(id = rewardDialogInfo.value!!.image),
-            contentDescription = stringResource(rewardDialogInfo.value!!.contentDescription),
-            okBtnText = stringResource(id = R.string.details),
-            onDismissRequest = { showDialog = false },
-            onOkButtonClick = onRewardOkButtonClick
+            contentDescription = stringResource(rewardDialogInfo.value!!.contentDescription)
+        ) {
+            showRewardDialog = false
+            showBestScoreDialog = bestScoreDialogInfo.value != null
+        }
+    }
+
+    SFXDialog(
+        showDialog = showBestScoreDialog,
+        audioResource = R.raw.reveal,
+        onDismissRequest = { showBestScoreDialog = false }
+    ) {
+        DialogScaffold(
+            content = { DialogBody(stringResource(id = bestScoreDialogInfo.value!!.title), stringResource(id = bestScoreDialogInfo.value!!.message)) },
+            painter = painterResource(id = bestScoreDialogInfo.value!!.image),
+            contentDescription = stringResource(bestScoreDialogInfo.value!!.contentDescription),
+            onDismissRequest = { showBestScoreDialog = false },
         )
     }
 }

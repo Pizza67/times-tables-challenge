@@ -62,4 +62,6 @@
     <string name="round_code_received">Codice sfida ricevuto</string>
     <string name="received_round_code_quest">Ho ricevuto un codice sfida</string>
     <string name="share_round_msg">Vuoi sfidarmi in una gara di tabelline? Accedi alla modalità sfida nell\'app \"Gara di Tabelline\" e inserisci il codice: %1$s</string>
+    <string name="new_best_round">Nuovo Record</string>
+    <string name="new_best_round_message">Congratulazioni! La tua dedizione e abilità sono state ricompensate con un nuovo record! Continua così e presto raggiungerai l\'eccellenza!</string>
 </resources>

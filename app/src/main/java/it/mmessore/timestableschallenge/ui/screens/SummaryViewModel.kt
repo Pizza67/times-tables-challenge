@@ -4,11 +4,11 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import it.mmessore.timestableschallenge.R
-import it.mmessore.timestableschallenge.data.Levels
-import it.mmessore.timestableschallenge.data.RoundInfo
 import it.mmessore.timestableschallenge.data.AppRepository
 import it.mmessore.timestableschallenge.data.Badges
-import it.mmessore.timestableschallenge.data.RewardDialogInfo
+import it.mmessore.timestableschallenge.data.Levels
+import it.mmessore.timestableschallenge.data.RoundInfo
+import it.mmessore.timestableschallenge.data.SummaryDialogInfo
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -22,13 +22,25 @@ class SummaryViewModel @Inject constructor(
 ): ViewModel() {
     private val _roundInfo: MutableStateFlow<RoundInfo> = MutableStateFlow(RoundInfo())
     val roundInfo: StateFlow<RoundInfo> = _roundInfo
-    private val _rewardDialogInfo: MutableStateFlow<RewardDialogInfo?> = MutableStateFlow(null)
-    val rewardDialogInfo: StateFlow<RewardDialogInfo?> = _rewardDialogInfo
+    private val _rewardDialogInfo: MutableStateFlow<SummaryDialogInfo?> = MutableStateFlow(null)
+    val rewardDialogInfo: StateFlow<SummaryDialogInfo?> = _rewardDialogInfo
+    private val _bestScoreDialogInfo: MutableStateFlow<SummaryDialogInfo?> = MutableStateFlow(null)
+    val bestScoreDialogInfo: StateFlow<SummaryDialogInfo?> = _bestScoreDialogInfo
 
     fun fetchRoundInfo(roundId: String) {
         viewModelScope.launch(context = coroutineScope.coroutineContext) {
             repository.getRound(roundId)?.let { round ->
                 _roundInfo.emit(RoundInfo(round.score, round.timeLeft, Levels.getLevelByScore(round.score)))
+                if (repository.isNewBestRound(round)) {
+                    _bestScoreDialogInfo.emit(
+                        SummaryDialogInfo(
+                            title = R.string.new_best_round,
+                            message = R.string.new_best_round_message,
+                            image = R.drawable.img_best_round,
+                            contentDescription = R.string.new_best_round
+                        )
+                    )
+                }
             }
         }
     }
@@ -37,9 +49,9 @@ class SummaryViewModel @Inject constructor(
         viewModelScope.launch(context = coroutineScope.coroutineContext) {
             repository.getCurrentAchievement()?.let { achievement ->
                 if (!repository.isAchievementUnlocked(achievement.id)) {
-                    repository.insertAchievement(achievement)
+                    repository.unlockNewAchievement(achievement)
                     _rewardDialogInfo.emit(
-                        RewardDialogInfo(
+                        SummaryDialogInfo(
                             title = R.string.new_achievement,
                             message = Badges.list[achievement.id].description,
                             image = Badges.list[achievement.id].image,
