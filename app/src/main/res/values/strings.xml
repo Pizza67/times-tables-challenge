@@ -64,4 +64,5 @@
     <string name="share_round_msg">Wanna challenge me to a times tables duel? Go to challenge mode in the \"Times Tables Race\" app and enter this code: %1$s</string>
     <string name="new_best_round">New Best Round</string>
     <string name="new_best_round_message">Congratulations! Your dedication and skill have paid off with a brand new high score! This is a huge milestone in your journey, keep striving for greatness!</string>
+    <string name="uri_custom_scheme" translatable="false">timestablesrace</string>
 </resources>

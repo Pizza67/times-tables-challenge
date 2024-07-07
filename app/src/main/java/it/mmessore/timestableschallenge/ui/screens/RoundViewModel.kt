@@ -8,7 +8,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import it.mmessore.timestableschallenge.data.AppRepository
 import it.mmessore.timestableschallenge.data.Quest
 import it.mmessore.timestableschallenge.data.RoundGenerator
-import it.mmessore.timestableschallenge.data.persistency.Constants.Companion.ROUND_TIME_SECONDS
+import it.mmessore.timestableschallenge.data.persistency.Constants.ROUND_TIME_SECONDS
 import it.mmessore.timestableschallenge.data.persistency.Round
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.delay

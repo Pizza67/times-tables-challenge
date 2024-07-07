@@ -9,8 +9,8 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
-import it.mmessore.timestableschallenge.data.AppRepositoryImpl
 import it.mmessore.timestableschallenge.data.AppRepository
+import it.mmessore.timestableschallenge.data.AppRepositoryImpl
 import it.mmessore.timestableschallenge.data.persistency.AppDatabase
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
