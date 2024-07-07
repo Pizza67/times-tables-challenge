@@ -134,7 +134,7 @@ fun SummaryScreen(
         Image(
             painter = painterResource(id = roundInfo.value.level.image),
             contentDescription = null,
-            Modifier.clip(MaterialTheme.shapes.small)
+            Modifier.clip(MaterialTheme.shapes.small).fillMaxWidth()
         )
         Row (
             horizontalArrangement = Arrangement.Center,

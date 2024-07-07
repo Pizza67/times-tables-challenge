@@ -16,6 +16,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.CheckCircle
@@ -91,7 +92,7 @@ fun ShareScreen(
             textToShare = viewModel.getShareUrl(),
             qrCodeBitmap = qrCodeBitmap,
             onInputSharedRoundId = viewModel::setReceivedRoundId,
-            modifier = modifier
+            modifier = modifier.widthIn(max = 600.dp)
         )
         RoundButton(
             onClick = { onStartRoundButtonClick(roundToPlay.value) },

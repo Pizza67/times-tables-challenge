@@ -101,11 +101,12 @@ fun StatsScreen(
             Image(
                 painter = painterResource(currentRankImg.value),
                 contentDescription = null,
-                Modifier.clip(MaterialTheme.shapes.small)
+                contentScale = ContentScale.Crop,
+                modifier = Modifier.clip(MaterialTheme.shapes.small).weight(1f)
             )
             Column (
                 verticalArrangement = Arrangement.Center,
-                modifier = Modifier.padding(start = 16.dp).weight(1f)
+                modifier = Modifier.padding(start = 16.dp)
             ) {
                 Stat(stringResource(
                     id = R.string.stat_num_rounds),
