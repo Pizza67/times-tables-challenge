@@ -2,6 +2,7 @@ package it.mmessore.timestableschallenge.ui.screens
 
 import android.content.Intent
 import android.graphics.Bitmap
+import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -17,7 +18,9 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.Share
+import androidx.compose.material.icons.filled.Warning
 import androidx.compose.material3.Card
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -35,6 +38,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
@@ -44,6 +48,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import it.mmessore.timestableschallenge.R
 import it.mmessore.timestableschallenge.ui.RoundButton
+import kotlinx.coroutines.delay
 
 @Composable
 fun ShareScreen(
@@ -54,8 +59,8 @@ fun ShareScreen(
 ) {
 
     val qrCodeBitmap = viewModel.qrCodeBitmap.collectAsState()
-    val sharedRoundId = viewModel.sharedRoundId.collectAsState()
-    val roundId = viewModel.roundId.collectAsState()
+    val roundToPlay = viewModel.roundToPlay.collectAsState()
+    val receivedRound = viewModel.receivedRound.collectAsState()
 
     LaunchedEffect(receivedRoundId) {
         viewModel.setReceivedRoundId(receivedRoundId)
@@ -82,13 +87,14 @@ fun ShareScreen(
             textAlign = TextAlign.Center
         )
         QRCard(
-            sharedRoundId = sharedRoundId,
-            textToShare = stringResource(id = R.string.share_round_msg, roundId.value),
+            receivedRound = receivedRound,
+            textToShare = viewModel.getShareUrl(),
             qrCodeBitmap = qrCodeBitmap,
+            onInputSharedRoundId = viewModel::setReceivedRoundId,
             modifier = modifier
         )
         RoundButton(
-            onClick = { onStartRoundButtonClick(roundId.value) },
+            onClick = { onStartRoundButtonClick(roundToPlay.value) },
             text = stringResource(id = R.string.start_button)
         )
     }
@@ -96,9 +102,10 @@ fun ShareScreen(
 
 @Composable
 private fun QRCard(
-    sharedRoundId: State<String?>,
+    receivedRound: State<String?>,
     textToShare: String,
     qrCodeBitmap: State<Bitmap?>,
+    onInputSharedRoundId: (String) -> Boolean,
     modifier: Modifier
 ) {
     val context = LocalContext.current
@@ -151,43 +158,61 @@ private fun QRCard(
                 }
             }
             Spacer(modifier = Modifier.height(8.dp))
-            RoundCodeRow(sharedRoundId)
+            RoundCodeRow(receivedRound, onInputSharedRoundId)
         }
     }
 }
 
 @Composable
 private fun RoundCodeRow(
-    sharedRoundId: State<String?>,
+    receivedRound: State<String?>,
+    onRoundIdValidation: (String) -> Boolean,
     modifier: Modifier = Modifier
 ) {
     var showTextField by remember { mutableStateOf(false) }
     var enableTextField by remember { mutableStateOf(true) }
-    var inputText by remember { mutableStateOf(sharedRoundId.value ?: "") }
+    var inputText by remember { mutableStateOf(receivedRound.value ?: "") }
+    var isValid by remember { mutableStateOf(false) }
 
-    LaunchedEffect(sharedRoundId.value) {
-        inputText = sharedRoundId.value ?: ""
-        enableTextField = sharedRoundId.value == null
+    LaunchedEffect(receivedRound.value) {
+        inputText = receivedRound.value ?: ""
+        enableTextField = receivedRound.value == null
     }
 
-    Row (
-        verticalAlignment = Alignment.CenterVertically,
+    LaunchedEffect(inputText) {
+        delay(500)
+        isValid = onRoundIdValidation(inputText)
+    }
+
+    Crossfade(
+        targetState = (showTextField || !enableTextField),
+        label = "showInputTextField",
         modifier = modifier.fillMaxWidth()
-    ){
-        if (showTextField || !enableTextField) {
+    ) { showOutlinedTextField ->
+        if (showOutlinedTextField) {
             OutlinedTextField(
                 value = inputText,
                 onValueChange = { inputText = it },
                 label = { Text(stringResource(R.string.round_code_received)) },
                 enabled = enableTextField,
-                modifier = Modifier.weight(1f)
-            )} else {
+                singleLine = true,
+                isError = !isValid,
+                trailingIcon = {
+                    if (inputText.isNotEmpty()) {
+                        Icon(
+                            imageVector = if (isValid) Icons.Filled.CheckCircle else Icons.Filled.Warning,
+                            contentDescription = if (isValid) "Valid Round ID" else "Invalid Round ID",
+                            tint = if (isValid) MaterialTheme.colorScheme.primary else Color.Red
+                        )
+                    }
+                },
+                modifier = Modifier.fillMaxWidth()
+            )
+        } else {
             Text(
                 text = stringResource(R.string.received_round_code_quest),
                 style = MaterialTheme.typography.bodyLarge.copy(fontWeight = FontWeight.Bold),
-                modifier = Modifier
-                    .clickable { showTextField = true }
-                    .weight(1f)
+                modifier = Modifier.clickable { showTextField = true }
             )
         }
     }

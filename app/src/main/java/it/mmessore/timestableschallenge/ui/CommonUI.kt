@@ -118,6 +118,7 @@ fun DelayedFadeInContent(
     endDelayMillis: Long = 1000,
     fadeInDurationMillis: Int = 1000,
     onAnimationEnd: () -> Unit = {},
+    modifier: Modifier = Modifier,
     content: @Composable () -> Unit
 ) {
     var visible by remember { mutableStateOf(false) }
@@ -133,7 +134,7 @@ fun DelayedFadeInContent(
         onAnimationEnd()
     }
 
-    Box(modifier = Modifier.alpha(alpha)) {
+    Box(modifier = modifier.alpha(alpha)) {
         content()
     }
 }

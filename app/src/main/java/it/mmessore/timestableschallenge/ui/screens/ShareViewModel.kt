@@ -2,6 +2,7 @@ package it.mmessore.timestableschallenge.ui.screens
 
 import android.graphics.Bitmap
 import android.graphics.Color
+import android.net.Uri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.zxing.BarcodeFormat
@@ -24,27 +25,38 @@ class ShareViewModel @Inject constructor(
 ) : ViewModel() {
     private lateinit var roundUrl: String
 
-    private val _sharedRoundId: MutableStateFlow<String?> = MutableStateFlow(null)
-    val sharedRoundId: StateFlow<String?> = _sharedRoundId
-    private val _roundId: MutableStateFlow<String> = MutableStateFlow("")
-    val roundId: StateFlow<String> = _roundId
+    private val _roundToPlay: MutableStateFlow<String> = MutableStateFlow(RoundGenerator.serialize(RoundGenerator().generate()))
+    val roundToPlay: StateFlow<String> = _roundToPlay
+    private val _receivedRound: MutableStateFlow<String?> = MutableStateFlow(null)
+    val receivedRound: StateFlow<String?> = _receivedRound
     private val _bitmap = MutableStateFlow<Bitmap?>(null)
     val qrCodeBitmap: StateFlow<Bitmap?> = _bitmap
 
-    init {
-        _roundId.value = RoundGenerator.serialize(RoundGenerator().generate())
-    }
-
-    fun setReceivedRoundId(roundId: String?) {
-        // TODO: Validate roundId
-        if (roundId != null) {
-            _sharedRoundId.value = roundId
-            _roundId.value = roundId
+    fun setReceivedRoundId(receivedRoundId: String?): Boolean {
+        val isValid = isValidRoundId(receivedRoundId)
+        if (isValid) {
+            _roundToPlay.value = receivedRoundId!!
+            _receivedRound.value = receivedRoundId
+            generateQRCode(createRoundUrl(receivedRoundId), 1024, 1024)
+        } else {
+            generateQRCode(createRoundUrl(_roundToPlay.value), 1024, 1024)
         }
-        generateQRCode(generateRoundUrl(_roundId.value), 1024, 1024)
+        return isValid
     }
 
-    private fun generateRoundUrl(roundId: String): String {
+    private fun isValidRoundId(inputText: String?): Boolean {
+        var isValid = false
+        if (inputText != null) {
+            // Check first if user has input the whole url
+            val roundId = Uri.parse(inputText).getQueryParameter("roundId") ?: inputText
+            isValid = RoundGenerator.isValid(roundId)
+        }
+        return isValid
+    }
+
+    fun getShareUrl() = createRoundUrl(_roundToPlay.value)
+
+    private fun createRoundUrl(roundId: String): String {
         roundUrl = "ttchallenge://?roundId=$roundId"
         return roundUrl
     }

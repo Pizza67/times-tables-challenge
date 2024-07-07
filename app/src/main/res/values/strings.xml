@@ -57,7 +57,7 @@
     <string name="achievement_requirements_desc">This achievement requires you to play at least %1$s rounds with an average score of %2$s.</string>
     <string name="requirements">Requirements</string>
     <string name="share_round_desc">"Challenge your friends to play the same round and see who comes out on top!"</string>
-    <string name="share_round_howto">Get your friends in on the action! Scan the QR code or share it with your preferred app to invite them.</string>
+    <string name="share_round_howto">Get your friends in on the action! Scan the QR code or share it with your preferred app to challenge them.</string>
     <string name="round_code">Round code:</string>
     <string name="round_code_received">Received round code</string>
     <string name="received_round_code_quest">I received a challenge code</string>

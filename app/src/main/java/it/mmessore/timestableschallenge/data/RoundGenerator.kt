@@ -55,6 +55,15 @@ class RoundGenerator (
             return quests
         }
 
+        fun isValid(base64String: String): Boolean {
+            return try {
+                val quests = deserialize(base64String)
+                quests.isNotEmpty() && quests.size == Constants.ROUND_QUESTS
+            } catch (e: Exception) {
+                false
+            }
+        }
+
         private fun hexToBase64(hexString: String): String {
             val byteArray = hexStringToByteArray(hexString)
             return Base64.getEncoder().encodeToString(byteArray)
