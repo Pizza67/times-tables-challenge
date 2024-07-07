@@ -4,6 +4,8 @@ import androidx.activity.ComponentActivity
 import androidx.compose.ui.test.ExperimentalTestApi
 import androidx.compose.ui.test.hasText
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
+import androidx.compose.ui.test.onNodeWithText
+import androidx.compose.ui.test.performClick
 import androidx.lifecycle.lifecycleScope
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import dagger.hilt.android.testing.HiltAndroidRule
@@ -64,6 +66,26 @@ class SummaryScreenInstrumentedTest {
                 SummaryScreen(roundId = "testRoundId", viewModel = viewModel)
             }
         }
+        composeTestRule.waitUntilAtLeastOneExists(
+            hasText(composeTestRule.activity.getString(R.string.new_best_round), ignoreCase = true), 20000
+        )
+    }
+
+    @OptIn(ExperimentalTestApi::class)
+    @Test
+    fun bestRoundDialog_isShownOnNewBestRound_AfterRewardDialogDismissed() {
+        fakeRepository.setNewAchievementUnlocked(true)
+        fakeRepository.setIsNewBestRound(true)
+
+        composeTestRule.setContent {
+            AppTheme {
+                SummaryScreen(roundId = "testRoundId", viewModel = viewModel)
+            }
+        }
+        composeTestRule.waitUntilAtLeastOneExists(
+            hasText(composeTestRule.activity.getString(R.string.new_achievement), ignoreCase = true), 20000
+        )
+        composeTestRule.onNodeWithText(composeTestRule.activity.getString(R.string.close), ignoreCase = true).performClick()
         composeTestRule.waitUntilAtLeastOneExists(
             hasText(composeTestRule.activity.getString(R.string.new_best_round), ignoreCase = true), 20000
         )
