@@ -54,6 +54,7 @@ import it.mmessore.timestableschallenge.data.BadgeInfo
 import it.mmessore.timestableschallenge.data.Badges
 import it.mmessore.timestableschallenge.data.Levels
 import it.mmessore.timestableschallenge.data.persistency.Round
+import it.mmessore.timestableschallenge.ui.CommonScaffold
 import it.mmessore.timestableschallenge.ui.DialogPager
 import it.mmessore.timestableschallenge.ui.DialogScaffold
 import it.mmessore.timestableschallenge.ui.SFXDialog
@@ -66,8 +67,6 @@ fun StatsScreen(
     onRetryRoundButtonClick: (String) -> Unit,
     modifier: Modifier = Modifier
 ){
-    val scrollState = rememberScrollState()
-
     val currentRank = viewModel.currentRank.collectAsState()
     val currentRankImg = viewModel.currentRankImg.collectAsState()
     val numRounds = viewModel.numRounds.collectAsState()
@@ -77,71 +76,73 @@ fun StatsScreen(
     val worstRound = viewModel.worstRound.collectAsState()
     val badges = viewModel.badges.collectAsState()
 
-    Column(
-        modifier = modifier
-            .verticalScroll(scrollState)
-            .fillMaxSize()
-            .padding(16.dp),
-        verticalArrangement = Arrangement.Top
-    ) {
-        Text(
-            text = stringResource(id = R.string.menu_your_scores),
-            style = MaterialTheme.typography.displayMedium,
-            textAlign = TextAlign.Center,
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(vertical = 16.dp)
-        )
-        CurrentRank(currentRank.value)
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(vertical = 8.dp)
+    CommonScaffold(titleResId = R.string.menu_your_scores) { padding ->
+        Column(
+            modifier = modifier
+                .verticalScroll(rememberScrollState())
+                .fillMaxSize()
+                .padding(padding),
+            verticalArrangement = Arrangement.Top
         ) {
-            Image(
-                painter = painterResource(currentRankImg.value),
-                contentDescription = null,
-                contentScale = ContentScale.Crop,
-                modifier = Modifier.clip(MaterialTheme.shapes.small).weight(1f)
-            )
-            Column (
-                verticalArrangement = Arrangement.Center,
-                modifier = Modifier.padding(start = 16.dp)
+            CurrentRank(currentRank.value)
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 8.dp)
             ) {
-                Stat(stringResource(
-                    id = R.string.stat_num_rounds),
-                    formatNumber(numRounds.value.toDouble()),
-                    Modifier.padding(vertical = 8.dp)
+                Image(
+                    painter = painterResource(currentRankImg.value),
+                    contentDescription = null,
+                    contentScale = ContentScale.Crop,
+                    modifier = Modifier
+                        .clip(MaterialTheme.shapes.small)
+                        .weight(1f)
                 )
-                Stat(stringResource(
-                    id = R.string.stat_total_score),
-                    formatNumber(totalScore.value.toDouble()),
-                    Modifier.padding(vertical = 8.dp)
-                )
-                Stat(stringResource(
-                    id = R.string.stat_avg_score),
-                    formatNumber(avgScore.value),
-                    Modifier.padding(vertical = 8.dp)
-                )
+                Column(
+                    verticalArrangement = Arrangement.Center,
+                    modifier = Modifier.padding(start = 16.dp)
+                ) {
+                    Stat(
+                        stringResource(
+                            id = R.string.stat_num_rounds
+                        ),
+                        formatNumber(numRounds.value.toDouble()),
+                        Modifier.padding(vertical = 8.dp)
+                    )
+                    Stat(
+                        stringResource(
+                            id = R.string.stat_total_score
+                        ),
+                        formatNumber(totalScore.value.toDouble()),
+                        Modifier.padding(vertical = 8.dp)
+                    )
+                    Stat(
+                        stringResource(
+                            id = R.string.stat_avg_score
+                        ),
+                        formatNumber(avgScore.value),
+                        Modifier.padding(vertical = 8.dp)
+                    )
+                }
             }
-        }
 
-        AchievementList(badges.value, modifier = Modifier.padding(top = 8.dp))
+            AchievementList(badges.value, modifier = Modifier.padding(top = 8.dp))
 
-        bestRound.value?.let { bestRound ->
-            Text(
-                text = stringResource(R.string.your_best_round),
-                style = MaterialTheme.typography.bodyLarge
-            )
-            StatsRoundCard(bestRound)
-        }
-        worstRound.value?.let { worstRound ->
-            Spacer(modifier = Modifier.height(8.dp))
-            Text(
-                text = stringResource(R.string.replay_your_worst_round),
-                style = MaterialTheme.typography.bodyLarge
-            )
-            StatsRoundCard(worstRound, onRetryRoundButtonClick)
+            bestRound.value?.let { bestRound ->
+                Text(
+                    text = stringResource(R.string.your_best_round),
+                    style = MaterialTheme.typography.bodyLarge
+                )
+                StatsRoundCard(bestRound)
+            }
+            worstRound.value?.let { worstRound ->
+                Spacer(modifier = Modifier.height(8.dp))
+                Text(
+                    text = stringResource(R.string.replay_your_worst_round),
+                    style = MaterialTheme.typography.bodyLarge
+                )
+                StatsRoundCard(worstRound, onRetryRoundButtonClick)
+            }
         }
     }
 }

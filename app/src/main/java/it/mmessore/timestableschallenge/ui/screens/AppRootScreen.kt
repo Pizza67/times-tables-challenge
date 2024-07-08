@@ -23,7 +23,7 @@ import androidx.navigation.navArgument
 import it.mmessore.timestableschallenge.R
 
 enum class AppScreen() {
-    Home, Menu, Round, Share, Summary, Stats
+    Home, Menu, Round, Share, Summary, Stats, Settings
 }
 
 @Composable
@@ -73,7 +73,7 @@ fun AppRootScreen(
                                 navController.navigate(AppScreen.Stats.name)
                             }
                             MenuAction.SETTINGS -> {
-
+                                navController.navigate(AppScreen.Settings.name)
                             }
                         }
                     })
@@ -135,6 +135,10 @@ fun AppRootScreen(
                             popUpTo(AppScreen.Stats.name) { inclusive = true }
                         }
                     })
+            }
+
+            composable(route = AppScreen.Settings.name) {
+                SettingsScreen()
             }
         }
     }

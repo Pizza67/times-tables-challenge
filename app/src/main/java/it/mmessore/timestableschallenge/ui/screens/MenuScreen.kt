@@ -8,18 +8,16 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import it.mmessore.timestableschallenge.R
+import it.mmessore.timestableschallenge.ui.CommonScaffold
 import it.mmessore.timestableschallenge.ui.RoundButton
 
 enum class MenuAction {
@@ -36,33 +34,27 @@ fun MenuScreen(
     modifier: Modifier = Modifier
 ) {
     val hasPlayedRounds = viewModel.hasPlayedRounds.collectAsState()
-    val scrollState = rememberScrollState()
 
     LaunchedEffect(Unit) {
         viewModel.getRoundNum()
     }
 
-    Column(
-        modifier = modifier
-            .verticalScroll(scrollState)
-            .fillMaxSize()
-            .padding(16.dp),
-        verticalArrangement = Arrangement.Top
-    ) {
-        Text(
-            text = stringResource(id = R.string.menu),
-            style = MaterialTheme.typography.displayMedium,
-            textAlign = TextAlign.Center,
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(vertical = 16.dp)
-        )
-        GameMenu(
-            onMenuButtonClick = onMenuButtonClick,
-            hasPlayedRounds = hasPlayedRounds.value,
-            modifier = Modifier
-                .fillMaxWidth()
-                .widthIn(max = 600.dp))
+    CommonScaffold(titleResId = R.string.menu) { padding ->
+        Column(
+            modifier = modifier
+                .verticalScroll(rememberScrollState())
+                .fillMaxSize()
+                .padding(padding),
+            verticalArrangement = Arrangement.Top
+        ) {
+            GameMenu(
+                onMenuButtonClick = onMenuButtonClick,
+                hasPlayedRounds = hasPlayedRounds.value,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .widthIn(max = 600.dp)
+            )
+        }
     }
 }
 

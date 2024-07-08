@@ -48,6 +48,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import it.mmessore.timestableschallenge.R
+import it.mmessore.timestableschallenge.ui.CommonScaffold
 import it.mmessore.timestableschallenge.ui.RoundButton
 import kotlinx.coroutines.delay
 
@@ -67,37 +68,31 @@ fun ShareScreen(
         viewModel.setReceivedRoundId(receivedRoundId)
     }
 
-    Column(
-        modifier = modifier
-            .fillMaxSize()
-            .padding(16.dp),
-        verticalArrangement = Arrangement.SpaceBetween,
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        Text(
-            text = stringResource(id = R.string.menu_share_new_game),
-            style = MaterialTheme.typography.displayMedium,
-            textAlign = TextAlign.Center,
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(vertical = 16.dp)
-        )
-        Text (
-            text = stringResource(id = R.string.share_round_desc),
-            style = MaterialTheme.typography.titleLarge,
-            textAlign = TextAlign.Center
-        )
-        QRCard(
-            receivedRound = receivedRound,
-            textToShare = viewModel.getShareUrl(),
-            qrCodeBitmap = qrCodeBitmap,
-            onInputSharedRoundId = viewModel::setReceivedRoundId,
-            modifier = modifier.widthIn(max = 600.dp)
-        )
-        RoundButton(
-            onClick = { onStartRoundButtonClick(roundToPlay.value) },
-            text = stringResource(id = R.string.start_button)
-        )
+    CommonScaffold(titleResId = R.string.menu_share_new_game) { padding ->
+        Column(
+            modifier = modifier
+                .fillMaxSize()
+                .padding(padding),
+            verticalArrangement = Arrangement.SpaceBetween,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Text(
+                text = stringResource(id = R.string.share_round_desc),
+                style = MaterialTheme.typography.titleLarge,
+                textAlign = TextAlign.Center
+            )
+            QRCard(
+                receivedRound = receivedRound,
+                textToShare = viewModel.getShareUrl(),
+                qrCodeBitmap = qrCodeBitmap,
+                onInputSharedRoundId = viewModel::setReceivedRoundId,
+                modifier = modifier.widthIn(max = 600.dp)
+            )
+            RoundButton(
+                onClick = { onStartRoundButtonClick(roundToPlay.value) },
+                text = stringResource(id = R.string.start_button)
+            )
+        }
     }
 }
 
