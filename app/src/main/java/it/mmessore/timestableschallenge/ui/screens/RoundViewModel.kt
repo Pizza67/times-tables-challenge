@@ -8,7 +8,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import it.mmessore.timestableschallenge.data.AppRepository
 import it.mmessore.timestableschallenge.data.Quest
 import it.mmessore.timestableschallenge.data.RoundGenerator
-import it.mmessore.timestableschallenge.data.persistency.Constants.ROUND_TIME_SECONDS
+import it.mmessore.timestableschallenge.data.persistency.Constants
 import it.mmessore.timestableschallenge.data.persistency.Round
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.delay
@@ -20,6 +20,7 @@ import javax.inject.Inject
 @HiltViewModel
 class RoundViewModel @Inject constructor(
     private val repository: AppRepository,
+    private val constants: Constants,
     private val coroutineScope: CoroutineScope
 ): ViewModel() {
     enum class RoundState {
@@ -42,14 +43,14 @@ class RoundViewModel @Inject constructor(
     val answer: StateFlow<String> = _answer
     private val _score = MutableStateFlow(DEFAULT_SCORE)
     val score: StateFlow<Int> = _score
-    private val _timeLeft = MutableStateFlow(ROUND_TIME_SECONDS)
+    private val _timeLeft = MutableStateFlow(constants.ROUND_TIME_SECONDS)
     val timeLeft: StateFlow<Int> = _timeLeft
     private val _roundState = MutableStateFlow(RoundState.STARTING)
     val roundState: StateFlow<RoundState> = _roundState
     private val _currentQuest = MutableStateFlow(quests[currentQuestIdx])
     val currentQuest: StateFlow<Quest> = _currentQuest
 
-    private val timer = object : CountDownTimer((ROUND_TIME_SECONDS * 1000).toLong(), 1000) {
+    private val timer = object : CountDownTimer((constants.ROUND_TIME_SECONDS * 1000).toLong(), 1000) {
         override fun onTick(millisUntilFinished: Long) {
             _timeLeft.value = (millisUntilFinished / 1000).toInt()
             timeLeftMillis = millisUntilFinished
@@ -72,7 +73,7 @@ class RoundViewModel @Inject constructor(
     fun setRound(roundId: String? = null) {
         _score.value = DEFAULT_SCORE
         _answer.value = NO_ANSWER
-        _timeLeft.value = ROUND_TIME_SECONDS
+        _timeLeft.value = constants.ROUND_TIME_SECONDS
         _roundState.value = RoundState.STARTING
         currentQuestIdx = 0
         quests = if (roundId != null) {

@@ -1,6 +1,6 @@
 package it.mmessore.timestableschallenge.data
 
-import it.mmessore.timestableschallenge.data.persistency.Constants
+import it.mmessore.timestableschallenge.data.persistency.ConstantsImpl
 import java.util.Base64
 
 class RoundGenerator (
@@ -14,7 +14,7 @@ class RoundGenerator (
         require (minTable <= maxTable)
     }
 
-    fun generate(n: Int = Constants.ROUND_QUESTS): List<Quest> {
+    fun generate(n: Int = ConstantsImpl.ROUND_QUESTS): List<Quest> {
         val quests = mutableListOf<Quest>()
         var savedEasyOps = 0
         val allowSameQuests = n > ((maxTable - minTable + 1) * 8)
@@ -58,7 +58,7 @@ class RoundGenerator (
         fun isValid(base64String: String): Boolean {
             return try {
                 val quests = deserialize(base64String)
-                quests.isNotEmpty() && quests.size == Constants.ROUND_QUESTS
+                quests.isNotEmpty() && quests.size == ConstantsImpl.ROUND_QUESTS
             } catch (e: Exception) {
                 false
             }

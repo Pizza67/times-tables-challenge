@@ -12,6 +12,8 @@ import dagger.hilt.components.SingletonComponent
 import it.mmessore.timestableschallenge.data.AppRepository
 import it.mmessore.timestableschallenge.data.AppRepositoryImpl
 import it.mmessore.timestableschallenge.data.persistency.AppDatabase
+import it.mmessore.timestableschallenge.data.persistency.Constants
+import it.mmessore.timestableschallenge.data.persistency.ConstantsImpl
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import javax.inject.Singleton
@@ -54,4 +56,12 @@ object ApplicationModule {
     @Singleton
     @Provides
     fun providesCoroutineScope() = CoroutineScope(Dispatchers.IO)
+
+    @Provides
+    @Singleton
+    fun provideConstants(@ApplicationContext context: Context): Constants {
+        val constants = ConstantsImpl
+        constants.init(context)
+        return constants
+    }
 }

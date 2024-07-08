@@ -6,7 +6,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import dagger.hilt.android.AndroidEntryPoint
-import it.mmessore.timestableschallenge.data.persistency.Constants
+import it.mmessore.timestableschallenge.data.persistency.ConstantsImpl
 import it.mmessore.timestableschallenge.ui.screens.AppRootScreen
 import it.mmessore.timestableschallenge.ui.theme.AppTheme
 
@@ -18,7 +18,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             val data: Uri? = intent?.data
             var roundId: String? = null
-            if (data?.scheme == Constants.CUSTOM_URI_SCHEME) {
+            if (data?.scheme == ConstantsImpl.CUSTOM_URI_SCHEME) {
                 roundId = data.getQueryParameter("roundId")
             }
             AppTheme {

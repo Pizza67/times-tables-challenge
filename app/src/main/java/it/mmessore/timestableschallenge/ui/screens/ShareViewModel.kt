@@ -12,7 +12,7 @@ import com.google.zxing.qrcode.QRCodeWriter
 import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import it.mmessore.timestableschallenge.data.RoundGenerator
-import it.mmessore.timestableschallenge.data.persistency.Constants
+import it.mmessore.timestableschallenge.data.persistency.ConstantsImpl
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -49,7 +49,7 @@ class ShareViewModel @Inject constructor(
         var isValid = false
         if (inputText != null) {
             // Check first if user has input the whole url
-            val roundId = Uri.parse(inputText).getQueryParameter(Constants.QUERY_PARAM_ROUND_ID) ?: inputText
+            val roundId = Uri.parse(inputText).getQueryParameter(ConstantsImpl.QUERY_PARAM_ROUND_ID) ?: inputText
             isValid = RoundGenerator.isValid(roundId)
         }
         return isValid
@@ -58,7 +58,7 @@ class ShareViewModel @Inject constructor(
     fun getShareUrl() = createRoundUrl(_roundToPlay.value)
 
     private fun createRoundUrl(roundId: String): String {
-        roundUrl = "${Constants.CUSTOM_URI_SCHEME}://?${Constants.QUERY_PARAM_ROUND_ID}=$roundId"
+        roundUrl = "${ConstantsImpl.CUSTOM_URI_SCHEME}://?${ConstantsImpl.QUERY_PARAM_ROUND_ID}=$roundId"
         return roundUrl
     }
 
