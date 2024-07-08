@@ -26,7 +26,21 @@ class QuestTest {
         val q2 = Quest(4, 10)
         val q2Hex = q2.toHex()
         assert(q2Hex == "4a")
+        val q3 = Quest(11, 12)
+        val q3Hex = q3.toHex()
+        assert(q3Hex == "bc")
         assert(Quest.fromHex(q1Hex) == q1)
         assert(Quest.fromHex(q2Hex) == q2)
+        assert(Quest.fromHex(q3Hex) == q3)
+    }
+
+    @Test
+    fun compute_answer_length() {
+        val q1 = Quest(4, 2)
+        assert(q1.answerLength() == 1)
+        val q2 = Quest(4, 5)
+        assert(q2.answerLength() == 2)
+        val q3 = Quest(11, 12)
+        assert(q3.answerLength() == 3)
     }
 }

@@ -12,6 +12,7 @@ import com.google.zxing.qrcode.QRCodeWriter
 import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import it.mmessore.timestableschallenge.data.RoundGenerator
+import it.mmessore.timestableschallenge.data.persistency.AppPreferences
 import it.mmessore.timestableschallenge.data.persistency.ConstantsImpl
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -22,11 +23,12 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ShareViewModel @Inject constructor(
+    private val appPreferences: AppPreferences,
     private val coroutineScope: CoroutineScope
 ) : ViewModel() {
     private lateinit var roundUrl: String
 
-    private val _roundToPlay: MutableStateFlow<String> = MutableStateFlow(RoundGenerator.serialize(RoundGenerator().generate()))
+    private val _roundToPlay: MutableStateFlow<String> = MutableStateFlow(RoundGenerator.serialize(RoundGenerator(appPreferences).generate()))
     val roundToPlay: StateFlow<String> = _roundToPlay
     private val _receivedRound: MutableStateFlow<String?> = MutableStateFlow(null)
     val receivedRound: StateFlow<String?> = _receivedRound

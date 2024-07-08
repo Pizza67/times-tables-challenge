@@ -1,13 +1,16 @@
 package it.mmessore.timestableschallenge.data
 
+import it.mmessore.timestableschallenge.data.persistency.AppPreferences
 import it.mmessore.timestableschallenge.data.persistency.ConstantsImpl
 import java.util.Base64
+import javax.inject.Inject
 
-class RoundGenerator (
-    val minTable: Int = 1,
-    val maxTable: Int = 9,
-    val easyOps: List<Int> = listOf(1, 10),
-    val maxNumEasyQuests: Int = 3
+class RoundGenerator @Inject constructor (
+    private val appPreferences: AppPreferences,
+    private val minTable: Int = 1,
+    private val maxTable: Int = if (!appPreferences.extendedMode) 9 else 12,
+    private val easyOps: List<Int> = listOf(1, 10, 11),
+    private val maxNumEasyQuests: Int = 3
 ) {
 
     init {
@@ -20,7 +23,8 @@ class RoundGenerator (
         val allowSameQuests = n > ((maxTable - minTable + 1) * 8)
         while (quests.size < n) {
             val op1 = (minTable..maxTable).random()
-            val op2 = (1..10).random()
+            val maxOp2 = if (!appPreferences.extendedMode) 10 else 12
+            val op2 = (1..maxOp2).random()
             val quest = Quest(op1, op2)
             if (quests.isEmpty() ||
                 (allowSameQuests && quests.last() != quest) || // if allow same quests check they're not consecutive

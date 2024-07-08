@@ -2,12 +2,14 @@ package it.mmessore.timestableschallenge.ui.screens
 
 import android.media.MediaPlayer
 import android.os.CountDownTimer
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import it.mmessore.timestableschallenge.data.AppRepository
 import it.mmessore.timestableschallenge.data.Quest
 import it.mmessore.timestableschallenge.data.RoundGenerator
+import it.mmessore.timestableschallenge.data.persistency.AppPreferences
 import it.mmessore.timestableschallenge.data.persistency.Constants
 import it.mmessore.timestableschallenge.data.persistency.Round
 import kotlinx.coroutines.CoroutineScope
@@ -20,6 +22,7 @@ import javax.inject.Inject
 @HiltViewModel
 class RoundViewModel @Inject constructor(
     private val repository: AppRepository,
+    private val appPreferences: AppPreferences,
     private val constants: Constants,
     private val coroutineScope: CoroutineScope
 ): ViewModel() {
@@ -34,7 +37,7 @@ class RoundViewModel @Inject constructor(
         private const val DEFAULT_SCORE = 0
     }
 
-    private var quests: List<Quest> = RoundGenerator().generate()
+    private var quests: List<Quest> = RoundGenerator(appPreferences).generate()
     private var currentQuestIdx = 0
     private var timeLeftMillis: Long = 0
     private var lastTickTime: Long = 0
@@ -79,7 +82,7 @@ class RoundViewModel @Inject constructor(
         quests = if (roundId != null) {
             RoundGenerator.deserialize(roundId)
         } else  {
-            RoundGenerator().generate()
+            RoundGenerator(appPreferences).generate()
         }
         _currentQuest.value = quests[currentQuestIdx]
     }
@@ -119,7 +122,8 @@ class RoundViewModel @Inject constructor(
     }
 
     fun onNumberClick(number: Char) {
-        if (_answer.value.length < 2 && _roundState.value == RoundState.IN_PROGRESS)
+        // Add the digit only if the answer size (except NO_ANSWER) is not yet met and the round is in progress
+        if (_answer.value.replace(NO_ANSWER, "").length < _currentQuest.value.answerLength() && _roundState.value == RoundState.IN_PROGRESS)
             _answer.value = _answer.value.plus(number.toString()).replace(NO_ANSWER, "")
     }
 

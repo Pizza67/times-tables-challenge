@@ -17,6 +17,8 @@ class Quest(
         return (op1 in easyOps || op2 in easyOps)
     }
 
+    fun answerLength() = answer().toString().length
+
     fun toHex(): String {
         return op1.toString(16) + op2.toString(16)
     }

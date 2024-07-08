@@ -12,6 +12,8 @@ import dagger.hilt.components.SingletonComponent
 import it.mmessore.timestableschallenge.data.AppRepository
 import it.mmessore.timestableschallenge.data.AppRepositoryImpl
 import it.mmessore.timestableschallenge.data.persistency.AppDatabase
+import it.mmessore.timestableschallenge.data.persistency.AppPreferences
+import it.mmessore.timestableschallenge.data.persistency.AppPreferencesImpl
 import it.mmessore.timestableschallenge.data.persistency.Constants
 import it.mmessore.timestableschallenge.data.persistency.ConstantsImpl
 import kotlinx.coroutines.CoroutineScope
@@ -51,6 +53,12 @@ object ApplicationModule {
     @Singleton
     fun provideAppRepository(@ApplicationContext context: Context, database: AppDatabase): AppRepository {
         return AppRepositoryImpl(context, database.roundDao(), database.achievementDao())
+    }
+
+    @Provides
+    @Singleton
+    fun provideAppPreferences(@ApplicationContext context: Context): AppPreferences {
+        return AppPreferencesImpl(context)
     }
 
     @Singleton
