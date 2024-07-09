@@ -54,7 +54,6 @@ import it.mmessore.timestableschallenge.data.BadgeInfo
 import it.mmessore.timestableschallenge.data.Badges
 import it.mmessore.timestableschallenge.data.Levels
 import it.mmessore.timestableschallenge.data.persistency.Round
-import it.mmessore.timestableschallenge.ui.CommonScaffold
 import it.mmessore.timestableschallenge.ui.DialogPager
 import it.mmessore.timestableschallenge.ui.DialogScaffold
 import it.mmessore.timestableschallenge.ui.SFXDialog

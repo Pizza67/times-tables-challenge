@@ -48,7 +48,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import it.mmessore.timestableschallenge.R
-import it.mmessore.timestableschallenge.ui.CommonScaffold
 import it.mmessore.timestableschallenge.ui.RoundButton
 import kotlinx.coroutines.delay
 
