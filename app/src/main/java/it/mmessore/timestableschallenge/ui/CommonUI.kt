@@ -1,6 +1,8 @@
 package it.mmessore.timestableschallenge.ui
 
+import android.content.Intent
 import android.media.MediaPlayer
+import android.net.Uri
 import android.util.Log
 import android.view.Window
 import androidx.compose.animation.AnimatedVisibility
@@ -37,6 +39,7 @@ import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.ClickableText
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
@@ -63,8 +66,13 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextDecoration
+import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
@@ -344,7 +352,10 @@ fun DialogPager(
             modifier = Modifier.wrapContentHeight()
         ) { page ->
             val scrollState = rememberScrollState()
-            Box (Modifier.height(250.dp).verticalScroll(scrollState)){
+            Box (
+                Modifier
+                    .height(250.dp)
+                    .verticalScroll(scrollState)){
                 pages[page]()
             }
         }
@@ -377,4 +388,42 @@ fun DialogPager(
             }
         }
     }
+}
+
+@Composable
+fun ClickableTextWithUrl(text: String, textUrl: String, url: String, style: TextStyle = MaterialTheme.typography.bodyLarge) {
+    val context = LocalContext.current
+    val annotatedString = buildAnnotatedString {
+        withStyle(style = SpanStyle(
+            color = MaterialTheme.colorScheme.onSurface,
+            fontSize = style.fontSize,
+            fontFamily = style.fontFamily
+        )) {
+            append("$text ")
+        }
+        pushStringAnnotation(tag = "URL", annotation = url)
+        withStyle(
+            style = SpanStyle(
+                color = MaterialTheme.colorScheme.primary,
+                textDecoration = TextDecoration.Underline,
+                fontSize = style.fontSize,
+                fontFamily = style.fontFamily
+            )
+        ) {
+            append(textUrl)
+        }
+        pop()
+    }
+
+    ClickableText(
+        text = annotatedString,
+        style = style,
+        onClick = { offset ->
+            annotatedString.getStringAnnotations(tag = "URL", start = offset, end = offset)
+                .firstOrNull()?.let { annotation ->
+                    val intent = Intent(Intent.ACTION_VIEW, Uri.parse(annotation.item))
+                    context.startActivity(intent)
+                }
+        }
+    )
 }

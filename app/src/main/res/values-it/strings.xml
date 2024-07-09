@@ -74,4 +74,11 @@
     <string name="settings_play_sounds_desc">Abilita gli effetti sonori durante il gioco</string>
     <string name="settings_use_time_left">Conta il tempo residuo</string>
     <string name="settings_use_time_left_desc">Calcola il punteggio usando il tempo rimasto dopo aver risposto a tutte le domande</string>
+    <string name="back_button">indietro</string>
+    <string name="settings_support_group">Supporto</string>
+    <string name="ic_arrow_forward">avanti</string>
+    <string name="settings_about">Informazioni</string>
+    <string name="settings_about_desc">Mettiti in contatto e fornisci suggerimenti</string>
+    <string name="about_text_version">Versione %1$s (%2$s)</string>
+    <string name="about_text_feedback">Scrivi i tuoi suggerimenti e chiedi supporto su</string>
 </resources>

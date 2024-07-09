@@ -1,5 +1,7 @@
 package it.mmessore.timestableschallenge.utils
 
+import android.content.Context
+import android.content.pm.PackageManager
 import android.text.format.DateUtils.DAY_IN_MILLIS
 import android.text.format.DateUtils.FORMAT_ABBREV_RELATIVE
 import android.text.format.DateUtils.getRelativeTimeSpanString
@@ -41,4 +43,22 @@ fun formatNumber(number: Double, maximumFractionDigits: Int = 1, locale: Locale 
     val formatter = NumberFormat.getNumberInstance(locale)
     formatter.maximumFractionDigits = maximumFractionDigits
     return formatter.format(number)
+}
+
+fun getAppVersion(context: Context): String {
+    try {
+        val packageInfo = context.packageManager.getPackageInfo(context.packageName, 0)
+        return packageInfo.versionName
+    } catch (e: PackageManager.NameNotFoundException) {
+        return "Unknown"
+    }
+}
+
+fun getAppVersionCode(context: Context): String {
+    try {
+        val packageInfo = context.packageManager.getPackageInfo(context.packageName, 0)
+        return packageInfo.versionCode.toString()
+    } catch (e: PackageManager.NameNotFoundException) {
+        return ""
+    }
 }

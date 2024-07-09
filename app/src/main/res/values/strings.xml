@@ -76,4 +76,11 @@
     <string name="settings_use_time_left">Track time left</string>
     <string name="settings_use_time_left_desc">Enable to compute the score using the time remaining after answering all questions</string>
     <string name="back_button">back</string>
+    <string name="settings_support_group">Support</string>
+    <string name="ic_arrow_forward">forward</string>
+    <string name="settings_about">About</string>
+    <string name="settings_about_desc">Get in touch and provide feedback</string>
+    <string name="about_text_version">Version %1$s (%2$s)</string>
+    <string name="about_text_feedback" >Please provide feedback and submit issues on</string>
+    <string name="here">here</string>
 </resources>

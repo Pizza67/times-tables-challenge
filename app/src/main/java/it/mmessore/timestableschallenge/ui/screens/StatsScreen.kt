@@ -235,7 +235,7 @@ fun AchievedBadgeDescription(badgeInfo: BadgeInfo) {
         Text(
             text = stringResource(id = Badges.list[badgeInfo.id].nameStrId),
             style = MaterialTheme.typography.titleLarge,
-            fontWeight = FontWeight.Bold,
+            fontWeight = FontWeight.Bold
         )
         Spacer(modifier = Modifier.height(8.dp))
         Text(text = stringResource(id = Badges.list[badgeInfo.id].description))
