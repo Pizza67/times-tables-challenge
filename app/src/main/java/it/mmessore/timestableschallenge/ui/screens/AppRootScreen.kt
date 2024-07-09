@@ -62,9 +62,9 @@ fun AppRootScreen(
     }
 
     // Get current back stack entry
-    val backStackEntry by navController.currentBackStackEntryAsState()
+    val backStackEntryState by navController.currentBackStackEntryAsState()
     // Get the name of the current screen or default to menu
-    val currentScreen = backStackEntry?.destination?.route?.let { route ->
+    val currentScreen = backStackEntryState?.destination?.route?.let { route ->
         val screenName = route.substringBefore('/')
         try {
             AppScreen.valueOf(screenName)
@@ -127,11 +127,11 @@ fun AppRootScreen(
                 }
                 RoundScreen(
                     viewModel = roundViewModel,
-                    onRoundFinished = { round ->
-                        navController.navigate(AppScreen.Summary.name) {
+                    onRoundFinished = { it ->
+                        val round = it?.serialize()
+                        navController.navigate("${AppScreen.Summary.name}/$round") {
                             popUpTo(AppScreen.Round.name) { inclusive = true }
                         }
-                        navController.currentBackStackEntry?.arguments?.putParcelable("round", round)
                     })
             }
 
@@ -154,17 +154,17 @@ fun AppRootScreen(
             }
 
             composable(
-                route = AppScreen.Summary.name,
-                arguments = listOf(navArgument("round") { type = NavType.ParcelableType(Round::class.java); nullable = true })
+                route = "${AppScreen.Summary.name}/{round}",
+                arguments = listOf(navArgument("round") { type = NavType.StringType })
             ) { backStackEntry ->
-                val round = backStackEntry.arguments?.getParcelable("round", Round::class.java)
+                val round = backStackEntry.arguments?.getString("round") ?: ""
                 SummaryScreen(
-                    round = round,
+                    round = Round.deserialize(round),
                     onMenuButtonClick = { navController.navigate(AppScreen.Menu.name) {
-                        popUpTo(AppScreen.Summary.name) { inclusive = true }
+                        popUpTo("${AppScreen.Summary.name}/{round}") { inclusive = true }
                     }},
                     onStatsButtonClick = { navController.navigate(AppScreen.Stats.name) {
-                        popUpTo(AppScreen.Summary.name) { inclusive = true }
+                        popUpTo("${AppScreen.Summary.name}/{round}") { inclusive = true }
                     }}
                 )
             }

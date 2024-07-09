@@ -1,9 +1,9 @@
 package it.mmessore.timestableschallenge.data.persistency
 
-import android.os.Parcel
-import android.os.Parcelable
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import com.google.gson.Gson
+import com.google.gson.JsonSyntaxException
 
 @Entity
 data class Round(
@@ -12,7 +12,7 @@ data class Round(
     val timestamp: Long,
     val score: Int,
     val timeLeft: Int
-) : Parcelable {
+) {
 
     fun hasBetterOrEqualsScore(other: Round, useTimeLeft: Boolean): Boolean {
         var ret = (score >= other.score)
@@ -21,31 +21,17 @@ data class Round(
         return ret
     }
 
-    constructor(parcel: Parcel) : this(
-        parcel.readString() ?: "",
-        parcel.readLong(),
-        parcel.readInt(),
-        parcel.readInt()
-    )
-
-    override fun writeToParcel(parcel: Parcel, flags: Int) {
-        parcel.writeString(roundId)
-        parcel.writeLong(timestamp)
-        parcel.writeInt(score)
-        parcel.writeInt(timeLeft)
+    fun serialize(): String {
+        val gson = Gson()
+        return gson.toJson(this)
     }
 
-    override fun describeContents(): Int {
-        return 0
-    }
-
-    companion object CREATOR : Parcelable.Creator<Round>{
-        override fun createFromParcel(parcel: Parcel): Round {
-            return Round(parcel)
-        }
-
-        override fun newArray(size: Int): Array<Round?> {
-            return arrayOfNulls(size)
+    companion object {
+        fun deserialize(jsonString: String): Round? {
+            val gson = Gson()
+            return try {
+                gson.fromJson(jsonString, Round::class.java)
+            } catch (e: JsonSyntaxException) { null }
         }
     }
 }
