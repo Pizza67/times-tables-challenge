@@ -133,7 +133,10 @@ fun StatsScreen(
                     text = stringResource(R.string.your_best_round),
                     style = MaterialTheme.typography.bodyLarge
                 )
-                StatsRoundCard(bestRound)
+                StatsRoundCard(
+                    round = bestRound,
+                    useTimeleft = viewModel.useTimeLeft()
+                )
             }
             worstRound.value?.let { worstRound ->
                 Spacer(modifier = Modifier.height(8.dp))
@@ -141,7 +144,11 @@ fun StatsScreen(
                     text = stringResource(R.string.replay_your_worst_round),
                     style = MaterialTheme.typography.bodyLarge
                 )
-                StatsRoundCard(worstRound, onRetryRoundButtonClick)
+                StatsRoundCard(
+                    round = worstRound,
+                    useTimeleft = viewModel.useTimeLeft(),
+                    onReplayButtonClick = onRetryRoundButtonClick
+                )
             }
         }
     }
@@ -298,6 +305,7 @@ fun NotAchievedBadgeInfo(badgeInfo: BadgeInfo) {
 @Composable
 private fun StatsRoundCard(
     round: Round,
+    useTimeleft: Boolean,
     onReplayButtonClick: ((String) -> Unit)? = null,
     modifier: Modifier = Modifier
 ) {
@@ -314,14 +322,12 @@ private fun StatsRoundCard(
                 Image(
                     painter = painterResource(Levels.getLevelByScore(round.score).image),
                     contentDescription = null,
-                    modifier = Modifier
-                        .size(120.dp)
-                        .padding(end = 16.dp),
+                    modifier = Modifier.size(120.dp),
                     contentScale = ContentScale.Crop
                 )
                 Column(
                     verticalArrangement = Arrangement.Center,
-                    modifier = Modifier.weight(1f)
+                    modifier = Modifier.padding(horizontal = 16.dp)
                 ) {
                     Text(text = formatTimestamp(round.timestamp), style = MaterialTheme.typography.bodySmall)
                     Spacer(modifier = Modifier.height(8.dp))
@@ -346,7 +352,8 @@ private fun StatsRoundCard(
                             style = MaterialTheme.typography.titleLarge,
                             modifier = Modifier.padding(end = 16.dp)
                         )
-                        if (round.timeLeft > 0) {
+                        if (useTimeleft && round.timeLeft > 0) {
+                            Spacer(modifier = Modifier.weight(1f))
                             Text(
                                 text = stringResource(R.string.stats_round_time_left),
                                 style = MaterialTheme.typography.bodyMedium,

@@ -7,7 +7,6 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Transaction
-import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface RoundDao {
@@ -15,9 +14,9 @@ interface RoundDao {
     suspend fun insertRound(round: Round)
 
     @Transaction
-    suspend fun insertRoundIfBetterOrEquals(newRound: Round) {
+    suspend fun insertRoundIfBetterOrEquals(newRound: Round, useTimeLeft: Boolean) {
         val existingRound = getRound(newRound.roundId)
-        if (existingRound == null || newRound.hasBetterOrEqualsScore(existingRound)) {
+        if (existingRound == null || newRound.hasBetterOrEqualsScore(existingRound, useTimeLeft)) {
             insertRound(newRound)
         }
     }
@@ -25,8 +24,15 @@ interface RoundDao {
     @Query("SELECT * FROM Round WHERE roundId = :id")
     suspend fun getRound(id: String): Round?
 
-    @Query("SELECT * FROM Round ORDER BY timeLeft DESC, score DESC, timestamp ASC LIMIT 1")
-    suspend fun getBestRound(): Round?
+    @Query("""
+        SELECT * FROM Round 
+        ORDER BY 
+            CASE WHEN :useTimeleft THEN timeLeft ELSE 0 END DESC, 
+            score DESC, 
+            timestamp ASC 
+        LIMIT 1
+    """)
+    suspend fun getBestRound(useTimeleft: Boolean): Round?
 
     @Query("SELECT * FROM Round ORDER BY score ASC LIMIT 1")
     suspend fun getWorstRound(): Round?

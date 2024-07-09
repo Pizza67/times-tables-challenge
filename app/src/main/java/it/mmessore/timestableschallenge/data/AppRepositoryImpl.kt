@@ -3,17 +3,23 @@ package it.mmessore.timestableschallenge.data
 import android.content.Context
 import it.mmessore.timestableschallenge.data.persistency.Achievement
 import it.mmessore.timestableschallenge.data.persistency.AchievementDao
+import it.mmessore.timestableschallenge.data.persistency.AppPreferences
 import it.mmessore.timestableschallenge.data.persistency.Round
 import it.mmessore.timestableschallenge.data.persistency.RoundDao
+import javax.inject.Inject
 
-class AppRepositoryImpl(
+class AppRepositoryImpl @Inject constructor(
     private val context: Context,
+    private val appPreferences: AppPreferences,
     private val roundDao: RoundDao,
     private val achievementDao: AchievementDao
 ): AppRepository {
 
     override suspend fun insertRound(round: Round) {
-        roundDao.insertRoundIfBetterOrEquals(round)
+        if (appPreferences.overwriteBestScores)
+            roundDao.insertRound(round)
+        else
+            roundDao.insertRoundIfBetterOrEquals(round, appPreferences.useTimeLeft)
     }
 
     override suspend fun deleteAppData() {
@@ -41,8 +47,8 @@ class AppRepositoryImpl(
         return roundDao.getRoundNum()
     }
 
-    override suspend fun getBestRound(): Round? {
-        return roundDao.getBestRound()
+    override suspend fun getBestRound(useTimeleft: Boolean): Round? {
+        return roundDao.getBestRound(useTimeleft)
     }
 
     override suspend fun getWorstRound(): Round? {
@@ -50,9 +56,9 @@ class AppRepositoryImpl(
     }
 
     override suspend fun isNewBestRound(round: Round): Boolean {
-        val bestRound = getBestRound()
+        val bestRound = getBestRound(appPreferences.useTimeLeft)
         return if (bestRound != null && getRoundNum() > 1)
-            round.hasBetterOrEqualsScore(bestRound)
+            round.hasBetterOrEqualsScore(bestRound, appPreferences.useTimeLeft)
         else
             false
     }

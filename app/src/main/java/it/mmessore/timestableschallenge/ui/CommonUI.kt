@@ -76,6 +76,7 @@ import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import androidx.compose.ui.window.DialogWindowProvider
 import it.mmessore.timestableschallenge.R
+import it.mmessore.timestableschallenge.data.persistency.AppPreferencesImpl
 import kotlinx.coroutines.delay
 import java.util.Locale
 
@@ -155,6 +156,7 @@ fun SFXDialog(
 
     var showAnimatedDialog by remember { mutableStateOf(false) }
     val context = LocalContext.current
+    val appPreferences = remember { AppPreferencesImpl(context) }
 
     LaunchedEffect(showDialog) {
         if (showDialog) showAnimatedDialog = true
@@ -176,15 +178,17 @@ fun SFXDialog(
                 }
             }
 
-            audioResource?.let {
-                LaunchedEffect(Unit) {
-                    try {
-                        MediaPlayer.create(context, audioResource).apply {
-                            start()
-                            setOnCompletionListener { release() }
+            if (appPreferences.playSounds) {
+                audioResource?.let {
+                    LaunchedEffect(Unit) {
+                        try {
+                            MediaPlayer.create(context, audioResource).apply {
+                                start()
+                                setOnCompletionListener { release() }
+                            }
+                        } catch (e: Exception) {
+                            Log.e("ExpandingDialog", "Error in playing dialog sfx", e)
                         }
-                    } catch (e: Exception) {
-                        Log.e("ExpandingDialog", "Error in playing dialog sfx", e)
                     }
                 }
             }

@@ -49,11 +49,6 @@ fun SettingsScreen(
                 .padding(padding),
             verticalArrangement = Arrangement.SpaceBetween
         ) {
-            /*
-
-            5. About
-
-             */
             SettingsGroup(name = R.string.settings_game_group) {
                 SettingsSwitchComp(
                     icon = painterResource(id = R.drawable.filter_9_plus_24),

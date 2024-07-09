@@ -56,8 +56,8 @@ class RoundGeneratorTest {
     }
     @Test
     fun encode_decode_quests() {
-        val questsNum = 20
-        val quests = RoundGenerator(FakeAppPreferences()).generate(questsNum)
+        val questsNum = 200
+        val quests = RoundGenerator(FakeAppPreferences(extendedMode = true, numQuestions = questsNum)).generate(questsNum)
         val encodedQuests = RoundGenerator.serialize(quests)
         val decodedQuests = RoundGenerator.deserialize(encodedQuests)
         assertEquals(quests, decodedQuests)

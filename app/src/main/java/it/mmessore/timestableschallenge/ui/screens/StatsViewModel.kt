@@ -6,6 +6,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import it.mmessore.timestableschallenge.data.AppRepository
 import it.mmessore.timestableschallenge.data.BadgeInfo
 import it.mmessore.timestableschallenge.data.Badges
+import it.mmessore.timestableschallenge.data.persistency.AppPreferences
 import it.mmessore.timestableschallenge.data.persistency.Round
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -16,6 +17,7 @@ import javax.inject.Inject
 @HiltViewModel
 class StatsViewModel @Inject constructor(
     private val repository: AppRepository,
+    private val appPreferences: AppPreferences,
     private val coroutineScope: CoroutineScope
 ): ViewModel() {
 
@@ -71,4 +73,6 @@ class StatsViewModel @Inject constructor(
         }
         return badges
     }
+
+    fun useTimeLeft() = appPreferences.useTimeLeft
 }

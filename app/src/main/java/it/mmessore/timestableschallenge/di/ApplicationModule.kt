@@ -51,8 +51,8 @@ object ApplicationModule {
 
     @Provides
     @Singleton
-    fun provideAppRepository(@ApplicationContext context: Context, database: AppDatabase): AppRepository {
-        return AppRepositoryImpl(context, database.roundDao(), database.achievementDao())
+    fun provideAppRepository(@ApplicationContext context: Context, appPreferences: AppPreferences, database: AppDatabase): AppRepository {
+        return AppRepositoryImpl(context, appPreferences, database.roundDao(), database.achievementDao())
     }
 
     @Provides

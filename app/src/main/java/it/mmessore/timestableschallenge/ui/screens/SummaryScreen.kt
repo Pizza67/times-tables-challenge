@@ -1,6 +1,5 @@
 package it.mmessore.timestableschallenge.ui.screens
 
-import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -29,6 +28,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import it.mmessore.timestableschallenge.R
+import it.mmessore.timestableschallenge.data.persistency.Round
 import it.mmessore.timestableschallenge.ui.DialogScaffold
 import it.mmessore.timestableschallenge.ui.RoundButton
 import it.mmessore.timestableschallenge.ui.SFXDialog
@@ -37,7 +37,7 @@ import kotlinx.coroutines.delay
 
 @Composable
 fun SummaryScreen(
-    roundId: String,
+    round: Round?,
     viewModel: SummaryViewModel = hiltViewModel(),
     onMenuButtonClick: () -> Unit = {},
     onStatsButtonClick: () -> Unit = {},
@@ -54,8 +54,8 @@ fun SummaryScreen(
         mutableStateOf(false)
     }
 
-    LaunchedEffect(roundId) {
-        viewModel.fetchRoundInfo(roundId)
+    LaunchedEffect(round) {
+        viewModel.fetchRoundInfo(round)
         viewModel.checkRewards()
     }
 
@@ -63,7 +63,6 @@ fun SummaryScreen(
         delay(500)
         showRewardDialog = rewardDialogInfo.value != null
         showBestScoreDialog = !showRewardDialog && bestScoreDialogInfo.value != null
-        Log.d("showRewardDialog", showRewardDialog.toString())
     }
 
     Column(
@@ -91,7 +90,7 @@ fun SummaryScreen(
                     style = MaterialTheme.typography.displayLarge,
                 )
             }
-            if (roundInfo.value.timeLeft > 0) {
+            if (viewModel.useTimeleft() && roundInfo.value.timeLeft > 0) {
                 Row(
                     horizontalArrangement = Arrangement.Center,
                     verticalAlignment = Alignment.CenterVertically,

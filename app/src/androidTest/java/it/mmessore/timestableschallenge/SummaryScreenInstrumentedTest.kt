@@ -48,7 +48,7 @@ class SummaryScreenInstrumentedTest {
         fakeRepository.setNewAchievementUnlocked(true)
         composeTestRule.setContent {
             AppTheme {
-                SummaryScreen(roundId = "testRoundId", viewModel = viewModel)
+                SummaryScreen(round = "testRoundId", viewModel = viewModel)
             }
         }
         composeTestRule.waitUntilAtLeastOneExists(
@@ -63,7 +63,7 @@ class SummaryScreenInstrumentedTest {
 
         composeTestRule.setContent {
             AppTheme {
-                SummaryScreen(roundId = "testRoundId", viewModel = viewModel)
+                SummaryScreen(round = "testRoundId", viewModel = viewModel)
             }
         }
         composeTestRule.waitUntilAtLeastOneExists(
@@ -79,7 +79,7 @@ class SummaryScreenInstrumentedTest {
 
         composeTestRule.setContent {
             AppTheme {
-                SummaryScreen(roundId = "testRoundId", viewModel = viewModel)
+                SummaryScreen(round = "testRoundId", viewModel = viewModel)
             }
         }
         composeTestRule.waitUntilAtLeastOneExists(

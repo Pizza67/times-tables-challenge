@@ -2,7 +2,6 @@ package it.mmessore.timestableschallenge.ui.screens
 
 import android.media.MediaPlayer
 import android.os.CountDownTimer
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -41,6 +40,8 @@ class RoundViewModel @Inject constructor(
     private var currentQuestIdx = 0
     private var timeLeftMillis: Long = 0
     private var lastTickTime: Long = 0
+    var finishedRound: Round? = null
+        private set
 
     private val _answer = MutableStateFlow(NO_ANSWER)
     val answer: StateFlow<String> = _answer
@@ -128,26 +129,27 @@ class RoundViewModel @Inject constructor(
     }
 
     private fun playSound(player: MediaPlayer) {
-        if (player.isPlaying)
-            player.seekTo(0)
-        else
-            player.start()
+        if (appPreferences.playSounds) {
+            if (player.isPlaying)
+                player.seekTo(0)
+            else
+                player.start()
+        }
     }
 
     private fun finishRound(timeLeft: Int = 0) {
         viewModelScope.launch (context = coroutineScope.coroutineContext) {
             if (roundState.value == RoundState.IN_PROGRESS) {
                 _roundState.value = RoundState.FINISHED
-                val finishedRound = Round(
+                finishedRound = Round(
                     timestamp = System.currentTimeMillis(),
                     roundId = RoundGenerator.serialize(quests),
                     score = _score.value,
                     timeLeft = timeLeft
-                )
-                repository.insertRound(finishedRound)
+                ).also { round ->
+                    repository.insertRound(round)
+                }
             }
         }
     }
-
-    fun getRoundId(): String = RoundGenerator.serialize(quests)
 }

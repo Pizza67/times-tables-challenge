@@ -1,6 +1,5 @@
 package it.mmessore.timestableschallenge.data
 
-import android.util.Log
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import it.mmessore.timestableschallenge.R
@@ -53,7 +52,6 @@ object Badges {
     )
 
     fun getBadgebyStats(avgScore: Double, rounds: Int): Badge {
-        Log.d("StatsViewModel", "avgScore: $avgScore, rounds: $rounds")
         val roundedAvgScore = Math.round(avgScore * 10.0) / 10.0
         return list.last { roundedAvgScore >= it.minAvgScore && rounds >= it.minRounds }
     }

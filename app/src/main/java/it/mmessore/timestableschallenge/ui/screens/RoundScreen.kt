@@ -38,6 +38,7 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import it.mmessore.timestableschallenge.R
 import it.mmessore.timestableschallenge.data.Quest
+import it.mmessore.timestableschallenge.data.persistency.Round
 import it.mmessore.timestableschallenge.ui.DelayedFadeInContent
 import it.mmessore.timestableschallenge.ui.Keyboard
 import kotlinx.coroutines.delay
@@ -45,7 +46,7 @@ import kotlinx.coroutines.delay
 @Composable
 fun RoundScreen(
     viewModel: RoundViewModel = hiltViewModel(),
-    onRoundFinished: (String) -> Unit = {},
+    onRoundFinished: (Round?) -> Unit = {},
     modifier: Modifier = Modifier
 ) {
     val context = LocalContext.current
@@ -76,7 +77,7 @@ fun RoundScreen(
             RoundViewModel.RoundState.FINISHED -> {
                 DelayedFadeInContent (
                     endDelayMillis = 3000,
-                    onAnimationEnd = { onRoundFinished(viewModel.getRoundId()) }
+                    onAnimationEnd = { onRoundFinished(viewModel.finishedRound) }
                 ) {
                     Text(
                         text = stringResource(id = R.string.game_over),
