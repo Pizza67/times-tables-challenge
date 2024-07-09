@@ -64,7 +64,7 @@ class FakeSummaryRepository (private val context: Context): AppRepository {
         TODO("Not yet implemented")
     }
 
-    override suspend fun getBestRound(): Round? {
+    override suspend fun getBestRound(useTimeLeft: Boolean): Round? {
         TODO("Not yet implemented")
     }
 

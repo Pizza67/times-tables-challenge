@@ -46,7 +46,7 @@ class StatsViewModel @Inject constructor(
             val currentRank = Badges.getBadgebyStats(_avgRounds.value, _numRounds.value)
             _currentRank.value = currentRank.nameStrId
             _currentRankImg.value = currentRank.image
-            _bestRound.value = repository.getBestRound()
+            _bestRound.value = repository.getBestRound(appPreferences.useTimeLeft)
             _worstRound.value = repository.getWorstRound()
             _badges.value = getBadges()
         }

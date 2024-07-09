@@ -37,7 +37,7 @@ class RoundDaoInstrumentedTest {
     @Test
     fun insertRoundIfBetterOrEquals_noExistingRound_insertsNewRound() = runBlocking {
         val newRound = Round("round1", System.currentTimeMillis(), 10, 30)
-        roundDao.insertRoundIfBetterOrEquals(newRound)
+        roundDao.insertRoundIfBetterOrEquals(newRound, true)
 
         val retrievedRound = roundDao.getRound("round1")
         assertEquals(newRound, retrievedRound)
@@ -49,7 +49,7 @@ class RoundDaoInstrumentedTest {
         roundDao.insertRound(existingRound)
 
         val newRound = Round("round1", System.currentTimeMillis(), 10, 30)
-        roundDao.insertRoundIfBetterOrEquals(newRound)
+        roundDao.insertRoundIfBetterOrEquals(newRound, true)
 
         val retrievedRound = roundDao.getRound("round1")
         assertEquals(newRound, retrievedRound)
@@ -61,7 +61,7 @@ class RoundDaoInstrumentedTest {
         roundDao.insertRound(existingRound)
 
         val newRound = Round("round1", System.currentTimeMillis(), 10, 30)
-        roundDao.insertRoundIfBetterOrEquals(newRound)
+        roundDao.insertRoundIfBetterOrEquals(newRound, true)
 
         val retrievedRound = roundDao.getRound("round1")
         assertEquals(existingRound, retrievedRound)
@@ -73,7 +73,7 @@ class RoundDaoInstrumentedTest {
         roundDao.insertRound(existingRound)
 
         val newRound = Round("round1", System.currentTimeMillis(), 10, 30)
-        roundDao.insertRoundIfBetterOrEquals(newRound)
+        roundDao.insertRoundIfBetterOrEquals(newRound, true)
 
         val retrievedRound = roundDao.getRound("round1")
         assertEquals(newRound, retrievedRound)

@@ -17,7 +17,7 @@ interface AppRepository {
 
     suspend fun getRoundNum(): Int
 
-    suspend fun getBestRound(useTimeleft: Boolean): Round?
+    suspend fun getBestRound(useTimeLeft: Boolean): Round?
 
     suspend fun getWorstRound(): Round?
 

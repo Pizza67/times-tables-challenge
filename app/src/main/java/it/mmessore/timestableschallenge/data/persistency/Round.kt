@@ -14,9 +14,9 @@ data class Round(
     val timeLeft: Int
 ) : Parcelable {
 
-    fun hasBetterOrEqualsScore(other: Round, useTimeleft: Boolean): Boolean {
+    fun hasBetterOrEqualsScore(other: Round, useTimeLeft: Boolean): Boolean {
         var ret = (score >= other.score)
-        if (useTimeleft)
+        if (useTimeLeft)
             ret = ret && (timeLeft >= other.timeLeft)
         return ret
     }

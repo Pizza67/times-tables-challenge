@@ -47,8 +47,8 @@ class AppRepositoryImpl @Inject constructor(
         return roundDao.getRoundNum()
     }
 
-    override suspend fun getBestRound(useTimeleft: Boolean): Round? {
-        return roundDao.getBestRound(useTimeleft)
+    override suspend fun getBestRound(useTimeLeft: Boolean): Round? {
+        return roundDao.getBestRound(useTimeLeft)
     }
 
     override suspend fun getWorstRound(): Round? {

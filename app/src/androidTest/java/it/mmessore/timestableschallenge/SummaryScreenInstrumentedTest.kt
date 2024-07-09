@@ -11,6 +11,8 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import it.mmessore.timestableschallenge.data.FakeSummaryRepository
+import it.mmessore.timestableschallenge.data.persistency.FakeAppPreferences
+import it.mmessore.timestableschallenge.data.persistency.Round
 import it.mmessore.timestableschallenge.ui.screens.SummaryScreen
 import it.mmessore.timestableschallenge.ui.screens.SummaryViewModel
 import it.mmessore.timestableschallenge.ui.theme.AppTheme
@@ -29,6 +31,7 @@ class SummaryScreenInstrumentedTest {
 
     @get:Rule(order = 1)
     val composeTestRule = createAndroidComposeRule<ComponentActivity>()
+    private lateinit var fakePreferences: FakeAppPreferences
     private lateinit var fakeRepository: FakeSummaryRepository
     private lateinit var viewModel: SummaryViewModel
     private lateinit var coroutineScope: CoroutineScope
@@ -36,19 +39,21 @@ class SummaryScreenInstrumentedTest {
     @Before
     fun setup() {
         hiltRule.inject()
+        fakePreferences = FakeAppPreferences()
         fakeRepository = FakeSummaryRepository(composeTestRule.activity)
         fakeRepository.setCurrentAchievement()
         coroutineScope = composeTestRule.activity.lifecycleScope
-        viewModel = SummaryViewModel(fakeRepository, coroutineScope)
+        viewModel = SummaryViewModel(fakeRepository, fakePreferences, coroutineScope)
     }
 
     @OptIn(ExperimentalTestApi::class)
     @Test
     fun rewardDialog_isShownWhenNewAchievementUnlocked() {
         fakeRepository.setNewAchievementUnlocked(true)
+        val round = Round("testRoundId", System.currentTimeMillis(), 10, 20)
         composeTestRule.setContent {
             AppTheme {
-                SummaryScreen(round = "testRoundId", viewModel = viewModel)
+                SummaryScreen(round = round, viewModel = viewModel)
             }
         }
         composeTestRule.waitUntilAtLeastOneExists(
@@ -60,10 +65,11 @@ class SummaryScreenInstrumentedTest {
     @Test
     fun bestRoundDialog_isShownOnNewBestRound() {
         fakeRepository.setIsNewBestRound(true)
+        val round = Round("testRoundId", System.currentTimeMillis(), 10, 20)
 
         composeTestRule.setContent {
             AppTheme {
-                SummaryScreen(round = "testRoundId", viewModel = viewModel)
+                SummaryScreen(round = round, viewModel = viewModel)
             }
         }
         composeTestRule.waitUntilAtLeastOneExists(
@@ -76,10 +82,11 @@ class SummaryScreenInstrumentedTest {
     fun bestRoundDialog_isShownOnNewBestRound_AfterRewardDialogDismissed() {
         fakeRepository.setNewAchievementUnlocked(true)
         fakeRepository.setIsNewBestRound(true)
+        val round = Round("testRoundId", System.currentTimeMillis(), 10, 20)
 
         composeTestRule.setContent {
             AppTheme {
-                SummaryScreen(round = "testRoundId", viewModel = viewModel)
+                SummaryScreen(round = round, viewModel = viewModel)
             }
         }
         composeTestRule.waitUntilAtLeastOneExists(
