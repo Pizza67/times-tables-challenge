@@ -1,6 +1,5 @@
 package it.mmessore.timestableschallenge.ui.screens
 
-import android.util.Log
 import android.widget.Toast
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.fillMaxSize
@@ -21,6 +20,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import it.mmessore.timestableschallenge.R
+import it.mmessore.timestableschallenge.data.persistency.Round
 
 enum class AppScreen() {
     Home, Menu, Round, Share, Summary, Stats, Settings
@@ -85,10 +85,11 @@ fun AppRootScreen(
                 }
                 RoundScreen(
                     viewModel = roundViewModel,
-                    onRoundFinished = { roundId ->
-                        navController.navigate("${AppScreen.Summary.name}/$roundId") {
+                    onRoundFinished = { round ->
+                        navController.navigate(AppScreen.Summary.name) {
                             popUpTo(AppScreen.Round.name) { inclusive = true }
                         }
+                        navController.currentBackStackEntry?.arguments?.putParcelable("round", round)
                     })
             }
 
@@ -101,7 +102,6 @@ fun AppRootScreen(
                 })
             ) { backStackEntry ->
                 val roundId = backStackEntry.arguments?.getString("challengeId")
-                Log.d("roundId", roundId.toString())
                 ShareScreen(
                     receivedRoundId = roundId,
                     onStartRoundButtonClick = {
@@ -112,17 +112,17 @@ fun AppRootScreen(
             }
 
             composable(
-                route = "${AppScreen.Summary.name}/{roundId}",
-                arguments = listOf(navArgument("roundId") { type = NavType.StringType })
+                route = AppScreen.Summary.name,
+                arguments = listOf(navArgument("round") { type = NavType.ParcelableType(Round::class.java); nullable = true })
             ) { backStackEntry ->
-                val roundId = backStackEntry.arguments?.getString("roundId") ?: ""
+                val round = backStackEntry.arguments?.getParcelable("round", Round::class.java)
                 SummaryScreen(
-                    roundId = roundId,
+                    round = round,
                     onMenuButtonClick = { navController.navigate(AppScreen.Menu.name) {
-                        popUpTo("${AppScreen.Summary.name}/{roundId}") { inclusive = true }
+                        popUpTo(AppScreen.Summary.name) { inclusive = true }
                     }},
                     onStatsButtonClick = { navController.navigate(AppScreen.Stats.name) {
-                        popUpTo("${AppScreen.Summary.name}/{roundId}") { inclusive = true }
+                        popUpTo(AppScreen.Summary.name) { inclusive = true }
                     }}
                 )
             }
