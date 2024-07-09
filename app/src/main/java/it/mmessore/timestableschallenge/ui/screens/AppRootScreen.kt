@@ -2,9 +2,19 @@ package it.mmessore.timestableschallenge.ui.screens
 
 import android.widget.Toast
 import androidx.activity.compose.BackHandler
+import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material3.CenterAlignedTopAppBar
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -12,18 +22,31 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import it.mmessore.timestableschallenge.R
 import it.mmessore.timestableschallenge.data.persistency.Round
 
-enum class AppScreen() {
-    Home, Menu, Round, Share, Summary, Stats, Settings
+enum class AppScreen(
+    @StringRes val title: Int? = null,
+    val showBackButton: Boolean = false
+) {
+    Home(R.string.app_name),
+    Menu(R.string.menu),
+    Round,
+    Share(R.string.menu_share_new_game, true),
+    Summary,
+    Stats(R.string.menu_your_scores, true),
+    Settings(R.string.menu_settings, true)
 }
 
 @Composable
@@ -39,7 +62,29 @@ fun AppRootScreen(
         startDestination = "${AppScreen.Share.name}/{challengeId}"
     }
 
-    Scaffold (modifier = Modifier.fillMaxSize()) { innerPadding ->
+    // Get current back stack entry
+    val backStackEntry by navController.currentBackStackEntryAsState()
+    // Get the name of the current screen or default to menu
+    val currentScreen = backStackEntry?.destination?.route?.let { route ->
+        val screenName = route.substringBefore('/')
+        try {
+            AppScreen.valueOf(screenName)
+        } catch (e: IllegalArgumentException) {
+            null
+        }
+    } ?: AppScreen.Menu
+
+    Scaffold (
+        topBar = {
+            ScreenAppBar(
+                currentScreen = currentScreen,
+                canNavigateUp = navController.previousBackStackEntry != null,
+                navigateUp = { navController.navigateUp() },
+                modifier = Modifier.padding(vertical = 24.dp)
+            )
+        },
+        modifier = Modifier.fillMaxSize()
+    ) { innerPadding ->
         NavHost(
             navController = navController,
             startDestination = startDestination,
@@ -48,9 +93,7 @@ fun AppRootScreen(
             composable(route = AppScreen.Home.name) {
                 HomeScreen(
                     onStartButtonClick = {
-                        navController.navigate(AppScreen.Menu.name) {
-                            popUpTo(AppScreen.Home.name) { inclusive = true }
-                        }
+                        navController.navigate(AppScreen.Menu.name)
                 })
             }
 
@@ -141,5 +184,35 @@ fun AppRootScreen(
                 SettingsScreen()
             }
         }
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun ScreenAppBar(
+    currentScreen: AppScreen,
+    canNavigateUp: Boolean,
+    navigateUp: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    currentScreen.title?.let {
+        CenterAlignedTopAppBar(
+            title = { Text(
+                text = stringResource(id = currentScreen.title),
+                style = MaterialTheme.typography.displayMedium,
+                textAlign = TextAlign.Center,
+            )},
+            modifier = modifier,
+            navigationIcon = {
+                if (currentScreen.showBackButton && canNavigateUp) {
+                    IconButton(onClick = navigateUp) {
+                        Icon(
+                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                            contentDescription = stringResource(R.string.back_button)
+                        )
+                    }
+                }
+            }
+        )
     }
 }

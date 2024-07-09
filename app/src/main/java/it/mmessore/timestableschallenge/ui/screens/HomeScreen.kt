@@ -24,28 +24,27 @@ fun HomeScreen(
     onStartButtonClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    CommonScaffold(titleResId = R.string.app_name) { padding ->
-        Column(
-            modifier = modifier.fillMaxSize().padding(padding),
-            verticalArrangement = Arrangement.SpaceBetween
-        ) {
-            Image(
-                painter = painterResource(id = R.drawable.app_icon),
-                contentDescription = null,
-                Modifier.clip(MaterialTheme.shapes.small)
-            )
-            Text(
-                text = stringResource(id = R.string.home_intro),
-                style = MaterialTheme.typography.titleLarge,
-                textAlign = TextAlign.Center
-            )
-            RoundButton(
-                onClick = onStartButtonClick,
-                text = stringResource(id = R.string.start_button),
-                modifier = Modifier
-                    .padding(vertical = 16.dp)
-                    .align(alignment = Alignment.CenterHorizontally)
-            )
-        }
+    Column(
+        modifier = modifier.fillMaxSize().padding(16.dp),
+        verticalArrangement = Arrangement.SpaceBetween
+    ) {
+        Image(
+            painter = painterResource(id = R.drawable.app_icon),
+            contentDescription = null,
+            Modifier.clip(MaterialTheme.shapes.small)
+        )
+        Text(
+            text = stringResource(id = R.string.home_intro),
+            style = MaterialTheme.typography.titleLarge,
+            textAlign = TextAlign.Center
+        )
+        RoundButton(
+            onClick = onStartButtonClick,
+            text = stringResource(id = R.string.start_button),
+            modifier = Modifier
+                .padding(vertical = 16.dp)
+                .align(alignment = Alignment.CenterHorizontally)
+        )
+
     }
 }

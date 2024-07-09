@@ -76,80 +76,78 @@ fun StatsScreen(
     val worstRound = viewModel.worstRound.collectAsState()
     val badges = viewModel.badges.collectAsState()
 
-    CommonScaffold(titleResId = R.string.menu_your_scores) { padding ->
-        Column(
-            modifier = modifier
-                .verticalScroll(rememberScrollState())
-                .fillMaxSize()
-                .padding(padding),
-            verticalArrangement = Arrangement.Top
+    Column(
+        modifier = modifier
+            .verticalScroll(rememberScrollState())
+            .fillMaxSize()
+            .padding(16.dp),
+        verticalArrangement = Arrangement.Top
+    ) {
+        CurrentRank(currentRank.value)
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(vertical = 8.dp)
         ) {
-            CurrentRank(currentRank.value)
-            Row(
+            Image(
+                painter = painterResource(currentRankImg.value),
+                contentDescription = null,
+                contentScale = ContentScale.Crop,
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(vertical = 8.dp)
+                    .clip(MaterialTheme.shapes.small)
+                    .weight(1f)
+            )
+            Column(
+                verticalArrangement = Arrangement.Center,
+                modifier = Modifier.padding(start = 16.dp)
             ) {
-                Image(
-                    painter = painterResource(currentRankImg.value),
-                    contentDescription = null,
-                    contentScale = ContentScale.Crop,
-                    modifier = Modifier
-                        .clip(MaterialTheme.shapes.small)
-                        .weight(1f)
+                Stat(
+                    stringResource(
+                        id = R.string.stat_num_rounds
+                    ),
+                    formatNumber(numRounds.value.toDouble()),
+                    Modifier.padding(vertical = 8.dp)
                 )
-                Column(
-                    verticalArrangement = Arrangement.Center,
-                    modifier = Modifier.padding(start = 16.dp)
-                ) {
-                    Stat(
-                        stringResource(
-                            id = R.string.stat_num_rounds
-                        ),
-                        formatNumber(numRounds.value.toDouble()),
-                        Modifier.padding(vertical = 8.dp)
-                    )
-                    Stat(
-                        stringResource(
-                            id = R.string.stat_total_score
-                        ),
-                        formatNumber(totalScore.value.toDouble()),
-                        Modifier.padding(vertical = 8.dp)
-                    )
-                    Stat(
-                        stringResource(
-                            id = R.string.stat_avg_score
-                        ),
-                        formatNumber(avgScore.value),
-                        Modifier.padding(vertical = 8.dp)
-                    )
-                }
+                Stat(
+                    stringResource(
+                        id = R.string.stat_total_score
+                    ),
+                    formatNumber(totalScore.value.toDouble()),
+                    Modifier.padding(vertical = 8.dp)
+                )
+                Stat(
+                    stringResource(
+                        id = R.string.stat_avg_score
+                    ),
+                    formatNumber(avgScore.value),
+                    Modifier.padding(vertical = 8.dp)
+                )
             }
+        }
 
-            AchievementList(badges.value, modifier = Modifier.padding(top = 8.dp))
+        AchievementList(badges.value, modifier = Modifier.padding(top = 8.dp))
 
-            bestRound.value?.let { bestRound ->
-                Text(
-                    text = stringResource(R.string.your_best_round),
-                    style = MaterialTheme.typography.bodyLarge
-                )
-                StatsRoundCard(
-                    round = bestRound,
-                    useTimeleft = viewModel.useTimeLeft()
-                )
-            }
-            worstRound.value?.let { worstRound ->
-                Spacer(modifier = Modifier.height(8.dp))
-                Text(
-                    text = stringResource(R.string.replay_your_worst_round),
-                    style = MaterialTheme.typography.bodyLarge
-                )
-                StatsRoundCard(
-                    round = worstRound,
-                    useTimeleft = viewModel.useTimeLeft(),
-                    onReplayButtonClick = onRetryRoundButtonClick
-                )
-            }
+        bestRound.value?.let { bestRound ->
+            Text(
+                text = stringResource(R.string.your_best_round),
+                style = MaterialTheme.typography.bodyLarge
+            )
+            StatsRoundCard(
+                round = bestRound,
+                useTimeleft = viewModel.useTimeLeft()
+            )
+        }
+        worstRound.value?.let { worstRound ->
+            Spacer(modifier = Modifier.height(8.dp))
+            Text(
+                text = stringResource(R.string.replay_your_worst_round),
+                style = MaterialTheme.typography.bodyLarge
+            )
+            StatsRoundCard(
+                round = worstRound,
+                useTimeleft = viewModel.useTimeLeft(),
+                onReplayButtonClick = onRetryRoundButtonClick
+            )
         }
     }
 }

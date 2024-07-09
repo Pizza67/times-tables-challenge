@@ -39,22 +39,20 @@ fun MenuScreen(
         viewModel.getRoundNum()
     }
 
-    CommonScaffold(titleResId = R.string.menu) { padding ->
-        Column(
-            modifier = modifier
-                .verticalScroll(rememberScrollState())
-                .fillMaxSize()
-                .padding(padding),
-            verticalArrangement = Arrangement.Top
-        ) {
-            GameMenu(
-                onMenuButtonClick = onMenuButtonClick,
-                hasPlayedRounds = hasPlayedRounds.value,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .widthIn(max = 600.dp)
-            )
-        }
+    Column(
+        modifier = modifier
+            .verticalScroll(rememberScrollState())
+            .fillMaxSize()
+            .padding(16.dp),
+        verticalArrangement = Arrangement.Top
+    ) {
+        GameMenu(
+            onMenuButtonClick = onMenuButtonClick,
+            hasPlayedRounds = hasPlayedRounds.value,
+            modifier = Modifier
+                .fillMaxWidth()
+                .widthIn(max = 600.dp)
+        )
     }
 }
 

@@ -75,4 +75,5 @@
     <string name="settings_play_sounds_desc">Enable sound effects during gameplay</string>
     <string name="settings_use_time_left">Track time left</string>
     <string name="settings_use_time_left_desc">Enable to compute the score using the time remaining after answering all questions</string>
+    <string name="back_button">back</string>
 </resources>

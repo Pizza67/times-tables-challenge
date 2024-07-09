@@ -68,31 +68,29 @@ fun ShareScreen(
         viewModel.setReceivedRoundId(receivedRoundId)
     }
 
-    CommonScaffold(titleResId = R.string.menu_share_new_game) { padding ->
-        Column(
-            modifier = modifier
-                .fillMaxSize()
-                .padding(padding),
-            verticalArrangement = Arrangement.SpaceBetween,
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            Text(
-                text = stringResource(id = R.string.share_round_desc),
-                style = MaterialTheme.typography.titleLarge,
-                textAlign = TextAlign.Center
-            )
-            QRCard(
-                receivedRound = receivedRound,
-                textToShare = viewModel.getShareUrl(),
-                qrCodeBitmap = qrCodeBitmap,
-                onInputSharedRoundId = viewModel::setReceivedRoundId,
-                modifier = modifier.widthIn(max = 600.dp)
-            )
-            RoundButton(
-                onClick = { onStartRoundButtonClick(roundToPlay.value) },
-                text = stringResource(id = R.string.start_button)
-            )
-        }
+    Column(
+        modifier = modifier
+            .fillMaxSize()
+            .padding(16.dp),
+        verticalArrangement = Arrangement.SpaceBetween,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Text(
+            text = stringResource(id = R.string.share_round_desc),
+            style = MaterialTheme.typography.titleLarge,
+            textAlign = TextAlign.Center
+        )
+        QRCard(
+            receivedRound = receivedRound,
+            textToShare = viewModel.getShareUrl(),
+            qrCodeBitmap = qrCodeBitmap,
+            onInputSharedRoundId = viewModel::setReceivedRoundId,
+            modifier = modifier.widthIn(max = 600.dp)
+        )
+        RoundButton(
+            onClick = { onStartRoundButtonClick(roundToPlay.value) },
+            text = stringResource(id = R.string.start_button)
+        )
     }
 }
 

@@ -41,47 +41,45 @@ fun SettingsScreen(
     viewmodel: SettingsViewModel = hiltViewModel(),
     modifier: Modifier = Modifier
 ) {
-    CommonScaffold(titleResId = R.string.menu_settings) { padding ->
-        Column(
-            modifier = modifier
-                .verticalScroll(rememberScrollState())
-                .fillMaxSize()
-                .padding(padding),
-            verticalArrangement = Arrangement.SpaceBetween
-        ) {
-            SettingsGroup(name = R.string.settings_game_group) {
-                SettingsSwitchComp(
-                    icon = painterResource(id = R.drawable.filter_9_plus_24),
-                    name = R.string.settings_extended_mode,
-                    desc = R.string.settings_extended_mode_desc,
-                    state = viewmodel.swExtendedMode.collectAsState(),
-                    onClick = { viewmodel.toggleExtendedMode() }
-                )
-                SettingsSwitchComp(
-                    icon = painterResource(id = R.drawable.trending_down_24),
-                    name = R.string.settings_overwrite_best_scores,
-                    desc = R.string.settings_overwrite_best_scores_desc,
-                    state = viewmodel.swOverwriteBestScores.collectAsState(),
-                    onClick = { viewmodel.toggleOverwriteBestScores() }
-                )
-                SettingsSwitchComp(
-                    icon = painterResource(id = R.drawable.time_left_24),
-                    name = R.string.settings_use_time_left,
-                    desc = R.string.settings_use_time_left_desc,
-                    state = viewmodel.swUseTimeLeft.collectAsState(),
-                    onClick = { viewmodel.toggleUseTimeLeft() }
-                )
-            }
+    Column(
+        modifier = modifier
+            .verticalScroll(rememberScrollState())
+            .fillMaxSize()
+            .padding(16.dp),
+        verticalArrangement = Arrangement.SpaceBetween
+    ) {
+        SettingsGroup(name = R.string.settings_game_group) {
+            SettingsSwitchComp(
+                icon = painterResource(id = R.drawable.filter_9_plus_24),
+                name = R.string.settings_extended_mode,
+                desc = R.string.settings_extended_mode_desc,
+                state = viewmodel.swExtendedMode.collectAsState(),
+                onClick = { viewmodel.toggleExtendedMode() }
+            )
+            SettingsSwitchComp(
+                icon = painterResource(id = R.drawable.trending_down_24),
+                name = R.string.settings_overwrite_best_scores,
+                desc = R.string.settings_overwrite_best_scores_desc,
+                state = viewmodel.swOverwriteBestScores.collectAsState(),
+                onClick = { viewmodel.toggleOverwriteBestScores() }
+            )
+            SettingsSwitchComp(
+                icon = painterResource(id = R.drawable.time_left_24),
+                name = R.string.settings_use_time_left,
+                desc = R.string.settings_use_time_left_desc,
+                state = viewmodel.swUseTimeLeft.collectAsState(),
+                onClick = { viewmodel.toggleUseTimeLeft() }
+            )
+        }
 
-            SettingsGroup(name = R.string.settings_look_and_feel_group) {
-                SettingsSwitchComp(
-                    icon = painterResource(id = R.drawable.music_note_24),
-                    name = R.string.settings_play_sounds,
-                    desc = R.string.settings_play_sounds_desc,
-                    state = viewmodel.swPlaySounds.collectAsState(),
-                    onClick = { viewmodel.togglePlaySounds() }
-                )
-            }
+        SettingsGroup(name = R.string.settings_look_and_feel_group) {
+            SettingsSwitchComp(
+                icon = painterResource(id = R.drawable.music_note_24),
+                name = R.string.settings_play_sounds,
+                desc = R.string.settings_play_sounds_desc,
+                state = viewmodel.swPlaySounds.collectAsState(),
+                onClick = { viewmodel.togglePlaySounds() }
+            )
         }
     }
 }
