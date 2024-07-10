@@ -82,5 +82,4 @@
     <string name="settings_about_desc">Get in touch and provide feedback</string>
     <string name="about_text_version">Version %1$s (%2$s)</string>
     <string name="about_text_feedback" >Please provide feedback and submit issues on</string>
-    <string name="here">here</string>
 </resources>
