@@ -17,7 +17,9 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import it.mmessore.timestableschallenge.R
-
+/*
+ * Credits: https://gist.github.com/sinasamaki/daa825d96235a18822177a2b1b323f49?ref=sinasamaki.comCredits to: https://github.com/MakeItEasyDev/Jetpack-Compose-Custom-Number-Keyboard
+ */
 @Composable
 fun Keyboard(
     onNumberClick: (digit: Char) -> Unit,
@@ -73,9 +75,9 @@ private fun NumberButton(
             onClick(number.digitToChar())
         },
         modifier = modifier
-            .padding(4.dp)
-            .aspectRatio(1.4f)
-            .padding(4.dp)
+            .padding(5.dp)
+            .aspectRatio(1.5f)
+            .padding(5.dp)
     ) {
         Text(
             text = number.toString(),
