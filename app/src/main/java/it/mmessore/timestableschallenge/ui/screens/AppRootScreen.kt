@@ -92,7 +92,9 @@ fun AppRootScreen(
             composable(route = AppScreen.Home.name) {
                 HomeScreen(
                     onStartButtonClick = {
-                        navController.navigate(AppScreen.Menu.name)
+                        navController.navigate(AppScreen.Menu.name) {
+                            launchSingleTop = true
+                        }
                 })
             }
 
@@ -161,6 +163,7 @@ fun AppRootScreen(
                 SummaryScreen(
                     round = Round.deserialize(round),
                     onMenuButtonClick = { navController.navigate(AppScreen.Menu.name) {
+                        launchSingleTop = true
                         popUpTo("${AppScreen.Summary.name}/{round}") { inclusive = true }
                     }},
                     onStatsButtonClick = { navController.navigate(AppScreen.Stats.name) {
