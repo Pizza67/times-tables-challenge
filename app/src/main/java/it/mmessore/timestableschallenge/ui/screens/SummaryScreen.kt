@@ -20,6 +20,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -133,8 +134,10 @@ fun SummaryScreen(
         Image(
             painter = painterResource(id = roundInfo.value.level.image),
             contentDescription = null,
-            Modifier.clip(MaterialTheme.shapes.small).fillMaxWidth()
+            contentScale = ContentScale.Crop,
+            modifier = Modifier.clip(MaterialTheme.shapes.small).fillMaxWidth().weight(1f)
         )
+        Spacer(modifier = Modifier.height(16.dp))
         Row (
             horizontalArrangement = Arrangement.Center,
             modifier = Modifier.fillMaxWidth()
