@@ -18,6 +18,7 @@ import androidx.compose.animation.scaleOut
 import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.detectTapGestures
@@ -55,9 +56,14 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.composed
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.drawWithContent
 import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.geometry.CornerRadius
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.input.pointer.pointerInput
@@ -74,6 +80,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
@@ -82,6 +89,7 @@ import it.mmessore.timestableschallenge.R
 import it.mmessore.timestableschallenge.data.persistency.AppPreferencesImpl
 import kotlinx.coroutines.delay
 import java.util.Locale
+import kotlin.math.max
 
 
 @Composable
@@ -355,7 +363,8 @@ fun DialogPager(
             Box (
                 Modifier
                     .height(250.dp)
-                    .verticalScroll(scrollState)){
+                    .verticalScroll(scrollState)
+                    .verticalScrollbar(scrollState)){
                 pages[page]()
             }
         }
@@ -426,4 +435,45 @@ fun ClickableTextWithUrl(text: String, textUrl: String, url: String, style: Text
                 }
         }
     )
+}
+
+/*
+    Credits to: https://gist.github.com/XFY9326/2067efcc3c5899557cc6a334d76a92c8
+ */
+@Composable
+fun Modifier.verticalScrollbar(
+    scrollState: ScrollState,
+    scrollBarWidth: Dp = 4.dp,
+    minScrollBarHeight: Dp = 5.dp,
+    scrollBarColor: Color = MaterialTheme.colorScheme.primary,
+    cornerRadius: Dp = 2.dp
+): Modifier = composed {
+    val targetAlpha = if (scrollState.isScrollInProgress) 1f else .1f
+    val duration = if (scrollState.isScrollInProgress) 150 else 500
+
+    val alpha by animateFloatAsState(
+        targetValue = targetAlpha,
+        animationSpec = tween(durationMillis = duration)
+    )
+
+    drawWithContent {
+        drawContent()
+
+        val needDrawScrollbar = scrollState.isScrollInProgress || alpha > 0.0f
+
+        if (needDrawScrollbar && scrollState.maxValue > 0) {
+            val visibleHeight: Float = this.size.height - scrollState.maxValue
+            val scrollBarHeight: Float = max(visibleHeight * (visibleHeight / this.size.height), minScrollBarHeight.toPx())
+            val scrollPercent: Float = scrollState.value.toFloat() / scrollState.maxValue
+            val scrollBarOffsetY: Float = scrollState.value + (visibleHeight - scrollBarHeight) * scrollPercent
+
+            drawRoundRect(
+                color = scrollBarColor,
+                topLeft = Offset(this.size.width - scrollBarWidth.toPx(), scrollBarOffsetY),
+                size = Size(scrollBarWidth.toPx(), scrollBarHeight),
+                alpha = alpha,
+                cornerRadius = CornerRadius(cornerRadius.toPx())
+            )
+        }
+    }
 }

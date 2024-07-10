@@ -3,7 +3,9 @@ package it.mmessore.timestableschallenge.ui.screens
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -25,13 +27,15 @@ fun HomeScreen(
 ) {
     Column(
         modifier = modifier.fillMaxSize().padding(16.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.SpaceBetween
     ) {
         Image(
             painter = painterResource(id = R.drawable.app_icon),
             contentDescription = null,
-            Modifier.clip(MaterialTheme.shapes.small)
+            Modifier.clip(MaterialTheme.shapes.small).weight(1f)
         )
+        Spacer(modifier = Modifier.height(16.dp))
         Text(
             text = stringResource(id = R.string.home_intro),
             style = MaterialTheme.typography.titleLarge,
