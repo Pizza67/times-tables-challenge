@@ -18,7 +18,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import it.mmessore.timestableschallenge.R
 /*
- * Credits: https://gist.github.com/sinasamaki/daa825d96235a18822177a2b1b323f49?ref=sinasamaki.comCredits to: https://github.com/MakeItEasyDev/Jetpack-Compose-Custom-Number-Keyboard
+ * Credits: https://github.com/MakeItEasyDev/Jetpack-Compose-Custom-Number-Keyboard
  */
 @Composable
 fun Keyboard(
