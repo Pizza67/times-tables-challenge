@@ -3,6 +3,7 @@ package it.mmessore.timestableschallenge.data
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import it.mmessore.timestableschallenge.R
+import kotlin.math.pow
 
 data class Badge(
     @StringRes val nameStrId: Int,
@@ -51,8 +52,9 @@ object Badges {
         )
     )
 
-    fun getBadgebyStats(avgScore: Double, rounds: Int): Badge {
-        val roundedAvgScore = Math.round(avgScore * 10.0) / 10.0
+    fun getBadgebyStats(avgScore: Double, rounds: Int, fractionDigits: Int = 2): Badge {
+        val pow = 10.0.pow(fractionDigits.toDouble())
+        val roundedAvgScore = Math.round(avgScore * pow) / pow
         return list.last { roundedAvgScore >= it.minAvgScore && rounds >= it.minRounds }
     }
 }

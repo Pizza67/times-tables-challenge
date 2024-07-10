@@ -39,7 +39,7 @@ fun formatTimestampToTime(timestamp: Long): String {
     return timeFormat.format(Date(timestamp))
 }
 
-fun formatNumber(number: Double, maximumFractionDigits: Int = 1, locale: Locale = Locale.getDefault()): String {
+fun formatNumber(number: Double, maximumFractionDigits: Int = 2, locale: Locale = Locale.getDefault()): String {
     val formatter = NumberFormat.getNumberInstance(locale)
     formatter.maximumFractionDigits = maximumFractionDigits
     return formatter.format(number)

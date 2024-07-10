@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Gara di Tabelline</string>
-    <string name="home_intro">Sfida i tuoi amici per vedere chi riesce a dare più risposte corrette in 30 secondi</string>
+    <string name="home_intro">Diventa un Super Campione di tabelline e sfida i tuoi amici per vedere chi riesce a dare più risposte corrette in 30 secondi</string>
     <string name="start_button">inizia</string>
     <string name="time_remaining">Tempo:</string>
     <string name="score">Punteggio:</string>
@@ -72,7 +72,7 @@
     <string name="settings_look_and_feel_group">Aspetto e Suoni</string>
     <string name="settings_play_sounds">Riproduci suoni</string>
     <string name="settings_play_sounds_desc">Abilita gli effetti sonori durante il gioco</string>
-    <string name="settings_use_time_left">Conta il tempo residuo</string>
+    <string name="settings_use_time_left">Usa il tempo residuo</string>
     <string name="settings_use_time_left_desc">Calcola il punteggio usando il tempo rimasto dopo aver risposto a tutte le domande</string>
     <string name="back_button">indietro</string>
     <string name="settings_support_group">Supporto</string>
