@@ -45,4 +45,4 @@ I created this app while working through the [Android Basics With Compose](https
 
 It turned out that the initial version of the app, without levels or achievements and simply focused on playing rounds, was a big hit with my kids! They encouraged me to add more features and make it available to others – while keeping it privacy-safe, completely ads-free, and totally free of charge.
 
-Guess this won't be the app that'll make our family rich, but no father could refuse such a request! 😊
+Guess this won't be the app that'll make our family rich, but no dad could refuse such a request! 😊
