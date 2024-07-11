@@ -8,22 +8,22 @@ A player must try to answer up to 20 times tables questions in 30 seconds.
 
 Based on the final score the player can reach one of the following levels:
 
-* **Student**: if the final score is up to 6
-* **Expert**: if the score is between 7 and 12
-* **Champion**: if the score is between 13 and 17
-* **Superhero**: if the score is between 18 and 19
-* **Cosmic Legend**: if the score is 20
+* **Student**: Score is up to 6
+* **Expert**: Score is between 7 and 12
+* **Champion**: Score is between 13 and 17
+* **Superhero**: Score is between 18 and 19
+* **Cosmic Legend**: Score is 20
 
 The resulting score of each round is used to track progress and measure the improvements.
 
 ## Achievements
 In the journey the player may unlock the following achievements which are awarded based on a player's average score across all completed rounds.
 
-* **Novice Learner**: average score is below 8, or you have played fewer than 20 rounds
-* **Rising Genius**: average score is below 12 and you have played fewer than 40 rounds
-* **Sparkling Champion**: average score is below 15 and you have played fewer than 80 rounds
-* **Supereme Hero**: average score is below 18 and you have played fewer than 100 rounds
-* **Galactic Master**: average score of 18 or higher and you have played at least 100 rounds
+* **Novice Learner**: Average score is below 8, or you have played fewer than 20 rounds
+* **Rising Genius**: Average score is below 12 and you have played fewer than 40 rounds
+* **Sparkling Champion**: Average score is below 15 and you have played fewer than 80 rounds
+* **Supereme Hero**: Average score is below 18 and you have played fewer than 100 rounds
+* **Galactic Master**: Average score of 18 or higher and you have played at least 100 rounds
 
 _Pro Tip:_ To boost your average score, try replaying your lowest-scoring rounds to improve those results.
 
@@ -32,5 +32,12 @@ Generate a unique round ID and share it with your opponents via QR code or a cus
 Each player can start the round whenever they're ready, but everyone faces the same challenging questions.
 
 _Remember, your performance in Challenge Mode rounds counts towards your overall average score!_
+
+## Game variants
+Game rules can be changed a bit without changing the way levels and achievements are reached.
+
+* **Go Beyond 9**: Extend the times tables up to 12 for an extra challenge. (Default: Times tables up to 9)
+* **Self-Sabotage**: With this option enabled, your score for each round is permanently recorded, even if you replay it and get a lower score. (Default: Only your highest score for each round is saved)
+* **Track time left**: In this mode, your best round score will factor in the time you have remaining after answering all questions. The faster you are, the higher your potential score! (Default: Time remaining does not affect the score)
 
 The app works completely offline and no user account is required to play.
