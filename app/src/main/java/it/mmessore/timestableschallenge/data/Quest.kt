@@ -4,6 +4,11 @@ class Quest(
     val op1: Int,
     val op2: Int
 ) {
+    companion object {
+        fun fromHex(hex: String): Quest {
+            return Quest(hex.substring(0, 1).toInt(16), hex.substring(1, 2).toInt(16))
+        }
+    }
     fun answer(): Int {
         return op1 * op2
     }
@@ -11,6 +16,13 @@ class Quest(
     fun isEasy(easyOps: List<Int>): Boolean {
         return (op1 in easyOps || op2 in easyOps)
     }
+
+    fun answerLength() = answer().toString().length
+
+    fun toHex(): String {
+        return op1.toString(16) + op2.toString(16)
+    }
+
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (other !is Quest) return false
