@@ -1,4 +1,4 @@
-# Times Tables Challenge
+# Times Tables Race
 A simple Android app for training in times tables.
 
 <img src="https://github.com/Pizza67/times-tables-challenge/assets/13993235/9bc032e9-02d0-4ef8-8d82-7055c275cd27" width="200" ><img src="https://github.com/Pizza67/times-tables-challenge/assets/13993235/7843ed7e-e555-435a-8441-bacf67fabd1f" width="200"><img src="https://github.com/Pizza67/times-tables-challenge/assets/13993235/a0eae962-d7f9-47d2-b0d2-1252ccecb4d1" width="200"><img src="https://github.com/Pizza67/times-tables-challenge/assets/13993235/e4d6828d-5352-47fe-a3ca-22a7455de12a" width="200"><img src="https://github.com/Pizza67/times-tables-challenge/assets/13993235/838346b5-8f3f-4d42-97b4-a794afedac80" width="200">
