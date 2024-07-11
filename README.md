@@ -41,7 +41,7 @@ Adjust certain game settings without altering the core path to leveling up and u
 * **Track time left**: In this mode, your best round score will factor in the time you have remaining after answering all questions. The faster you are, the higher your potential score! (Default: Time remaining does not affect the score)
 
 ## Motivations
-I created this app while working through the [Android Basics With Compose](https://developer.android.com/courses/android-basics-compose/course) course. One exercise challenged me to build a simple app from scratch using the knowledge I had gained up to that point. At that stage, I hadn't yet reached the lesson on fetching data from the internet. This sparked my curiosity about creating a polished and useful app without requiring the internet permission (in fact, this app requests no permissions at all!).
+I created this app while working through the [Android Basics With Compose](https://developer.android.com/courses/android-basics-compose/course) course. One exercise challenged me to build a simple app from scratch using the knowledge I had gained up to that point. At that stage, I hadn't yet reached the lesson on fetching data from the internet. This sparked my curiosity about creating a polished and useful app without requiring the internet access permission (in fact, this app requests no permissions at all!).
 
 It turned out that the initial version of the app, without levels or achievements and simply focused on playing rounds, was a big hit with my kids! They encouraged me to add more features and make it available to others – while keeping it privacy-safe, completely ads-free, and totally free of charge.
 
