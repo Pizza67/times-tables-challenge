@@ -19,10 +19,18 @@ The resulting score of each round is used to track progress and measure the impr
 ## Achievements
 In the journey the player may unlock the following achievements which are awarded based on a player's average score across all completed rounds.
 
-* **Novice Learner**: awarded if the average score is below 8, or you have played fewer than 20 rounds
-* **Rising Genius**: awarded if the average score is below 12 and you have played fewer than 40 rounds
-* **Sparkling Champion**: awarded if the average score is below 15 and you have played fewer than 80 rounds
-* **Supereme Hero**: awarded if the average score is below 18 and you have played fewer than 100 rounds
-* **Galactic Master**: awarded if the average score of 18 or higher and you have played at least 100 rounds
+* **Novice Learner**: average score is below 8, or you have played fewer than 20 rounds
+* **Rising Genius**: average score is below 12 and you have played fewer than 40 rounds
+* **Sparkling Champion**: average score is below 15 and you have played fewer than 80 rounds
+* **Supereme Hero**: average score is below 18 and you have played fewer than 100 rounds
+* **Galactic Master**: average score of 18 or higher and you have played at least 100 rounds
+
+_Pro Tip:_ To boost your average score, try replaying your lowest-scoring rounds to improve those results.
+
+## Challenge Mode
+Generate a unique round ID and share it with your opponents via QR code or a custom URL. 
+Each player can start the round whenever they're ready, but everyone faces the same challenging questions.
+
+_Remember, your performance in Challenge Mode rounds counts towards your overall average score!_
 
 The app works completely offline and no user account is required to play.
