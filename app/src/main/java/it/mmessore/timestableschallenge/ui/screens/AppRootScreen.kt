@@ -19,9 +19,12 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.semantics.testTagsAsResourceId
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -48,6 +51,7 @@ enum class AppScreen(
     Settings(R.string.menu_settings, true)
 }
 
+@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun AppRootScreen(
     challengeId: String?,
@@ -82,7 +86,12 @@ fun AppRootScreen(
                 modifier = Modifier.padding(vertical = 24.dp)
             )
         },
-        modifier = Modifier.fillMaxSize()
+        modifier = Modifier
+            .fillMaxSize()
+            .semantics {
+            testTagsAsResourceId = true
+        }
+
     ) { innerPadding ->
         NavHost(
             navController = navController,

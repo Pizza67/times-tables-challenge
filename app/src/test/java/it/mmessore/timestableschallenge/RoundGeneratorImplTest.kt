@@ -1,7 +1,7 @@
 package it.mmessore.timestableschallenge
 
 import it.mmessore.timestableschallenge.data.Quest
-import it.mmessore.timestableschallenge.data.RoundGenerator
+import it.mmessore.timestableschallenge.data.RoundGeneratorImpl
 import it.mmessore.timestableschallenge.data.persistency.FakeAppPreferences
 import junit.framework.TestCase.assertEquals
 import junit.framework.TestCase.assertFalse
@@ -9,7 +9,7 @@ import org.junit.Assert.assertNotEquals
 import org.junit.Test
 import org.junit.jupiter.api.assertThrows
 
-class RoundGeneratorTest {
+class RoundGeneratorImplTest {
     private fun hasConsecutiveElements(list: List<Quest>): Boolean {
         for (i in 0 until list.size - 1) {
             if (list[i] == list[i + 1]) {
@@ -20,12 +20,12 @@ class RoundGeneratorTest {
     }
     @Test
     fun generate_round_with_proper_size() {
-        assertEquals(RoundGenerator(FakeAppPreferences()).generate(30).size, 30)
+        assertEquals(RoundGeneratorImpl(FakeAppPreferences()).generate(30).size, 30)
     }
     @Test
     fun generate_round_with_no_duplicates() {
         val questsNum = 30
-        val round = RoundGenerator(FakeAppPreferences()).generate(questsNum)
+        val round = RoundGeneratorImpl(FakeAppPreferences()).generate(questsNum)
         assertEquals(round.size, questsNum)
         val roundDistinct = round.distinct()
         assertEquals(round.size, roundDistinct.size)
@@ -33,7 +33,7 @@ class RoundGeneratorTest {
     @Test
     fun generate_round_with_duplicates_no_consecutive() {
         val questsNum = 30
-        val round = RoundGenerator(minTable = 4, maxTable = 4, appPreferences = FakeAppPreferences()).generate(questsNum)
+        val round = RoundGeneratorImpl(minTable = 4, maxTable = 4, appPreferences = FakeAppPreferences()).generate(questsNum)
         assertEquals(round.size, questsNum)
         val roundDistinct = round.distinct()
         assertNotEquals(round.size, roundDistinct.size)
@@ -44,22 +44,22 @@ class RoundGeneratorTest {
         val questsNum = 100
         val easyList = listOf(1, 10)
         val maxNumEasyQuests = 4
-        val round = RoundGenerator(easyOps = easyList, maxNumEasyQuests = maxNumEasyQuests, appPreferences = FakeAppPreferences()).generate(questsNum)
+        val round = RoundGeneratorImpl(easyOps = easyList, maxNumEasyQuests = maxNumEasyQuests, appPreferences = FakeAppPreferences()).generate(questsNum)
         assertEquals(round.size, questsNum)
         assert(round.filter { it.isEasy(easyList) }.size <= maxNumEasyQuests)
     }
     @Test
     fun generate_invalid_round() {
         assertThrows<IllegalArgumentException> {
-            RoundGenerator(minTable = 8, maxTable = 3, appPreferences = FakeAppPreferences()).generate()
+            RoundGeneratorImpl(minTable = 8, maxTable = 3, appPreferences = FakeAppPreferences()).generate()
         }
     }
     @Test
     fun encode_decode_quests() {
         val questsNum = 200
-        val quests = RoundGenerator(FakeAppPreferences(extendedMode = true, numQuestions = questsNum)).generate(questsNum)
-        val encodedQuests = RoundGenerator.serialize(quests)
-        val decodedQuests = RoundGenerator.deserialize(encodedQuests)
+        val quests = RoundGeneratorImpl(FakeAppPreferences(extendedMode = true, numQuestions = questsNum)).generate(questsNum)
+        val encodedQuests = RoundGeneratorImpl.serialize(quests)
+        val decodedQuests = RoundGeneratorImpl.deserialize(encodedQuests)
         assertEquals(quests, decodedQuests)
     }
 }

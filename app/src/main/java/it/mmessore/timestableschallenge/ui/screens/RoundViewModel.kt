@@ -8,6 +8,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import it.mmessore.timestableschallenge.data.AppRepository
 import it.mmessore.timestableschallenge.data.Quest
 import it.mmessore.timestableschallenge.data.RoundGenerator
+import it.mmessore.timestableschallenge.data.RoundGeneratorImpl
 import it.mmessore.timestableschallenge.data.persistency.AppPreferences
 import it.mmessore.timestableschallenge.data.persistency.Constants
 import it.mmessore.timestableschallenge.data.persistency.Round
@@ -21,6 +22,7 @@ import javax.inject.Inject
 @HiltViewModel
 class RoundViewModel @Inject constructor(
     private val repository: AppRepository,
+    roundGenerator: RoundGenerator,
     private val appPreferences: AppPreferences,
     private val constants: Constants,
     private val coroutineScope: CoroutineScope
@@ -36,7 +38,7 @@ class RoundViewModel @Inject constructor(
         private const val DEFAULT_SCORE = 0
     }
 
-    private var quests: List<Quest> = RoundGenerator(appPreferences).generate()
+    private var quests: List<Quest> = roundGenerator.generate()
     private var currentQuestIdx = 0
     private var timeLeftMillis: Long = 0
     private var lastTickTime: Long = 0
@@ -54,15 +56,21 @@ class RoundViewModel @Inject constructor(
     private val _currentQuest = MutableStateFlow(quests[currentQuestIdx])
     val currentQuest: StateFlow<Quest> = _currentQuest
 
-    private val timer = object : CountDownTimer((constants.ROUND_TIME_SECONDS * 1000).toLong(), 1000) {
-        override fun onTick(millisUntilFinished: Long) {
-            _timeLeft.value = (millisUntilFinished / 1000).toInt()
-            timeLeftMillis = millisUntilFinished
-            lastTickTime = System.currentTimeMillis()
-        }
+    private lateinit var timer: CountDownTimer
 
-        override fun onFinish() {
-            finishRound(0)
+    init {
+        viewModelScope.launch {
+            timer = object : CountDownTimer((constants.ROUND_TIME_SECONDS * 1000).toLong(), 1000) {
+                override fun onTick(millisUntilFinished: Long) {
+                    _timeLeft.value = (millisUntilFinished / 1000).toInt()
+                    timeLeftMillis = millisUntilFinished
+                    lastTickTime = System.currentTimeMillis()
+                }
+
+                override fun onFinish() {
+                    finishRound(0)
+                }
+            }
         }
     }
 
@@ -81,9 +89,9 @@ class RoundViewModel @Inject constructor(
         _roundState.value = RoundState.STARTING
         currentQuestIdx = 0
         quests = if (roundId != null) {
-            RoundGenerator.deserialize(roundId)
+            RoundGeneratorImpl.deserialize(roundId)
         } else  {
-            RoundGenerator(appPreferences).generate()
+            RoundGeneratorImpl(appPreferences).generate()
         }
         _currentQuest.value = quests[currentQuestIdx]
     }
@@ -143,7 +151,7 @@ class RoundViewModel @Inject constructor(
                 _roundState.value = RoundState.FINISHED
                 finishedRound = Round(
                     timestamp = System.currentTimeMillis(),
-                    roundId = RoundGenerator.serialize(quests),
+                    roundId = RoundGeneratorImpl.serialize(quests),
                     score = _score.value,
                     timeLeft = timeLeft
                 ).also { round ->

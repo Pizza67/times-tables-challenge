@@ -37,7 +37,7 @@ class FakeSummaryRepository (private val context: Context): AppRepository {
     }
 
     override suspend fun insertRound(round: Round) {
-        TODO("Not yet implemented")
+
     }
 
     override suspend fun deleteAppData() {

@@ -11,7 +11,7 @@ import com.google.zxing.common.BitMatrix
 import com.google.zxing.qrcode.QRCodeWriter
 import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel
 import dagger.hilt.android.lifecycle.HiltViewModel
-import it.mmessore.timestableschallenge.data.RoundGenerator
+import it.mmessore.timestableschallenge.data.RoundGeneratorImpl
 import it.mmessore.timestableschallenge.data.persistency.AppPreferences
 import it.mmessore.timestableschallenge.data.persistency.ConstantsImpl
 import kotlinx.coroutines.CoroutineScope
@@ -28,7 +28,7 @@ class ShareViewModel @Inject constructor(
 ) : ViewModel() {
     private lateinit var roundUrl: String
 
-    private val _roundToPlay: MutableStateFlow<String> = MutableStateFlow(RoundGenerator.serialize(RoundGenerator(appPreferences).generate()))
+    private val _roundToPlay: MutableStateFlow<String> = MutableStateFlow(RoundGeneratorImpl.serialize(RoundGeneratorImpl(appPreferences).generate()))
     val roundToPlay: StateFlow<String> = _roundToPlay
     private val _receivedRound: MutableStateFlow<String?> = MutableStateFlow(null)
     val receivedRound: StateFlow<String?> = _receivedRound
@@ -52,7 +52,7 @@ class ShareViewModel @Inject constructor(
         if (inputText != null) {
             // Check first if user has input the whole url
             val roundId = Uri.parse(inputText).getQueryParameter(ConstantsImpl.QUERY_PARAM_ROUND_ID) ?: inputText
-            isValid = RoundGenerator.isValid(roundId)
+            isValid = RoundGeneratorImpl.isValid(roundId)
         }
         return isValid
     }

@@ -11,6 +11,8 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import it.mmessore.timestableschallenge.data.AppRepository
 import it.mmessore.timestableschallenge.data.AppRepositoryImpl
+import it.mmessore.timestableschallenge.data.RoundGenerator
+import it.mmessore.timestableschallenge.data.RoundGeneratorImpl
 import it.mmessore.timestableschallenge.data.persistency.AppDatabase
 import it.mmessore.timestableschallenge.data.persistency.AppPreferences
 import it.mmessore.timestableschallenge.data.persistency.AppPreferencesImpl
@@ -59,6 +61,12 @@ object ApplicationModule {
     @Singleton
     fun provideAppPreferences(@ApplicationContext context: Context): AppPreferences {
         return AppPreferencesImpl(context)
+    }
+
+    @Provides
+    @Singleton
+    fun provideRoundGenerator(appPreferences: AppPreferences): RoundGenerator {
+        return RoundGeneratorImpl(appPreferences)
     }
 
     @Singleton

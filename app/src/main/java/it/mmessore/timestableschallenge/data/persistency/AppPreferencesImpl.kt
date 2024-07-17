@@ -54,4 +54,5 @@ class AppPreferencesImpl @Inject constructor(@ApplicationContext val context: Co
             AppPreferences.AppThemeStyle.valueOf(it)
         } ?: AppPreferences.AppThemeStyle.SYSTEM
         set(value) = sharedPreferences.edit().putString(THEME_STYLE, value.name).apply()
+
 }
