@@ -17,7 +17,7 @@ object ConstantsImpl: Constants {
     override val SCORE_MEDIUM_LVL = 12
     override val SCORE_HIGH_LVL = 17
 
-    val CUSTOM_URI_SCHEME: String
+    override val CUSTOM_URI_SCHEME: String
         get() = context.getString(R.string.uri_custom_scheme)
-    const val QUERY_PARAM_ROUND_ID = "roundId"
+    override val QUERY_PARAM_ROUND_ID = "roundId"
 }

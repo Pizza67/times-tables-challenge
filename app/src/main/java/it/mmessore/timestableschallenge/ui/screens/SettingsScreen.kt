@@ -20,6 +20,7 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
@@ -42,9 +43,11 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import it.mmessore.timestableschallenge.R
+import it.mmessore.timestableschallenge.data.persistency.AppPreferences.AppThemeStyle
 import it.mmessore.timestableschallenge.ui.ClickableTextWithUrl
 import it.mmessore.timestableschallenge.ui.DialogScaffold
 import it.mmessore.timestableschallenge.ui.SFXDialog
+import it.mmessore.timestableschallenge.utils.getActivity
 import it.mmessore.timestableschallenge.utils.getAppVersion
 import it.mmessore.timestableschallenge.utils.getAppVersionCode
 
@@ -53,6 +56,9 @@ fun SettingsScreen(
     viewmodel: SettingsViewModel = hiltViewModel(),
     modifier: Modifier = Modifier
 ) {
+    val context = LocalContext.current
+    val activity = context.getActivity()
+
     Column(
         modifier = modifier
             .verticalScroll(rememberScrollState())
@@ -92,14 +98,63 @@ fun SettingsScreen(
                 state = viewmodel.swPlaySounds.collectAsState(),
                 onClick = { viewmodel.togglePlaySounds() }
             )
+            SettingsClickableComp(
+                icon = painterResource(id = R.drawable.palette_24),
+                name = R.string.settings_theme,
+                desc = R.string.settings_theme_desc,
+                selectedValue = viewmodel.themeStyle.collectAsState().value,
+                onValueSaved = {
+                    viewmodel.saveTheme(it)
+                    activity?.recreate() },
+                dialogContent = { selectedTheme, onThemeSelected ->
+                    ThemeDialog(selectedTheme, onThemeSelected)
+                }
+            )
         }
 
         SettingsGroup(name = R.string.settings_support_group) {
             SettingsClickableComp(
                 icon = painterResource(id = R.drawable.info_outline_24),
+                dialogImage = painterResource(id = R.drawable.app_icon),
                 name = R.string.settings_about,
-                desc = R.string.settings_about_desc) {
-                AboutDialog()
+                desc = R.string.settings_about_desc,
+                selectedValue = Unit,
+                dialogContent = { _, _ ->
+                    AboutDialog()
+                }
+            )
+        }
+    }
+}
+
+@Composable
+fun ThemeDialog(
+    selectedTheme: AppThemeStyle,
+    onThemeSelected: (AppThemeStyle) -> Unit,
+    modifier: Modifier = Modifier
+)  {
+    Column(
+        modifier = modifier
+            .fillMaxWidth()
+            .padding(16.dp)
+    ) {
+        Text(
+            text = stringResource(id = R.string.settings_theme),
+            style = MaterialTheme.typography.titleLarge,
+            fontWeight = FontWeight.Bold,
+            textAlign = TextAlign.Center,
+            modifier = Modifier.fillMaxWidth()
+        )
+        Spacer(modifier = Modifier.height(16.dp))
+        Column {
+            AppThemeStyle.entries.forEach { theme ->
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    RadioButton(
+                        selected = selectedTheme == theme,
+                        onClick = { onThemeSelected(theme) }
+                    )
+                    Text(text = stringResource(id = theme.label))
+                }
             }
         }
     }
@@ -148,7 +203,8 @@ fun AboutDialog(modifier: Modifier = Modifier) {
 fun SettingsGroup(
     @StringRes name: Int,
     // to accept only composables compatible with column
-    content: @Composable ColumnScope.() -> Unit ){
+    content: @Composable ColumnScope.() -> Unit
+){
     Column(modifier = Modifier.padding(vertical = 8.dp)) {
         Text(
             text = stringResource(id = name),
@@ -220,22 +276,32 @@ fun SettingsSwitchComp(
 }
 
 @Composable
-fun SettingsClickableComp(
+fun <T> SettingsClickableComp(
     icon: Painter,
+    dialogImage: Painter? = null,
     @StringRes name: Int,
     @StringRes desc: Int,
-    content: @Composable () -> Unit = {}
+    selectedValue: T,
+    onValueSaved: (T) -> Unit = {},
+    dialogContent: @Composable (T, (T) -> Unit) -> Unit
 ) {
     var isDialogShown by remember { mutableStateOf(false) }
+    var selectedItem by remember { mutableStateOf(selectedValue) }
 
     SFXDialog(
         showDialog = isDialogShown,
         onDismissRequest = { isDialogShown = false }
     ) {
         DialogScaffold(
-            painterResource(id = R.drawable.app_icon),
-            onDismissRequest = { isDialogShown = false },
-            content = content
+            dialogImage,
+            onCloseButtonClick = {
+                isDialogShown = false
+                onValueSaved(selectedItem) },
+            content = {
+                dialogContent(selectedItem) { newValue ->
+                    selectedItem = newValue
+                }
+            }
         )
     }
 

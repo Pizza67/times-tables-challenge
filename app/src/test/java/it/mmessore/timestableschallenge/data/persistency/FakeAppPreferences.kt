@@ -7,5 +7,6 @@ class FakeAppPreferences(
     override var playSounds: Boolean = true,
     override var extendedMode: Boolean = false,
     override var overwriteBestScores: Boolean = false,
-    override var useTimeLeft: Boolean = true
+    override var useTimeLeft: Boolean = true,
+    override var themeStyle: AppPreferences.AppThemeStyle = AppPreferences.AppThemeStyle.LIGHT,
 ) : AppPreferences

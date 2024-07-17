@@ -222,7 +222,7 @@ private fun AchievementList(
                     else
                         R.drawable.img_badge_not_achieved
                 ),
-                onDismissRequest = { isDialogVisible = false }
+                onCloseButtonClick = { isDialogVisible = false }
             )
         }
     }

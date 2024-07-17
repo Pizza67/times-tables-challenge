@@ -81,4 +81,9 @@
     <string name="settings_about_desc">Mettiti in contatto e fornisci suggerimenti</string>
     <string name="about_text_version">Versione %1$s (%2$s)</string>
     <string name="about_text_feedback">Scrivi i tuoi suggerimenti e chiedi supporto su</string>
+    <string name="settings_theme">Stile colori</string>
+    <string name="settings_theme_desc">Scegli il tema dell\'app</string>
+    <string name="theme_light">Tema chiaro</string>
+    <string name="theme_dark">Tema scuro</string>
+    <string name="theme_system">Impostazioni di sistema</string>
 </resources>

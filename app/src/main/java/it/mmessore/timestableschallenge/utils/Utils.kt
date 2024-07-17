@@ -1,10 +1,13 @@
 package it.mmessore.timestableschallenge.utils
 
 import android.content.Context
+import android.content.ContextWrapper
 import android.content.pm.PackageManager
+import android.content.res.Configuration
 import android.text.format.DateUtils.DAY_IN_MILLIS
 import android.text.format.DateUtils.FORMAT_ABBREV_RELATIVE
 import android.text.format.DateUtils.getRelativeTimeSpanString
+import androidx.activity.ComponentActivity
 import java.text.NumberFormat
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -61,4 +64,19 @@ fun getAppVersionCode(context: Context): String {
     } catch (e: PackageManager.NameNotFoundException) {
         return ""
     }
+}
+
+
+fun isSystemInDarkTheme(context: Context): Boolean {
+    return when (context.resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) {
+        Configuration.UI_MODE_NIGHT_YES -> true
+        Configuration.UI_MODE_NIGHT_NO -> false
+        else -> false
+    }
+}
+
+fun Context.getActivity(): ComponentActivity? = when (this) {
+    is ComponentActivity -> this
+    is ContextWrapper -> baseContext.getActivity()
+    else -> null
 }

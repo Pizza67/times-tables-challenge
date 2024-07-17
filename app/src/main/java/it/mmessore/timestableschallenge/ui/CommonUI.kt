@@ -70,7 +70,6 @@ import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.TextStyle
@@ -264,37 +263,37 @@ fun getDialogWindow(): Window? = (LocalView.current.parent as? DialogWindowProvi
 
 @Composable
 fun DialogScaffold(
-    painter: Painter = painterResource(id = R.drawable.img_rank_medium),
+    painter: Painter? = null,
     contentDescription: String? = null,
     content: @Composable () -> Unit = {},
     okBtnText: String? = null,
     onOkButtonClick: () -> Unit = {},
     closeBtnText: String = stringResource(id = R.string.close),
-    onDismissRequest: () -> Unit = {}
+    onCloseButtonClick: () -> Unit = {}
 ) {
     Column(Modifier.background(MaterialTheme.colorScheme.surface)) {
+        painter?.let {
+            var graphicVisible by remember { mutableStateOf(false) }
 
-        var graphicVisible by remember { mutableStateOf(false) }
+            LaunchedEffect(Unit) { graphicVisible = true }
 
-        LaunchedEffect(Unit) { graphicVisible = true }
-
-        AnimatedVisibility(
-            visible = graphicVisible,
-            enter = expandVertically(
-                animationSpec = spring(stiffness = Spring.StiffnessMediumLow),
-                expandFrom = Alignment.CenterVertically,
-            )
-        ) {
-            Image(
-                painter = painter,
-                contentDescription = contentDescription,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(180.dp),
-                contentScale = ContentScale.FillWidth
-            )
+            AnimatedVisibility(
+                visible = graphicVisible,
+                enter = expandVertically(
+                    animationSpec = spring(stiffness = Spring.StiffnessMediumLow),
+                    expandFrom = Alignment.CenterVertically,
+                )
+            ) {
+                Image(
+                    painter = painter,
+                    contentDescription = contentDescription,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(180.dp),
+                    contentScale = ContentScale.FillWidth
+                )
+            }
         }
-
         content()
 
         Row(
@@ -304,7 +303,7 @@ fun DialogScaffold(
                 modifier = Modifier
                     .padding(8.dp)
                     .clip(RoundedCornerShape(8.dp))
-                    .clickable { onDismissRequest() }
+                    .clickable { onCloseButtonClick() }
                     .weight(1f)
                     .padding(vertical = 20.dp),
                 contentAlignment = Alignment.Center
@@ -328,7 +327,7 @@ fun DialogScaffold(
                         .padding(8.dp)
                         .clip(RoundedCornerShape(8.dp))
                         .clickable {
-                            onDismissRequest()
+                            onCloseButtonClick()
                             onOkButtonClick()
                         }
                         .weight(1f)

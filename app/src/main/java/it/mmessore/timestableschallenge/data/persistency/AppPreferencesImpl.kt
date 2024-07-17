@@ -5,7 +5,7 @@ import android.content.SharedPreferences
 import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
 
-class AppPreferencesImpl @Inject constructor(@ApplicationContext context: Context): AppPreferences {
+class AppPreferencesImpl @Inject constructor(@ApplicationContext val context: Context): AppPreferences {
 
     companion object {
         private const val PREFS_NAME = "app_preferences"
@@ -16,6 +16,7 @@ class AppPreferencesImpl @Inject constructor(@ApplicationContext context: Contex
         private const val EXTENDED_MODE = "extended_mode"
         private const val OVERWRITE_BEST_SCORES = "overwrite_best_scores"
         private const val USE_TIME_LEFT = "use_time_left"
+        private const val THEME_STYLE = "theme_style"
     }
 
     private val sharedPreferences: SharedPreferences = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
@@ -48,4 +49,9 @@ class AppPreferencesImpl @Inject constructor(@ApplicationContext context: Contex
         get() = sharedPreferences.getBoolean(USE_TIME_LEFT, true) // Default value
         set(value) = sharedPreferences.edit().putBoolean(USE_TIME_LEFT, value).apply()
 
+    override var themeStyle: AppPreferences.AppThemeStyle
+        get() = sharedPreferences.getString(THEME_STYLE, AppPreferences.AppThemeStyle.SYSTEM.name)?.let {
+            AppPreferences.AppThemeStyle.valueOf(it)
+        } ?: AppPreferences.AppThemeStyle.SYSTEM
+        set(value) = sharedPreferences.edit().putString(THEME_STYLE, value.name).apply()
 }

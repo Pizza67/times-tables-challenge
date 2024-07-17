@@ -18,6 +18,8 @@ class SettingsViewModel @Inject constructor(private val appPreferences: AppPrefe
     val swPlaySounds = _swPlaySounds.asStateFlow()
     private val _swUseTimeLeft = MutableStateFlow(appPreferences.useTimeLeft)
     val swUseTimeLeft = _swUseTimeLeft.asStateFlow()
+    private val _themeStyle = MutableStateFlow(appPreferences.themeStyle)
+    val themeStyle = _themeStyle.asStateFlow()
 
     fun toggleExtendedMode() {
         appPreferences.extendedMode = !appPreferences.extendedMode
@@ -37,5 +39,10 @@ class SettingsViewModel @Inject constructor(private val appPreferences: AppPrefe
     fun toggleUseTimeLeft() {
         appPreferences.useTimeLeft = !appPreferences.useTimeLeft
         _swUseTimeLeft.value = appPreferences.useTimeLeft
+    }
+
+    fun saveTheme(theme: AppPreferences.AppThemeStyle) {
+        appPreferences.themeStyle = theme
+        _themeStyle.value = appPreferences.themeStyle
     }
 }
