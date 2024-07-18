@@ -174,7 +174,7 @@ fun TimeLeft(time: Int, modifier: Modifier = Modifier) {
             text = time.toString(),
             style = MaterialTheme.typography.headlineLarge,
             textAlign = TextAlign.Center,
-            modifier = Modifier.padding(horizontal = 8.dp)
+            modifier = Modifier.padding(horizontal = 8.dp).testTag("timeLeft")
         )
     }
 }

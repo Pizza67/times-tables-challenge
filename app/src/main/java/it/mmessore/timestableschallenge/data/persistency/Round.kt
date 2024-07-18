@@ -9,9 +9,9 @@ import com.google.gson.JsonSyntaxException
 data class Round(
     @PrimaryKey
     val roundId: String,
-    val timestamp: Long,
-    val score: Int,
-    val timeLeft: Int
+    val timestamp: Long = System.currentTimeMillis(),
+    val score: Int = 0,
+    val timeLeft: Int = 0
 ) {
 
     fun hasBetterOrEqualsScore(other: Round, useTimeLeft: Boolean): Boolean {

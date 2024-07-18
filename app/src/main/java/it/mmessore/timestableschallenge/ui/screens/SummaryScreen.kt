@@ -21,6 +21,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -89,6 +90,11 @@ fun SummaryScreen(
                 Text(
                     text = roundInfo.value.score.toString(),
                     style = MaterialTheme.typography.displayLarge,
+                    modifier = Modifier.testTag("score")
+                )
+                Text(
+                    text = stringResource(R.string.stats_round_score),
+                    style = MaterialTheme.typography.displayMedium
                 )
             }
             if (viewModel.useTimeleft() && roundInfo.value.timeLeft > 0) {

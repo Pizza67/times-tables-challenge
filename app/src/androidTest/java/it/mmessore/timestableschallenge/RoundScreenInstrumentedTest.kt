@@ -1,6 +1,7 @@
 package it.mmessore.timestableschallenge
 
 import androidx.activity.ComponentActivity
+import androidx.compose.ui.semantics.SemanticsProperties
 import androidx.compose.ui.test.ExperimentalTestApi
 import androidx.compose.ui.test.assertTextEquals
 import androidx.compose.ui.test.hasText
@@ -20,6 +21,7 @@ import it.mmessore.timestableschallenge.data.Quest
 import it.mmessore.timestableschallenge.data.RoundGeneratorImpl
 import it.mmessore.timestableschallenge.data.persistency.FakeAppPreferences
 import it.mmessore.timestableschallenge.data.persistency.FakeConstants
+import it.mmessore.timestableschallenge.data.persistency.Round
 import it.mmessore.timestableschallenge.ui.screens.RoundScreen
 import it.mmessore.timestableschallenge.ui.screens.RoundViewModel
 import it.mmessore.timestableschallenge.ui.theme.AppTheme
@@ -58,16 +60,45 @@ class RoundScreenInstrumentedTest {
         viewModel = RoundViewModel(fakeRepository, fakeRoundGenerator, fakePreferences, fakeConstants, coroutineScope)
     }
 
+    @Test
+    fun roundCompleted_allQuestionsAnswered() {
+        testRound(composeTestRule, viewModel, quests, 0)
+    }
+
+    @Test
+    fun roundCompleted_allQuestionsAnsweredWithHalfErrors() {
+        testRound(composeTestRule, viewModel, quests, 1)
+    }
+
+    @Test
+    fun roundCompleted_halfQuestionsAnswered() {
+        testRound(composeTestRule, viewModel, quests, 0, quests.size / 2)
+    }
+
+    @Test
+    fun roundCompleted_halfQuestionsAnsweredWithHalfErrors() {
+        testRound(composeTestRule, viewModel, quests, 1, quests.size / 2)
+    }
+
+    @Test
+    fun roundTimedUp_allQuestionsAnswered() {
+        fakeConstants = FakeConstants(ROUND_TIME_SECONDS = 2)
+        viewModel = RoundViewModel(fakeRepository, fakeRoundGenerator, fakePreferences, fakeConstants, coroutineScope)
+        testRound(composeTestRule, viewModel, quests, 0)
+    }
+
     @OptIn(ExperimentalTestApi::class)
     fun testRound(
         composeTestRule: AndroidComposeTestRule<ActivityScenarioRule<ComponentActivity>, ComponentActivity>,
         viewModel: RoundViewModel,
         quests: List<Quest>,
-        errorsBeforeAnswer: Int
+        errorsBeforeAnswer: Int,
+        targetScore: Int = quests.size
     ) {
         composeTestRule.setContent {
             AppTheme {
-                RoundScreen(viewModel = viewModel)}
+                RoundScreen(viewModel = viewModel)
+            }
         }
         val answers = mutableListOf<Quest>()
         quests.forEach { quest ->
@@ -76,31 +107,36 @@ class RoundScreenInstrumentedTest {
             }
         }
         var score = 0
-        answers.forEachIndexed { idx, q ->
-            val answerCorrect = if (errorsBeforeAnswer > 0) {
-                if (idx % (errorsBeforeAnswer + 1) != 0) 1 else 0
-            } else 1
-            composeTestRule.onNodeWithTag("score").assertTextEquals(score.toString())
-            score += answerCorrect
-            composeTestRule.waitUntilAtLeastOneExists(hasText("${q.op1} x ${q.op2} = ?"), 5000)
-            val charArray = q.answer().times(answerCorrect).toString().toCharArray()
-            charArray.forEach {
-                composeTestRule.onNodeWithTag("numberButton_$it").performClick()
+        var idx = 0
+        while (idx < answers.size && score < targetScore) {
+            val q = answers[idx]
+            val timeLeft = composeTestRule.onNodeWithTag("timeLeft")
+                .fetchSemanticsNode()
+                .config[SemanticsProperties.Text]
+                .firstOrNull()?.text?.toIntOrNull() ?: 0
+
+            if (timeLeft > 0) {
+                val answerCorrect = if (errorsBeforeAnswer > 0) {
+                    if (idx % (errorsBeforeAnswer + 1) != 0) 1 else 0
+                } else 1
+                composeTestRule.onNodeWithTag("score").assertTextEquals(score.toString())
+                composeTestRule.waitUntilAtLeastOneExists(hasText("${q.op1} x ${q.op2} = ?"), 5000)
+                val charArray= q.answer().times(answerCorrect).toString().toCharArray()
+                charArray.forEach {
+                    composeTestRule.onNodeWithTag("numberButton_$it").performClick()
+                }
+                composeTestRule.onNodeWithContentDescription("Next").performClick()
+                score += answerCorrect
             }
-            composeTestRule.onNodeWithContentDescription("Next").performClick()
+            idx++
         }
+        // Check that the game is over
+        composeTestRule.waitUntilAtLeastOneExists(
+            hasText(composeTestRule.activity.getString(R.string.game_over)),
+            fakeConstants.ROUND_TIME_SECONDS.toLong() * 1000
+        )
+        // Check round info into viewmodel
+        assert(RoundGeneratorImpl.serialize(quests) == viewModel.finishedRound?.roundId)
+        assert(score == viewModel.finishedRound?.score)
     }
-
-    @OptIn(ExperimentalTestApi::class)
-    @Test
-    fun roundCompleted_allQuestionsAnswered() {
-        testRound(composeTestRule, viewModel, quests, 0)
-    }
-
-    @OptIn(ExperimentalTestApi::class)
-    @Test
-    fun roundCompleted_allQuestionsAnsweredWithHalfErrors() {
-        testRound(composeTestRule, viewModel, quests, 1)
-    }
-
 }
