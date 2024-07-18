@@ -52,7 +52,7 @@ class ShareViewModel @Inject constructor(
         if (inputText != null) {
             // Check first if user has input the whole url
             val roundId = Uri.parse(inputText).getQueryParameter(ConstantsImpl.QUERY_PARAM_ROUND_ID) ?: inputText
-            isValid = RoundGeneratorImpl.isValid(roundId)
+            isValid = RoundGeneratorImpl.isValid(roundId, appPreferences.numQuestions)
         }
         return isValid
     }

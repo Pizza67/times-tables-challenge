@@ -59,10 +59,10 @@ class RoundGeneratorImpl @Inject constructor (
             return quests
         }
 
-        fun isValid(base64String: String): Boolean {
+        fun isValid(base64String: String, size: Int): Boolean {
             return try {
                 val quests = deserialize(base64String)
-                quests.isNotEmpty() && quests.size == ConstantsImpl.ROUND_QUESTS
+                quests.isNotEmpty() && quests.size == size
             } catch (e: Exception) {
                 false
             }
