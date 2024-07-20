@@ -92,10 +92,6 @@ fun SummaryScreen(
                     style = MaterialTheme.typography.displayLarge,
                     modifier = Modifier.testTag("score")
                 )
-                Text(
-                    text = stringResource(R.string.stats_round_score),
-                    style = MaterialTheme.typography.displayMedium
-                )
             }
             if (viewModel.useTimeleft() && roundInfo.value.timeLeft > 0) {
                 Row(
