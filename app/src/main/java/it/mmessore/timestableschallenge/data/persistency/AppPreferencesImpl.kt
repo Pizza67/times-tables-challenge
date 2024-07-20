@@ -46,7 +46,7 @@ class AppPreferencesImpl @Inject constructor(@ApplicationContext val context: Co
         set(value) = sharedPreferences.edit().putBoolean(OVERWRITE_BEST_SCORES, value).apply()
 
     override var useTimeLeft: Boolean
-        get() = sharedPreferences.getBoolean(USE_TIME_LEFT, true) // Default value
+        get() = sharedPreferences.getBoolean(USE_TIME_LEFT, false) // Default value
         set(value) = sharedPreferences.edit().putBoolean(USE_TIME_LEFT, value).apply()
 
     override var themeStyle: AppPreferences.AppThemeStyle
