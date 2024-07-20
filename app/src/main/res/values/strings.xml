@@ -26,7 +26,7 @@
     <string name="desc_rank_medium">Congratulations! You\'ve conquered the first challenges and are now ready to embark on new adventures. Train your memory and keep testing your skills, and soon you\'ll be ready to ace any exam!</string>
     <string name="desc_rank_high">Wow! Your knowledge shines like gold! You\'ve shown great skill and speed, but the challenges aren\'t over yet. Get ready to test your mastery with even more complex and rapid multiplications. Will you be able to overcome every obstacle and reach the top?</string>
     <string name="desc_rank_max">Welcome to the Mount Olympus of multiplication! You have reached the pinnacle of knowledge, demonstrating absolute mastery of multiplication. Your speed and accuracy are unmatched, and your name will forever echo through the galaxy as a symbol of mathematical excellence. Now enjoy the view from the summit and continue to explore the infinite universe of numbers!</string>
-    <string name="game_over">TIME IS UP!</string>
+    <string name="game_over">Time is up!</string>
     <string name="final_score">Your Score is:</string>
     <string name="menu">Menu</string>
     <string name="menu_start_new_game">Start new round</string>
@@ -87,4 +87,5 @@
     <string name="theme_light">Light theme</string>
     <string name="theme_dark">Dark theme</string>
     <string name="theme_system">System settings</string>
+    <string name="round_complete">Round Complete!</string>
 </resources>

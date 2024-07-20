@@ -80,8 +80,14 @@ fun RoundScreen(
                     endDelayMillis = 3000,
                     onAnimationEnd = { onRoundFinished(viewModel.finishedRound) }
                 ) {
+                    val timeUp = (viewModel.finishedRound?.timeLeft ?: 0) == 0
                     Text(
-                        text = stringResource(id = R.string.game_over),
+                        text = stringResource(id =
+                            if (timeUp)
+                                R.string.game_over
+                            else
+                                R.string.round_complete
+                        ),
                         style = MaterialTheme.typography.displayLarge,
                         textAlign = TextAlign.Center,
                         modifier = Modifier.padding(vertical = 48.dp).fillMaxWidth()
