@@ -68,7 +68,7 @@ class RoundViewModel @Inject constructor(
                 }
 
                 override fun onFinish() {
-                    finishRound(0)
+                    finishRound(_score.value)
                 }
             }
         }
@@ -112,7 +112,7 @@ class RoundViewModel @Inject constructor(
             if (currentQuestIdx == quests.size - 1) {
                 timer.cancel()
                 val timeleft = (timeLeftMillis - (System.currentTimeMillis() - lastTickTime)).toInt()
-                finishRound(timeleft)
+                finishRound(quests.size, timeleft)
             } else {
                 currentQuestIdx++
                 _currentQuest.value = quests[currentQuestIdx]
@@ -145,14 +145,14 @@ class RoundViewModel @Inject constructor(
         }
     }
 
-    private fun finishRound(timeLeft: Int = 0) {
+    private fun finishRound(finalScore: Int, timeLeft: Int = 0) {
         viewModelScope.launch (context = coroutineScope.coroutineContext) {
             if (roundState.value == RoundState.IN_PROGRESS) {
                 _roundState.value = RoundState.FINISHED
                 finishedRound = Round(
                     timestamp = System.currentTimeMillis(),
                     roundId = RoundGeneratorImpl.serialize(quests),
-                    score = _score.value,
+                    score = finalScore,
                     timeLeft = timeLeft
                 ).also { round ->
                     repository.insertRound(round)
