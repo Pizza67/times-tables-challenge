@@ -50,4 +50,4 @@ jobs:
       with:
         arg-spec: 'android-device.yml:android-pixel-8'
       env:
-        FB_SERVICE_ACCOUNT: ${{ secrets.FB_TEST_LAB_SERVICE_ACCOUNT }}
+        SERVICE_ACCOUNT: ${{ secrets.SERVICE_ACCOUNT }}
