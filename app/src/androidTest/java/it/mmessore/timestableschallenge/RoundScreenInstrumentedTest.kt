@@ -21,7 +21,6 @@ import it.mmessore.timestableschallenge.data.Quest
 import it.mmessore.timestableschallenge.data.RoundGeneratorImpl
 import it.mmessore.timestableschallenge.data.persistency.FakeAppPreferences
 import it.mmessore.timestableschallenge.data.persistency.FakeConstants
-import it.mmessore.timestableschallenge.data.persistency.Round
 import it.mmessore.timestableschallenge.ui.screens.RoundScreen
 import it.mmessore.timestableschallenge.ui.screens.RoundViewModel
 import it.mmessore.timestableschallenge.ui.theme.AppTheme
@@ -132,7 +131,12 @@ class RoundScreenInstrumentedTest {
         }
         // Check that the game is over
         composeTestRule.waitUntilAtLeastOneExists(
-            hasText(composeTestRule.activity.getString(R.string.game_over)),
+            hasText(composeTestRule.activity.getString(
+                if (score < quests.size)
+                    R.string.game_over
+                else
+                    R.string.round_complete
+            )),
             fakeConstants.ROUND_TIME_SECONDS.toLong() * 1000
         )
         // Check round info into viewmodel
