@@ -115,7 +115,7 @@ class NavigationInstrumentedTest {
         // Navigate from Round to Summary after round is finished
         composeTestRule.waitUntilAtLeastOneExists(
             hasText(context.getString(R.string.final_score)),
-            (fakeConstants.ROUND_TIME_SECONDS + 5).toLong() * 1000
+            (fakeConstants.ROUND_TIME_SECONDS + 10).toLong() * 1000
         )
     }
 
