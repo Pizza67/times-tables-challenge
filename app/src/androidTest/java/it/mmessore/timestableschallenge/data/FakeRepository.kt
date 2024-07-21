@@ -3,8 +3,9 @@ package it.mmessore.timestableschallenge.data
 import android.content.Context
 import it.mmessore.timestableschallenge.data.persistency.Achievement
 import it.mmessore.timestableschallenge.data.persistency.Round
+import javax.inject.Inject
 
-class FakeSummaryRepository (private val context: Context): AppRepository {
+class FakeRepository @Inject constructor(private val context: Context): AppRepository {
     private var round: Round? = Round(
         roundId = "testRoundId",
         timestamp = System.currentTimeMillis(),
@@ -14,6 +15,7 @@ class FakeSummaryRepository (private val context: Context): AppRepository {
     private var isNewBestRound: Boolean = false
     private var currentAchievement: Achievement? = null
     private var isAchievementAlreadyUnlocked: Boolean = true
+    private var roundNum: Int = 1
 
     fun setRound(round: Round) {
         this.round = round
@@ -36,6 +38,10 @@ class FakeSummaryRepository (private val context: Context): AppRepository {
         this.isAchievementAlreadyUnlocked = !isUnlocked
     }
 
+    fun setRoundNum(numRounds: Int) {
+        roundNum = numRounds
+    }
+
     override suspend fun insertRound(round: Round) {
 
     }
@@ -45,7 +51,7 @@ class FakeSummaryRepository (private val context: Context): AppRepository {
     }
 
     override suspend fun lastRound(): Round? {
-        TODO("Not yet implemented")
+        return round
     }
 
     override suspend fun getRound(roundId: String): Round? {
@@ -53,23 +59,21 @@ class FakeSummaryRepository (private val context: Context): AppRepository {
     }
 
     override suspend fun getAvgScore(): Double {
-        TODO("Not yet implemented")
+        return 10.0
     }
 
     override suspend fun getTotalScore(): Int {
-        TODO("Not yet implemented")
+        return 100
     }
 
-    override suspend fun getRoundNum(): Int {
-        TODO("Not yet implemented")
-    }
+    override suspend fun getRoundNum() = roundNum
 
     override suspend fun getBestRound(useTimeLeft: Boolean): Round? {
-        TODO("Not yet implemented")
+        return round
     }
 
     override suspend fun getWorstRound(): Round? {
-        TODO("Not yet implemented")
+        return round
     }
 
     override suspend fun isNewBestRound(round: Round): Boolean {
@@ -81,7 +85,13 @@ class FakeSummaryRepository (private val context: Context): AppRepository {
     }
 
     override suspend fun getAchievements(): List<Achievement> {
-        TODO("Not yet implemented")
+        return listOf(
+            Achievement.createFromBadge(
+                context = context,
+                badge = Badges.list[0],
+                avgScore = 10.0,
+                numRounds = 10
+        )!!)
     }
 
     override suspend fun getCurrentAchievement(): Achievement? {

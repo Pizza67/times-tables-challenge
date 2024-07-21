@@ -10,7 +10,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
-import it.mmessore.timestableschallenge.data.FakeSummaryRepository
+import it.mmessore.timestableschallenge.data.FakeRepository
 import it.mmessore.timestableschallenge.data.persistency.FakeAppPreferences
 import it.mmessore.timestableschallenge.data.persistency.Round
 import it.mmessore.timestableschallenge.ui.screens.SummaryScreen
@@ -32,7 +32,7 @@ class SummaryScreenInstrumentedTest {
     @get:Rule(order = 1)
     val composeTestRule = createAndroidComposeRule<ComponentActivity>()
     private lateinit var fakePreferences: FakeAppPreferences
-    private lateinit var fakeRepository: FakeSummaryRepository
+    private lateinit var fakeRepository: FakeRepository
     private lateinit var viewModel: SummaryViewModel
     private lateinit var coroutineScope: CoroutineScope
 
@@ -40,7 +40,7 @@ class SummaryScreenInstrumentedTest {
     fun setup() {
         hiltRule.inject()
         fakePreferences = FakeAppPreferences()
-        fakeRepository = FakeSummaryRepository(composeTestRule.activity)
+        fakeRepository = FakeRepository(composeTestRule.activity)
         fakeRepository.setCurrentAchievement()
         coroutineScope = composeTestRule.activity.lifecycleScope
         viewModel = SummaryViewModel(fakeRepository, fakePreferences, coroutineScope)

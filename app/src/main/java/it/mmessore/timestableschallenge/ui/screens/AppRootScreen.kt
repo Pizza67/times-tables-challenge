@@ -54,7 +54,7 @@ enum class AppScreen(
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun AppRootScreen(
-    challengeId: String?,
+    challengeId: String? = null,
     roundViewModel: RoundViewModel = hiltViewModel(),
     navController: NavHostController = rememberNavController()
 ) {

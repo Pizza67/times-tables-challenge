@@ -10,13 +10,12 @@ import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.performClick
-import androidx.lifecycle.lifecycleScope
 import androidx.test.ext.junit.rules.ActivityScenarioRule
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import it.mmessore.timestableschallenge.data.FakeRoundGenerator
-import it.mmessore.timestableschallenge.data.FakeSummaryRepository
+import it.mmessore.timestableschallenge.data.FakeRepository
 import it.mmessore.timestableschallenge.data.Quest
 import it.mmessore.timestableschallenge.data.RoundGeneratorImpl
 import it.mmessore.timestableschallenge.data.persistency.FakeAppPreferences
@@ -24,7 +23,7 @@ import it.mmessore.timestableschallenge.data.persistency.FakeConstants
 import it.mmessore.timestableschallenge.ui.screens.RoundScreen
 import it.mmessore.timestableschallenge.ui.screens.RoundViewModel
 import it.mmessore.timestableschallenge.ui.theme.AppTheme
-import kotlinx.coroutines.CoroutineScope
+import it.mmessore.timestableschallenge.utils.fakeRoundViewModel
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -38,52 +37,54 @@ class RoundScreenInstrumentedTest {
 
     @get:Rule(order = 1)
     val composeTestRule = createAndroidComposeRule<ComponentActivity>()
-    private lateinit var fakeConstants: FakeConstants
-    private lateinit var fakePreferences: FakeAppPreferences
-    private lateinit var fakeRepository: FakeSummaryRepository
-    private lateinit var quests: List<Quest>
+    private lateinit var fakeRepository: FakeRepository
     private lateinit var fakeRoundGenerator: FakeRoundGenerator
     private lateinit var viewModel: RoundViewModel
-    private lateinit var coroutineScope: CoroutineScope
 
     @Before
     fun setup() {
         hiltRule.inject()
-        fakeConstants = FakeConstants()
-        fakePreferences = FakeAppPreferences()
-        fakeRepository = FakeSummaryRepository(composeTestRule.activity)
-        fakeRepository.setCurrentAchievement()
-        quests = RoundGeneratorImpl(fakePreferences).generate()
-        fakeRoundGenerator = FakeRoundGenerator(quests)
-        coroutineScope = composeTestRule.activity.lifecycleScope
-        viewModel = RoundViewModel(fakeRepository, fakeRoundGenerator, fakePreferences, fakeConstants, coroutineScope)
+        fakeRepository = FakeRepository(composeTestRule.activity).apply {
+            setCurrentAchievement()
+        }
+        fakeRoundGenerator = FakeRoundGenerator(RoundGeneratorImpl(FakeAppPreferences()).generate())
+        viewModel = fakeRoundViewModel(
+            activity = composeTestRule.activity,
+            quests = fakeRoundGenerator.quests,
+            fakeRepository = fakeRepository
+        )
     }
 
     @Test
     fun roundCompleted_allQuestionsAnswered() {
-        testRound(composeTestRule, viewModel, quests, 0)
+        testRound(composeTestRule, viewModel, fakeRoundGenerator.quests, 0)
     }
 
     @Test
     fun roundCompleted_allQuestionsAnsweredWithHalfErrors() {
-        testRound(composeTestRule, viewModel, quests, 1)
+        testRound(composeTestRule, viewModel, fakeRoundGenerator.quests, 1)
     }
 
     @Test
     fun roundCompleted_halfQuestionsAnswered() {
-        testRound(composeTestRule, viewModel, quests, 0, quests.size / 2)
+        testRound(composeTestRule, viewModel, fakeRoundGenerator.quests, 0, fakeRoundGenerator.quests.size / 2)
     }
 
     @Test
     fun roundCompleted_halfQuestionsAnsweredWithHalfErrors() {
-        testRound(composeTestRule, viewModel, quests, 1, quests.size / 2)
+        testRound(composeTestRule, viewModel, fakeRoundGenerator.quests, 1, fakeRoundGenerator.quests.size / 2)
     }
 
     @Test
     fun roundTimedUp_allQuestionsAnswered() {
-        fakeConstants = FakeConstants(ROUND_TIME_SECONDS = 2)
-        viewModel = RoundViewModel(fakeRepository, fakeRoundGenerator, fakePreferences, fakeConstants, coroutineScope)
-        testRound(composeTestRule, viewModel, quests, 0)
+        val fakeConstants = FakeConstants(ROUND_TIME_SECONDS = 2)
+        viewModel = fakeRoundViewModel(
+            activity = composeTestRule.activity,
+            quests = fakeRoundGenerator.quests,
+            fakeConstants = fakeConstants,
+            fakeRepository = fakeRepository
+        )
+        testRound(composeTestRule, viewModel, fakeRoundGenerator.quests, 0)
     }
 
     @OptIn(ExperimentalTestApi::class)
@@ -137,7 +138,7 @@ class RoundScreenInstrumentedTest {
                 else
                     R.string.round_complete
             )),
-            fakeConstants.ROUND_TIME_SECONDS.toLong() * 1000
+            (viewModel.timeLeft.value.toLong() + 2) * 1000
         )
         // Check round info into viewmodel
         assert(RoundGeneratorImpl.serialize(quests) == viewModel.finishedRound?.roundId)

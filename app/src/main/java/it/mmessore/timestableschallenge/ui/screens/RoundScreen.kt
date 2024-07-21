@@ -100,7 +100,7 @@ fun RoundScreen(
             onBackspaceClick = { viewModel.onBackspace() },
             onNumberClick = { viewModel.onNumberClick(it) },
             onNextClick = { viewModel.onAnswer(inputVal.value, mediaAnswerCorrect, mediaAnswerWrong) },
-            modifier = Modifier.widthIn(max = 600.dp)
+            modifier = Modifier.widthIn(max = 600.dp).testTag("keyboard")
         )
     }
 }
