@@ -52,4 +52,19 @@ Guess this won't be the app that'll make our family rich, but no dad could refus
 * Most of the images used have been AI generated using [Adobe Firefly](https://firefly.adobe.com/) and [Bing Image Creator](https://www.bing.com/images/create)
 * Round keypad comes basically from this [project](https://github.com/MakeItEasyDev/Jetpack-Compose-Custom-Number-Keyboard) by [@MakeItEasyDev](https://github.com/MakeItEasyDev)
 * Animated dialogs took inspiration from this [gist](https://gist.github.com/sinasamaki/daa825d96235a18822177a2b1b323f49?ref=sinasamaki.com) by [@sinasamaki](https://github.com/sinasamaki) and also [this](https://gist.github.com/XFY9326/2067efcc3c5899557cc6a334d76a92c8) from [XFY9326](https://gist.github.com/XFY9326) to add vertical scrollbars
-* Settings section components have been inspired by this [article](https://tomas-repcik.medium.com/making-extensible-settings-screen-in-jetpack-compose-from-scratch-2558170dd24d) by [Tomáš Repčík](https://tomasrepcik.dev/) 
+* Settings section components have been inspired by this [article](https://tomas-repcik.medium.com/making-extensible-settings-screen-in-jetpack-compose-from-scratch-2558170dd24d) by [Tomáš Repčík](https://tomasrepcik.dev/)
+
+## Under the Hood
+
+The project uses [Jetpack Compose](https://developer.android.com/develop/ui/compose) for the UI and [Material3](https://m3.material.io/) for theming and styling, and tries to follow the [Guide to app architecture](https://developer.android.com/topic/architecture) as much as possible.
+
+The main building blocks of the project are:
+
+* [Jetpack Navigation](https://developer.android.com/guide/navigation)
+* [Jetpack ViewModel](https://developer.android.com/topic/libraries/architecture/viewmodel)
+* [Room Database](https://developer.android.com/training/data-storage/room)
+* [Dependency injection with Hilt](https://developer.android.com/training/dependency-injection/hilt-android)
+* [Continuous Integration](https://en.wikipedia.org/wiki/Continuous_integration) with:
+  * [Github Actions](https://github.com/features/actions)
+  * [Unit tests](https://developer.android.com/training/testing/local-tests) with JUnit
+  * [Instrumented tests](https://developer.android.com/training/testing/instrumented-tests) on devices available on [Firebase Test Lab](https://firebase.google.com/docs/test-lab)
