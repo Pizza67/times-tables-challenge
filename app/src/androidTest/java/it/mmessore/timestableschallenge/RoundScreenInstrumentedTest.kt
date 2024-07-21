@@ -110,10 +110,7 @@ class RoundScreenInstrumentedTest {
         var idx = 0
         while (idx < answers.size && score < targetScore) {
             val q = answers[idx]
-            val timeLeft = composeTestRule.onNodeWithTag("timeLeft")
-                .fetchSemanticsNode()
-                .config[SemanticsProperties.Text]
-                .firstOrNull()?.text?.toIntOrNull() ?: 0
+            val timeLeft = viewModel.timeLeft.value
 
             if (timeLeft > 0) {
                 val answerCorrect = if (errorsBeforeAnswer > 0) {
