@@ -13,7 +13,7 @@ import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import it.mmessore.timestableschallenge.data.RoundGeneratorImpl
 import it.mmessore.timestableschallenge.data.persistency.AppPreferences
-import it.mmessore.timestableschallenge.data.persistency.ConstantsImpl
+import it.mmessore.timestableschallenge.data.persistency.Constants
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -23,6 +23,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ShareViewModel @Inject constructor(
+    private val constants: Constants,
     private val appPreferences: AppPreferences,
     private val coroutineScope: CoroutineScope
 ) : ViewModel() {
@@ -51,7 +52,7 @@ class ShareViewModel @Inject constructor(
         var isValid = false
         if (inputText != null) {
             // Check first if user has input the whole url
-            val roundId = Uri.parse(inputText).getQueryParameter(ConstantsImpl.QUERY_PARAM_ROUND_ID) ?: inputText
+            val roundId = Uri.parse(inputText).getQueryParameter(constants.QUERY_PARAM_ROUND_ID) ?: inputText
             isValid = RoundGeneratorImpl.isValid(roundId, appPreferences.numQuestions)
         }
         return isValid
@@ -60,7 +61,7 @@ class ShareViewModel @Inject constructor(
     fun getShareUrl() = createRoundUrl(_roundToPlay.value)
 
     private fun createRoundUrl(roundId: String): String {
-        roundUrl = "${ConstantsImpl.CUSTOM_URI_SCHEME}://?${ConstantsImpl.QUERY_PARAM_ROUND_ID}=$roundId"
+        roundUrl = "${constants.CUSTOM_URI_SCHEME}://?${constants.QUERY_PARAM_ROUND_ID}=$roundId"
         return roundUrl
     }
 
