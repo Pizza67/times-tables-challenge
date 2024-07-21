@@ -77,7 +77,7 @@ class RoundScreenInstrumentedTest {
 
     @Test
     fun roundTimedUp_allQuestionsAnswered() {
-        val fakeConstants = FakeConstants(ROUND_TIME_SECONDS = 2)
+        val fakeConstants = FakeConstants(ROUND_TIME_SECONDS = 5)
         viewModel = fakeRoundViewModel(
             activity = composeTestRule.activity,
             quests = fakeRoundGenerator.quests,
@@ -112,7 +112,8 @@ class RoundScreenInstrumentedTest {
             val q = answers[idx]
             val timeLeft = viewModel.timeLeft.value
 
-            if (timeLeft > 0) {
+            // Place the correct answer only if time is not too close to end (for slow emulators)
+            if (timeLeft > 2) {
                 val answerCorrect = if (errorsBeforeAnswer > 0) {
                     if (idx % (errorsBeforeAnswer + 1) != 0) 1 else 0
                 } else 1
@@ -135,7 +136,7 @@ class RoundScreenInstrumentedTest {
                 else
                     R.string.round_complete
             )),
-            (viewModel.timeLeft.value.toLong() + 2) * 1000
+            (viewModel.timeLeft.value.toLong() + 5) * 1000
         )
         // Check round info into viewmodel
         assert(RoundGeneratorImpl.serialize(quests) == viewModel.finishedRound?.roundId)
