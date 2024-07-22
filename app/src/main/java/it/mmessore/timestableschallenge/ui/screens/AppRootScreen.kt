@@ -83,7 +83,7 @@ fun AppRootScreen(
                 currentScreen = currentScreen,
                 canNavigateUp = navController.previousBackStackEntry != null,
                 navigateUp = { navController.navigateUp() },
-                modifier = Modifier.padding(vertical = 24.dp)
+                modifier = Modifier.padding(top = 24.dp)
             )
         },
         modifier = Modifier
@@ -138,8 +138,8 @@ fun AppRootScreen(
                 }
                 RoundScreen(
                     viewModel = roundViewModel,
-                    onRoundFinished = { it ->
-                        val round = it?.serialize()
+                    onRoundFinished = { finishedRound ->
+                        val round = finishedRound?.serialize()
                         navController.navigate("${AppScreen.Summary.name}/$round") {
                             popUpTo(AppScreen.Round.name) { inclusive = true }
                         }

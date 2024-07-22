@@ -5,7 +5,6 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -34,6 +33,7 @@ import it.mmessore.timestableschallenge.data.persistency.Round
 import it.mmessore.timestableschallenge.ui.DialogScaffold
 import it.mmessore.timestableschallenge.ui.RoundButton
 import it.mmessore.timestableschallenge.ui.SFXDialog
+import it.mmessore.timestableschallenge.ui.ScreenContainer
 import it.mmessore.timestableschallenge.utils.formatNumber
 import kotlinx.coroutines.delay
 
@@ -67,10 +67,8 @@ fun SummaryScreen(
         showBestScoreDialog = !showRewardDialog && bestScoreDialogInfo.value != null
     }
 
-    Column(
-        modifier = modifier
-            .fillMaxSize()
-            .padding(16.dp),
+    ScreenContainer(
+        modifier = modifier,
         verticalArrangement = Arrangement.SpaceBetween
     ) {
         Column (

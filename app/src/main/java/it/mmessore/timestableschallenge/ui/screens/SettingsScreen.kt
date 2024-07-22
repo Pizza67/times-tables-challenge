@@ -6,14 +6,11 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.rounded.KeyboardArrowRight
 import androidx.compose.material3.Card
@@ -47,6 +44,7 @@ import it.mmessore.timestableschallenge.data.persistency.AppPreferences.AppTheme
 import it.mmessore.timestableschallenge.ui.ClickableTextWithUrl
 import it.mmessore.timestableschallenge.ui.DialogScaffold
 import it.mmessore.timestableschallenge.ui.SFXDialog
+import it.mmessore.timestableschallenge.ui.ScreenContainer
 import it.mmessore.timestableschallenge.utils.getActivity
 import it.mmessore.timestableschallenge.utils.getAppVersion
 import it.mmessore.timestableschallenge.utils.getAppVersionCode
@@ -59,11 +57,8 @@ fun SettingsScreen(
     val context = LocalContext.current
     val activity = context.getActivity()
 
-    Column(
-        modifier = modifier
-            .verticalScroll(rememberScrollState())
-            .fillMaxSize()
-            .padding(16.dp),
+    ScreenContainer(
+        modifier = modifier,
         verticalArrangement = Arrangement.SpaceBetween
     ) {
         SettingsGroup(name = R.string.settings_game_group) {

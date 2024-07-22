@@ -37,25 +37,26 @@ class ShareViewModel @Inject constructor(
     val qrCodeBitmap: StateFlow<Bitmap?> = _bitmap
 
     fun setReceivedRoundId(receivedRoundId: String?): Boolean {
-        val isValid = isValidRoundId(receivedRoundId)
-        if (isValid) {
-            _roundToPlay.value = receivedRoundId!!
-            _receivedRound.value = receivedRoundId
-            generateQRCode(createRoundUrl(receivedRoundId), 1024, 1024)
+        val validatedRoundId = validateRoundId(receivedRoundId)
+        if (validatedRoundId != null) {
+            _roundToPlay.value = validatedRoundId
+            _receivedRound.value = validatedRoundId
+            generateQRCode(createRoundUrl(validatedRoundId), 1024, 1024)
         } else {
             generateQRCode(createRoundUrl(_roundToPlay.value), 1024, 1024)
         }
-        return isValid
+        return validatedRoundId != null
     }
 
-    private fun isValidRoundId(inputText: String?): Boolean {
-        var isValid = false
+    private fun validateRoundId(inputText: String?): String? {
+        var validatedRoundId: String? = null
         if (inputText != null) {
             // Check first if user has input the whole url
             val roundId = Uri.parse(inputText).getQueryParameter(constants.QUERY_PARAM_ROUND_ID) ?: inputText
-            isValid = RoundGeneratorImpl.isValid(roundId, appPreferences.numQuestions)
+            if (RoundGeneratorImpl.isValid(roundId, appPreferences.numQuestions))
+                validatedRoundId = roundId
         }
-        return isValid
+        return validatedRoundId
     }
 
     fun getShareUrl() = createRoundUrl(_roundToPlay.value)

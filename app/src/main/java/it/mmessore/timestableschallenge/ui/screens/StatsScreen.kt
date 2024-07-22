@@ -9,16 +9,13 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Card
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -57,6 +54,7 @@ import it.mmessore.timestableschallenge.data.persistency.Round
 import it.mmessore.timestableschallenge.ui.DialogPager
 import it.mmessore.timestableschallenge.ui.DialogScaffold
 import it.mmessore.timestableschallenge.ui.SFXDialog
+import it.mmessore.timestableschallenge.ui.ScreenContainer
 import it.mmessore.timestableschallenge.utils.formatNumber
 import it.mmessore.timestableschallenge.utils.formatTimestamp
 
@@ -75,12 +73,8 @@ fun StatsScreen(
     val worstRound = viewModel.worstRound.collectAsState()
     val badges = viewModel.badges.collectAsState()
 
-    Column(
+    ScreenContainer(
         modifier = modifier
-            .verticalScroll(rememberScrollState())
-            .fillMaxSize()
-            .padding(16.dp),
-        verticalArrangement = Arrangement.Top
     ) {
         CurrentRank(currentRank.value)
         Row(
@@ -98,7 +92,7 @@ fun StatsScreen(
             )
             Column(
                 verticalArrangement = Arrangement.Center,
-                modifier = Modifier.padding(start = 16.dp)
+                modifier = Modifier.padding(horizontal = 16.dp)
             ) {
                 Stat(
                     stringResource(
