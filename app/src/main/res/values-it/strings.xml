@@ -15,9 +15,9 @@
     <string name="name_score_max">Leggenda Cosmica</string>
     <string name="desc_score_low">Studia ancora un po\' le tabelline e presto raggiungerai il prossimo livello</string>
     <string name="desc_score_medium">Continua ad allenarti e di sicuro passerai la prossima verifica in classe</string>
-    <string name="desc_score_high">Ora sei un vero campione di tabelline</string>
+    <string name="desc_score_high">Hai giocato da vero campione di tabelline!</string>
     <string name="desc_score_top">Sei il Supereroe delle tabelline</string>
-    <string name="desc_score_max">Ora sei pronto per dominare l\'universo!</string>
+    <string name="desc_score_max">Sei pronto per dominare l\'universo!</string>
     <string name="game_over">Tempo scaduto!</string>
     <string name="final_score">Punti totali:</string>
     <string name="menu">Menu</string>
