@@ -29,13 +29,13 @@ fun fakeRoundViewModel(
     activity: ComponentActivity,
     fakeRepository: FakeRepository = FakeRepository(activity),
     fakePreferences: FakeAppPreferences = FakeAppPreferences(),
-    quests: List<Quest> = RoundGeneratorImpl(fakePreferences).generate(),
+    fakeRoundGenerator: FakeRoundGenerator = FakeRoundGenerator(fakePreferences),
     fakeConstants: FakeConstants = FakeConstants(),
     coroutineScope: CoroutineScope = activity.lifecycleScope
 ): RoundViewModel {
     return RoundViewModel(
         fakeRepository,
-        FakeRoundGenerator(quests),
+        fakeRoundGenerator,
         fakePreferences,
         fakeConstants,
         coroutineScope

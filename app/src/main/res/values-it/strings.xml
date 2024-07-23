@@ -87,4 +87,6 @@
     <string name="theme_dark">Tema scuro</string>
     <string name="theme_system">Impostazioni di sistema</string>
     <string name="round_complete">Round Completato!</string>
+    <string name="round_code_valid">Codice round valido</string>
+    <string name="round_code_invalid">Codice round non valido</string>
 </resources>

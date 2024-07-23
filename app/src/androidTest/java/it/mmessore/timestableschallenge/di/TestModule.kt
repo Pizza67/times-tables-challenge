@@ -47,7 +47,7 @@ object TestModule {
     @Provides
     @Singleton
     fun provideFakeRoundGenerator(appPreferences: AppPreferences): RoundGenerator {
-        return FakeRoundGenerator(RoundGeneratorImpl(appPreferences).generate())
+        return FakeRoundGenerator(appPreferences)
     }
 
     @Singleton

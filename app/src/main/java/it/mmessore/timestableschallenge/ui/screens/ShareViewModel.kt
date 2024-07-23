@@ -11,6 +11,7 @@ import com.google.zxing.common.BitMatrix
 import com.google.zxing.qrcode.QRCodeWriter
 import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel
 import dagger.hilt.android.lifecycle.HiltViewModel
+import it.mmessore.timestableschallenge.data.RoundGenerator
 import it.mmessore.timestableschallenge.data.RoundGeneratorImpl
 import it.mmessore.timestableschallenge.data.persistency.AppPreferences
 import it.mmessore.timestableschallenge.data.persistency.Constants
@@ -24,12 +25,13 @@ import javax.inject.Inject
 @HiltViewModel
 class ShareViewModel @Inject constructor(
     private val constants: Constants,
+    private val roundGenerator: RoundGenerator,
     private val appPreferences: AppPreferences,
     private val coroutineScope: CoroutineScope
 ) : ViewModel() {
     private lateinit var roundUrl: String
 
-    private val _roundToPlay: MutableStateFlow<String> = MutableStateFlow(RoundGeneratorImpl.serialize(RoundGeneratorImpl(appPreferences).generate()))
+    private val _roundToPlay: MutableStateFlow<String> = MutableStateFlow(RoundGeneratorImpl.serialize(roundGenerator.generate()))
     val roundToPlay: StateFlow<String> = _roundToPlay
     private val _receivedRound: MutableStateFlow<String?> = MutableStateFlow(null)
     val receivedRound: StateFlow<String?> = _receivedRound
@@ -61,7 +63,7 @@ class ShareViewModel @Inject constructor(
 
     fun getShareUrl() = createRoundUrl(_roundToPlay.value)
 
-    private fun createRoundUrl(roundId: String): String {
+    fun createRoundUrl(roundId: String): String {
         roundUrl = "${constants.CUSTOM_URI_SCHEME}://?${constants.QUERY_PARAM_ROUND_ID}=$roundId"
         return roundUrl
     }

@@ -50,12 +50,7 @@ class SummaryScreenInstrumentedTest {
     @Test
     fun rewardDialog_isShownWhenNewAchievementUnlocked() {
         fakeRepository.setNewAchievementUnlocked(true)
-        val round = Round("testRoundId", System.currentTimeMillis(), 10, 20)
-        composeTestRule.setContent {
-            AppTheme {
-                SummaryScreen(round = round, viewModel = viewModel)
-            }
-        }
+        setSummaryScreen()
         composeTestRule.waitUntilAtLeastOneExists(
             hasText(composeTestRule.activity.getString(R.string.new_achievement), ignoreCase = true), 20000
         )
@@ -65,13 +60,7 @@ class SummaryScreenInstrumentedTest {
     @Test
     fun bestRoundDialog_isShownOnNewBestRound() {
         fakeRepository.setIsNewBestRound(true)
-        val round = Round("testRoundId", System.currentTimeMillis(), 10, 20)
-
-        composeTestRule.setContent {
-            AppTheme {
-                SummaryScreen(round = round, viewModel = viewModel)
-            }
-        }
+        setSummaryScreen()
         composeTestRule.waitUntilAtLeastOneExists(
             hasText(composeTestRule.activity.getString(R.string.new_best_round), ignoreCase = true), 20000
         )
@@ -82,13 +71,7 @@ class SummaryScreenInstrumentedTest {
     fun bestRoundDialog_isShownOnNewBestRound_AfterRewardDialogDismissed() {
         fakeRepository.setNewAchievementUnlocked(true)
         fakeRepository.setIsNewBestRound(true)
-        val round = Round("testRoundId", System.currentTimeMillis(), 10, 20)
-
-        composeTestRule.setContent {
-            AppTheme {
-                SummaryScreen(round = round, viewModel = viewModel)
-            }
-        }
+        setSummaryScreen()
         composeTestRule.waitUntilAtLeastOneExists(
             hasText(composeTestRule.activity.getString(R.string.new_achievement), ignoreCase = true), 20000
         )
@@ -96,5 +79,16 @@ class SummaryScreenInstrumentedTest {
         composeTestRule.waitUntilAtLeastOneExists(
             hasText(composeTestRule.activity.getString(R.string.new_best_round), ignoreCase = true), 20000
         )
+    }
+
+    private fun setSummaryScreen(
+        round: Round = Round("testRoundId", System.currentTimeMillis(), 10, 20),
+        viewModel: SummaryViewModel = this.viewModel
+    ) {
+        composeTestRule.setContent {
+            AppTheme {
+                SummaryScreen(round = round, viewModel = viewModel)
+            }
+        }
     }
 }

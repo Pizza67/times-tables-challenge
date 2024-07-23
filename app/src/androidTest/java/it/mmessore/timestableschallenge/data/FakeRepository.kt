@@ -1,11 +1,12 @@
 package it.mmessore.timestableschallenge.data
 
 import android.content.Context
+import dagger.hilt.android.qualifiers.ApplicationContext
 import it.mmessore.timestableschallenge.data.persistency.Achievement
 import it.mmessore.timestableschallenge.data.persistency.Round
 import javax.inject.Inject
 
-class FakeRepository @Inject constructor(private val context: Context): AppRepository {
+class FakeRepository @Inject constructor(@ApplicationContext private val context: Context): AppRepository {
     private var round: Round? = Round(
         roundId = "testRoundId",
         timestamp = System.currentTimeMillis(),

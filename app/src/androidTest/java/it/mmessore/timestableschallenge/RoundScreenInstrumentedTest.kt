@@ -1,5 +1,6 @@
 package it.mmessore.timestableschallenge
 
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.compose.ui.semantics.SemanticsProperties
 import androidx.compose.ui.test.ExperimentalTestApi
@@ -28,6 +29,7 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
+import javax.inject.Inject
 
 @HiltAndroidTest
 @RunWith(AndroidJUnit4::class)
@@ -37,20 +39,17 @@ class RoundScreenInstrumentedTest {
 
     @get:Rule(order = 1)
     val composeTestRule = createAndroidComposeRule<ComponentActivity>()
-    private lateinit var fakeRepository: FakeRepository
-    private lateinit var fakeRoundGenerator: FakeRoundGenerator
+    @Inject lateinit var fakeRepository: FakeRepository
+    @Inject lateinit var fakeRoundGenerator: FakeRoundGenerator
     private lateinit var viewModel: RoundViewModel
 
     @Before
     fun setup() {
         hiltRule.inject()
-        fakeRepository = FakeRepository(composeTestRule.activity).apply {
-            setCurrentAchievement()
-        }
-        fakeRoundGenerator = FakeRoundGenerator(RoundGeneratorImpl(FakeAppPreferences()).generate())
+        fakeRepository.setCurrentAchievement()
         viewModel = fakeRoundViewModel(
             activity = composeTestRule.activity,
-            quests = fakeRoundGenerator.quests,
+            fakeRoundGenerator = fakeRoundGenerator,
             fakeRepository = fakeRepository
         )
     }
@@ -80,8 +79,8 @@ class RoundScreenInstrumentedTest {
         val fakeConstants = FakeConstants(ROUND_TIME_SECONDS = 5)
         viewModel = fakeRoundViewModel(
             activity = composeTestRule.activity,
-            quests = fakeRoundGenerator.quests,
             fakeConstants = fakeConstants,
+            fakeRoundGenerator = fakeRoundGenerator,
             fakeRepository = fakeRepository
         )
         testRound(composeTestRule, viewModel, fakeRoundGenerator.quests, 0)
@@ -117,9 +116,11 @@ class RoundScreenInstrumentedTest {
                 val answerCorrect = if (errorsBeforeAnswer > 0) {
                     if (idx % (errorsBeforeAnswer + 1) != 0) 1 else 0
                 } else 1
+                Log.d("testRoundLog", "answerCorrect: $answerCorrect - ${q.op1} x ${q.op2}")
                 composeTestRule.onNodeWithTag("score").assertTextEquals(score.toString())
                 composeTestRule.waitUntilAtLeastOneExists(hasText("${q.op1} x ${q.op2} = ?"), 5000)
                 val charArray= q.answer().times(answerCorrect).toString().toCharArray()
+                Log.d("testRoundLog", "charArray: ${charArray.contentToString()}")
                 charArray.forEach {
                     composeTestRule.onNodeWithTag("numberButton_$it").performClick()
                 }

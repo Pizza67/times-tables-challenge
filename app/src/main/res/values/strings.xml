@@ -88,4 +88,6 @@
     <string name="theme_dark">Dark theme</string>
     <string name="theme_system">System settings</string>
     <string name="round_complete">Round Complete!</string>
+    <string name="round_code_valid">Valid Round Id</string>
+    <string name="round_code_invalid">Invalid Round ID</string>
 </resources>

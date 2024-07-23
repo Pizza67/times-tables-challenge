@@ -41,6 +41,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -192,12 +193,12 @@ private fun RoundCodeRow(
                     if (inputText.isNotEmpty()) {
                         Icon(
                             imageVector = if (isValid) Icons.Filled.CheckCircle else Icons.Filled.Warning,
-                            contentDescription = if (isValid) "Valid Round ID" else "Invalid Round ID",
+                            contentDescription = if (isValid) stringResource(R.string.round_code_valid) else stringResource(R.string.round_code_invalid),
                             tint = if (isValid) MaterialTheme.colorScheme.primary else Color.Red
                         )
                     }
                 },
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier.fillMaxWidth().testTag("inputCode")
             )
         } else {
             Text(
@@ -215,7 +216,7 @@ fun QRCodeImage(bitmap: Bitmap?, modifier: Modifier = Modifier) {
         Image(
             bitmap = bitmap.asImageBitmap(),
             contentDescription = "QR Code",
-            modifier = modifier
+            modifier = modifier.testTag("qrcode")
         )
     }
 }
