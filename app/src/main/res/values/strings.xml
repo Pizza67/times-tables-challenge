@@ -45,7 +45,7 @@
     <string name="current_rank">Current rank:</string>
     <string name="stats_round_level">Level:</string>
     <string name="stats_round_score">Score:</string>
-    <string name="stats_round_time_left">Time left:</string>
+    <string name="stats_round_time_left">Time:</string>
     <string name="stats_round_sec" translatable="false">s</string>
     <string name="new_achievement">New achievement</string>
     <string name="cancel">Cancel</string>

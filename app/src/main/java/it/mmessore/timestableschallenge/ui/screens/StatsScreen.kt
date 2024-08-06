@@ -313,12 +313,14 @@ private fun StatsRoundCard(
                 Image(
                     painter = painterResource(Levels.getLevelByScore(round.score).image),
                     contentDescription = null,
-                    modifier = Modifier.size(120.dp),
+                    modifier = Modifier
+                        .size(120.dp)
+                        .clip(MaterialTheme.shapes.small),
                     contentScale = ContentScale.Crop
                 )
                 Column(
                     verticalArrangement = Arrangement.Center,
-                    modifier = Modifier.padding(horizontal = 16.dp)
+                    modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
                 ) {
                     Text(text = formatTimestamp(round.timestamp), style = MaterialTheme.typography.bodySmall)
                     Spacer(modifier = Modifier.height(8.dp))
@@ -336,23 +338,24 @@ private fun StatsRoundCard(
                         Text(
                             text = stringResource(R.string.stats_round_score),
                             style = MaterialTheme.typography.bodyMedium,
-                            modifier = Modifier.padding(end = 8.dp)
+                            modifier = Modifier.padding(end = 4.dp)
                         )
                         Text(
                             text = round.score.toString(),
-                            style = MaterialTheme.typography.titleLarge,
-                            modifier = Modifier.padding(end = 16.dp)
+                            style = MaterialTheme.typography.titleMedium,
+                            modifier = Modifier.padding(end = 8.dp)
                         )
                         if (useTimeleft && round.timeLeft > 0) {
                             Spacer(modifier = Modifier.weight(1f))
                             Text(
                                 text = stringResource(R.string.stats_round_time_left),
                                 style = MaterialTheme.typography.bodyMedium,
-                                modifier = Modifier.padding(end = 8.dp)
+                                modifier = Modifier.padding(end = 4.dp)
                             )
                             Text(
                                 text = formatNumber(round.timeLeft/1000.0, 3),
-                                style = MaterialTheme.typography.titleLarge,
+                                style = MaterialTheme.typography.titleMedium,
+                                maxLines = 1,
                                 modifier = Modifier.padding(end = 4.dp)
                             )
                             Text(
