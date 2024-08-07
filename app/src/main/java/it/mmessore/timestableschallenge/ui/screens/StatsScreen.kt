@@ -1,6 +1,7 @@
 package it.mmessore.timestableschallenge.ui.screens
 
 import androidx.annotation.StringRes
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
@@ -15,6 +16,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.Icon
@@ -23,6 +25,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -46,6 +49,9 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.gigamole.composefadingedges.content.FadingEdgesContentType
+import com.gigamole.composefadingedges.content.scrollconfig.FadingEdgesScrollConfig
+import com.gigamole.composefadingedges.horizontalFadingEdges
 import it.mmessore.timestableschallenge.R
 import it.mmessore.timestableschallenge.data.BadgeInfo
 import it.mmessore.timestableschallenge.data.Badges
@@ -152,7 +158,22 @@ private fun AchievementList(
 ) {
     var selectedBadge by remember { mutableStateOf<BadgeInfo?>(null) }
     var isDialogVisible by remember { mutableStateOf(false) }
-
+    val rawLazyListState = rememberLazyListState()
+    val fadingEdgesDuration = 450L
+    val fadingEdgesAnimationSpec = tween<Float>(durationMillis = fadingEdgesDuration.toInt())
+    val fadingEdgesScrollConfig by remember {
+        derivedStateOf {
+            FadingEdgesScrollConfig.Dynamic(animationSpec = fadingEdgesAnimationSpec)
+        }
+    }
+    val fadingEdgesContentType by remember {
+        derivedStateOf {
+            FadingEdgesContentType.Dynamic.Lazy.List(
+                state = rawLazyListState,
+                scrollConfig = fadingEdgesScrollConfig
+            )
+        }
+    }
     Column(modifier = modifier) {
         Text(
             text = stringResource(R.string.your_achievements),
@@ -164,6 +185,8 @@ private fun AchievementList(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(vertical = 8.dp)
+                .horizontalFadingEdges(fadingEdgesContentType),
+            state = rawLazyListState
         ) {
             items(badges) { badge ->
                 if (badge.isAchieved()) {

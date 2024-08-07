@@ -19,6 +19,7 @@ monitor = "1.7.1"
 zxing = "3.5.1"
 uiTestJunit4Android = "1.6.8"
 gson = "2.11.0"
+fadingEdges = "1.0.4"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -54,6 +55,7 @@ androidx-lifecycle-runtime-compose-android = { group = "androidx.lifecycle", nam
 androidx-monitor = { group = "androidx.test", name = "monitor", version.ref = "monitor" }
 android-zxing = { group = "com.google.zxing", name = "core", version.ref = "zxing" }
 android-gson = { group = "com.google.code.gson", name = "gson", version.ref = "gson" }
+compose-fading-edges = { group = "com.github.GIGAMOLE", name = "ComposeFadingEdges", version.ref = "fadingEdges" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

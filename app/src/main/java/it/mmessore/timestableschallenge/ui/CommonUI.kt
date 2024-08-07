@@ -51,6 +51,7 @@ import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.ReadOnlyComposable
 import androidx.compose.runtime.SideEffect
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -65,10 +66,7 @@ import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.geometry.CornerRadius
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
-import androidx.compose.ui.graphics.BlendMode
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
@@ -88,12 +86,14 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import androidx.compose.ui.window.DialogWindowProvider
+import com.gigamole.composefadingedges.content.FadingEdgesContentType
+import com.gigamole.composefadingedges.content.scrollconfig.FadingEdgesScrollConfig
+import com.gigamole.composefadingedges.verticalFadingEdges
 import it.mmessore.timestableschallenge.R
 import it.mmessore.timestableschallenge.data.persistency.AppPreferencesImpl
 import kotlinx.coroutines.delay
 import java.util.Locale
 import kotlin.math.max
-import kotlin.math.min
 
 
 @Composable
@@ -448,15 +448,29 @@ fun ScreenContainer(
     horizontalAlignment: Alignment.Horizontal = Alignment.Start,
     content: @Composable ColumnScope.() -> Unit
 ) {
-    val scrollState = rememberScrollState()
+    val fadingEdgeInitialScrollLength = 0
+    val fadingEdgesDuration = 450L
+    val scrollState = rememberScrollState(initial = fadingEdgeInitialScrollLength)
+    val fadingEdgesAnimationSpec = tween<Float>(durationMillis = fadingEdgesDuration.toInt())
+    val fadingEdgesScrollConfig by remember {
+        derivedStateOf {
+            FadingEdgesScrollConfig.Dynamic(animationSpec = fadingEdgesAnimationSpec)
+        }
+    }
     Column(
         verticalArrangement = verticalArrangement,
         horizontalAlignment = horizontalAlignment,
         modifier = modifier
             .padding(16.dp)
             .fillMaxSize()
+            //.fadingEdges(scrollState)
+            .verticalFadingEdges(
+                contentType = FadingEdgesContentType.Dynamic.Scroll(
+                    state = scrollState,
+                    scrollConfig = fadingEdgesScrollConfig
+                )
+            )
             .verticalScroll(scrollState)
-            .fadingEdges(scrollState)
     ) {
         content()
     }
@@ -502,41 +516,3 @@ fun Modifier.verticalScrollbar(
         }
     }
 }
-
-// Credits to: https://medium.com/@helmersebastian/fading-edges-modifier-in-jetpack-compose-af94159fdf1f
-fun Modifier.fadingEdges(
-    scrollState: ScrollState,
-    topEdgeHeight: Dp = 16.dp,
-    bottomEdgeHeight: Dp = 16.dp
-): Modifier = this.then(
-    Modifier
-        // adding layer fixes issue with blending gradient and content
-        .graphicsLayer { alpha = 0.99F }
-        .drawWithContent {
-            drawContent()
-
-            val topColors = listOf(Color.Transparent, Color.Black)
-            val topStartY = scrollState.value.toFloat()
-            val topGradientHeight = min(topEdgeHeight.toPx(), topStartY)
-            drawRect(
-                brush = Brush.verticalGradient(
-                    colors = topColors,
-                    startY = topStartY,
-                    endY = topStartY + topGradientHeight
-                ),
-                blendMode = BlendMode.DstIn
-            )
-
-            val bottomColors = listOf(Color.Black, Color.Transparent)
-            val bottomEndY = size.height - scrollState.maxValue + scrollState.value
-            val bottomGradientHeight = min(bottomEdgeHeight.toPx(), scrollState.maxValue.toFloat() - scrollState.value)
-            if (bottomGradientHeight != 0f) drawRect(
-                brush = Brush.verticalGradient(
-                    colors = bottomColors,
-                    startY = bottomEndY - bottomGradientHeight,
-                    endY = bottomEndY
-                ),
-                blendMode = BlendMode.DstIn
-            )
-        }
-)

@@ -68,6 +68,8 @@ dependencies {
     implementation libs.androidx.navigation.compose
     implementation libs.android.zxing
     implementation libs.android.gson
+    // Credits: https://github.com/GIGAMOLE/ComposeFadingEdges/
+    implementation libs.compose.fading.edges
 
     implementation libs.androidx.room.runtime
     implementation libs.androidx.room.runtime.ktx
