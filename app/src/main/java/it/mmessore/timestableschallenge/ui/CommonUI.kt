@@ -463,7 +463,6 @@ fun ScreenContainer(
         modifier = modifier
             .padding(16.dp)
             .fillMaxSize()
-            //.fadingEdges(scrollState)
             .verticalFadingEdges(
                 contentType = FadingEdgesContentType.Dynamic.Scroll(
                     state = scrollState,
