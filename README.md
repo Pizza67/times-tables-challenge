@@ -68,4 +68,4 @@ The main building blocks of the project are:
 * [Continuous Integration](https://en.wikipedia.org/wiki/Continuous_integration) with:
   * [Github Actions](https://github.com/features/actions)
   * [Unit tests](https://developer.android.com/training/testing/local-tests) with JUnit
-  * [Instrumented tests](https://developer.android.com/training/testing/instrumented-tests) on devices available on [Firebase Test Lab](https://firebase.google.com/docs/test-lab)
+  * [Instrumented tests](https://developer.android.com/training/testing/instrumented-tests) on remote devices available on [Firebase Test Lab](https://firebase.google.com/docs/test-lab)
