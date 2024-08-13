@@ -8,7 +8,7 @@ import javax.inject.Inject
 class RoundGeneratorImpl @Inject constructor (
     private val appPreferences: AppPreferences,
     private val minTable: Int = 1,
-    private val maxTable: Int = if (!appPreferences.extendedMode) 9 else 12,
+    private val maxTable: Int = maxOp(appPreferences),
     private val easyOps: List<Int> = listOf(1, 10, 11),
     private val maxNumEasyQuests: Int = 3
 ): RoundGenerator {
@@ -23,7 +23,7 @@ class RoundGeneratorImpl @Inject constructor (
         val allowSameQuests = n > ((maxTable - minTable + 1) * 8)
         while (quests.size < n) {
             val op1 = (minTable..maxTable).random()
-            val maxOp2 = if (!appPreferences.extendedMode) 10 else 12
+            val maxOp2 = maxOp(appPreferences)
             val op2 = (1..maxOp2).random()
             val quest = Quest(op1, op2)
             if (quests.isEmpty() ||
@@ -101,3 +101,6 @@ class RoundGeneratorImpl @Inject constructor (
         }
     }
 }
+
+private fun maxOp(appPreferences: AppPreferences) =
+    if (!appPreferences.extendedMode) 9 else 12
