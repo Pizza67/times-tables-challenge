@@ -63,7 +63,7 @@ fun SettingsScreen(
     ) {
         SettingsGroup(name = R.string.settings_game_group) {
             SettingsSwitchComp(
-                icon = painterResource(id = R.drawable.filter_9_plus_24),
+                icon = painterResource(id = R.drawable.ic_extended_mode),
                 name = R.string.settings_extended_mode,
                 desc = R.string.settings_extended_mode_desc,
                 state = viewmodel.swExtendedMode.collectAsState(),

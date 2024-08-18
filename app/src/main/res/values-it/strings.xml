@@ -65,7 +65,7 @@
     <string name="new_best_round">Nuovo Record</string>
     <string name="new_best_round_message">Congratulazioni! La tua dedizione e abilità sono state ricompensate con un nuovo record! Continua così e presto raggiungerai l\'eccellenza!</string>
     <string name="settings_game_group">Impostazioni di gioco</string>
-    <string name="settings_extended_mode">Oltre il 9</string>
+    <string name="settings_extended_mode">Oltre il 10</string>
     <string name="settings_extended_mode_desc">Abilita per esercitarti con le tabelline fino al 12</string>
     <string name="settings_overwrite_best_scores">Auto-Sabotaggio</string>
     <string name="settings_overwrite_best_scores_desc">Abilita questa opzione per salvare sempre il punteggio di un round già giocato, anche se più basso</string>

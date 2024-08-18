@@ -66,7 +66,7 @@
     <string name="new_best_round_message">Congratulations! Your dedication and skill have paid off with a brand new high score! This is a huge milestone in your journey, keep striving for greatness!</string>
     <string name="uri_custom_scheme" translatable="false">timestablesrace</string>
     <string name="settings_game_group">Game settings</string>
-    <string name="settings_extended_mode">Go Beyond 9</string>
+    <string name="settings_extended_mode">Go Beyond 10</string>
     <string name="settings_extended_mode_desc">Enable to practice times tables up to 12</string>
     <string name="settings_overwrite_best_scores">Self-Sabotage</string>
     <string name="settings_overwrite_best_scores_desc">Enable this option to always save the score of a previously played round, even if it\'s lower</string>

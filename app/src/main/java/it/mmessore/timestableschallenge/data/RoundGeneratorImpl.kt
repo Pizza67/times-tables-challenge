@@ -103,4 +103,4 @@ class RoundGeneratorImpl @Inject constructor (
 }
 
 private fun maxOp(appPreferences: AppPreferences) =
-    if (!appPreferences.extendedMode) 9 else 12
+    if (!appPreferences.extendedMode) 10 else 12
