@@ -2,8 +2,8 @@ package it.mmessore.timestableschallenge
 
 import android.util.Log
 import androidx.activity.ComponentActivity
-import androidx.compose.ui.semantics.SemanticsProperties
 import androidx.compose.ui.test.ExperimentalTestApi
+import androidx.compose.ui.test.assertIsNotEnabled
 import androidx.compose.ui.test.assertTextEquals
 import androidx.compose.ui.test.hasText
 import androidx.compose.ui.test.junit4.AndroidComposeTestRule
@@ -43,6 +43,23 @@ class RoundScreenInstrumentedTest {
     @Inject lateinit var fakeRoundGenerator: FakeRoundGenerator
     private lateinit var viewModel: RoundViewModel
 
+    private fun getViewModelBySettings(
+        roundTimeSeconds: Int = 10,
+        extendedMode: Boolean = false,
+        autoConfirm: Boolean = false
+    ): RoundViewModel {
+        return fakeRoundViewModel(
+            activity = composeTestRule.activity,
+            fakeRoundGenerator = fakeRoundGenerator,
+            fakeRepository = fakeRepository,
+            fakeConstants = FakeConstants(ROUND_TIME_SECONDS = roundTimeSeconds),
+            fakePreferences = FakeAppPreferences(
+                extendedMode = extendedMode,
+                autoConfirm = autoConfirm
+            )
+        )
+    }
+
     @Before
     fun setup() {
         hiltRule.inject()
@@ -56,34 +73,47 @@ class RoundScreenInstrumentedTest {
 
     @Test
     fun roundCompleted_allQuestionsAnswered() {
-        testRound(composeTestRule, viewModel, fakeRoundGenerator.quests, 0)
+        testRound(composeTestRule, viewModel, fakeRoundGenerator.quests)
     }
 
     @Test
     fun roundCompleted_allQuestionsAnsweredWithHalfErrors() {
-        testRound(composeTestRule, viewModel, fakeRoundGenerator.quests, 1)
+        testRound(composeTestRule, viewModel, fakeRoundGenerator.quests, .5f)
+    }
+
+    @Test
+    fun roundCompleted_autoConfirm_allQuestionsAnswered() {
+        testRound(composeTestRule, getViewModelBySettings(autoConfirm = true), fakeRoundGenerator.quests)
+    }
+
+    @Test
+    fun roundCompleted_extendedMode_allQuestionsAnswered() {
+        testRound(composeTestRule, getViewModelBySettings(extendedMode = true), fakeRoundGenerator.quests)
     }
 
     @Test
     fun roundCompleted_halfQuestionsAnswered() {
-        testRound(composeTestRule, viewModel, fakeRoundGenerator.quests, 0, fakeRoundGenerator.quests.size / 2)
+        testRound(
+            composeTestRule = composeTestRule,
+            viewModel = viewModel,
+            quests = fakeRoundGenerator.quests,
+            targetScore = fakeRoundGenerator.quests.size / 2
+        )
     }
 
     @Test
     fun roundCompleted_halfQuestionsAnsweredWithHalfErrors() {
-        testRound(composeTestRule, viewModel, fakeRoundGenerator.quests, 1, fakeRoundGenerator.quests.size / 2)
+        testRound(composeTestRule, viewModel, fakeRoundGenerator.quests, .5f, fakeRoundGenerator.quests.size / 2)
     }
 
     @Test
     fun roundTimedUp_allQuestionsAnswered() {
-        val fakeConstants = FakeConstants(ROUND_TIME_SECONDS = 5)
-        viewModel = fakeRoundViewModel(
-            activity = composeTestRule.activity,
-            fakeConstants = fakeConstants,
-            fakeRoundGenerator = fakeRoundGenerator,
-            fakeRepository = fakeRepository
-        )
-        testRound(composeTestRule, viewModel, fakeRoundGenerator.quests, 0)
+        testRound(composeTestRule, getViewModelBySettings(roundTimeSeconds = 5), fakeRoundGenerator.quests)
+    }
+
+    @Test
+    fun roundTimedUp_autoConfirm_allQuestionsAnswered() {
+        testRound(composeTestRule, getViewModelBySettings(roundTimeSeconds = 5, autoConfirm = true), fakeRoundGenerator.quests)
     }
 
     @OptIn(ExperimentalTestApi::class)
@@ -91,7 +121,7 @@ class RoundScreenInstrumentedTest {
         composeTestRule: AndroidComposeTestRule<ActivityScenarioRule<ComponentActivity>, ComponentActivity>,
         viewModel: RoundViewModel,
         quests: List<Quest>,
-        errorsBeforeAnswer: Int,
+        errorRatio: Float = 0f,
         targetScore: Int = quests.size
     ) {
         composeTestRule.setContent {
@@ -99,9 +129,11 @@ class RoundScreenInstrumentedTest {
                 RoundScreen(viewModel = viewModel)
             }
         }
+        val tentativePerAnswer = if (viewModel.isAutoConfirmEnabled() || errorRatio == 0f) 1 else (1f/errorRatio).toInt()
+        // answers size is the number of answers that will be given in the whole round
         val answers = mutableListOf<Quest>()
         quests.forEach { quest ->
-            repeat(errorsBeforeAnswer + 1) {
+            repeat(tentativePerAnswer) {
                 answers.add(quest)
             }
         }
@@ -113,19 +145,22 @@ class RoundScreenInstrumentedTest {
 
             // Place the correct answer only if time is not too close to end (for slow emulators)
             if (timeLeft > 2) {
-                val answerCorrect = if (errorsBeforeAnswer > 0) {
-                    if (idx % (errorsBeforeAnswer + 1) != 0) 1 else 0
-                } else 1
+                val answerCorrect = idx % tentativePerAnswer == tentativePerAnswer.minus(1)
                 Log.d("testRoundLog", "answerCorrect: $answerCorrect - ${q.op1} x ${q.op2}")
+
                 composeTestRule.onNodeWithTag("score").assertTextEquals(score.toString())
                 composeTestRule.waitUntilAtLeastOneExists(hasText("${q.op1} x ${q.op2} = ?"), 5000)
-                val charArray= q.answer().times(answerCorrect).toString().toCharArray()
+                val answer = if (answerCorrect) q.answer() else q.answer() + 1
+                val charArray = answer.toString().toCharArray()
                 Log.d("testRoundLog", "charArray: ${charArray.contentToString()}")
                 charArray.forEach {
                     composeTestRule.onNodeWithTag("numberButton_$it").performClick()
                 }
-                composeTestRule.onNodeWithContentDescription("Next").performClick()
-                score += answerCorrect
+                if (viewModel.isAutoConfirmEnabled())
+                    composeTestRule.onNodeWithContentDescription("Next").assertIsNotEnabled()
+                else
+                    composeTestRule.onNodeWithContentDescription("Next").performClick()
+                score += if (answerCorrect) 1 else 0
             }
             idx++
         }
@@ -137,7 +172,7 @@ class RoundScreenInstrumentedTest {
                 else
                     R.string.round_complete
             )),
-            (viewModel.timeLeft.value.toLong() + 5) * 1000
+            (viewModel.timeLeft.value.toLong() + 10) * 1000
         )
         // Check round info into viewmodel
         assert(RoundGeneratorImpl.serialize(quests) == viewModel.finishedRound?.roundId)

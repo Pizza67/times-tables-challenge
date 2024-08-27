@@ -56,6 +56,7 @@ fun RoundScreen(
     val timeLeft = viewModel.timeLeft.collectAsState()
     val roundState = viewModel.roundState.collectAsState()
     val currentQuest = viewModel.currentQuest.collectAsState()
+    val submitAnswer = viewModel.submitAnswer.collectAsState()
 
     val mediaAnswerCorrect = MediaPlayer.create(context, R.raw.correct)
     val mediaAnswerWrong = MediaPlayer.create(context, R.raw.wrong)
@@ -73,23 +74,26 @@ fun RoundScreen(
             }
             RoundViewModel.RoundState.IN_PROGRESS -> {
                 RoundPanel(timeLeft, score, currentQuest, inputVal)
+                if (submitAnswer.value != RoundViewModel.NO_ANSWER)
+                    viewModel.onAnswer(inputVal.value, mediaAnswerCorrect, mediaAnswerWrong)
             }
             RoundViewModel.RoundState.FINISHED -> {
                 DelayedFadeInContent (
                     endDelayMillis = 3000,
                     onAnimationEnd = { onRoundFinished(viewModel.finishedRound) }
                 ) {
-                    val timeUp = (viewModel.finishedRound?.timeLeft ?: 0) == 0
                     Text(
                         text = stringResource(id =
-                            if (timeUp)
-                                R.string.game_over
-                            else
+                            if (viewModel.isRoundCompleted())
                                 R.string.round_complete
+                            else
+                                R.string.game_over
                         ),
                         style = MaterialTheme.typography.displayLarge,
                         textAlign = TextAlign.Center,
-                        modifier = Modifier.padding(vertical = 48.dp).fillMaxWidth()
+                        modifier = Modifier
+                            .padding(vertical = 48.dp)
+                            .fillMaxWidth()
                     )
                 }
             }
@@ -99,7 +103,10 @@ fun RoundScreen(
             onBackspaceClick = { viewModel.onBackspace() },
             onNumberClick = { viewModel.onNumberClick(it) },
             onNextClick = { viewModel.onAnswer(inputVal.value, mediaAnswerCorrect, mediaAnswerWrong) },
-            modifier = Modifier.widthIn(max = 600.dp).testTag("keyboard")
+            autoConfirm = viewModel.isAutoConfirmEnabled(),
+            modifier = Modifier
+                .widthIn(max = 600.dp)
+                .testTag("keyboard")
         )
     }
 }
@@ -179,7 +186,9 @@ fun TimeLeft(time: Int, modifier: Modifier = Modifier) {
             text = time.toString(),
             style = MaterialTheme.typography.headlineLarge,
             textAlign = TextAlign.Center,
-            modifier = Modifier.padding(horizontal = 8.dp).testTag("timeLeft")
+            modifier = Modifier
+                .padding(horizontal = 8.dp)
+                .testTag("timeLeft")
         )
     }
 }
@@ -199,7 +208,9 @@ fun Score(score: Int, modifier: Modifier = Modifier) {
             text = score.toString(),
             style = MaterialTheme.typography.headlineLarge,
             textAlign = TextAlign.Center,
-            modifier = Modifier.padding(horizontal = 8.dp).testTag("score")
+            modifier = Modifier
+                .padding(horizontal = 8.dp)
+                .testTag("score")
         )
     }
 }

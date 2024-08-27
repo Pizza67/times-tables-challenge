@@ -12,6 +12,8 @@ class SettingsViewModel @Inject constructor(private val appPreferences: AppPrefe
 
     private val _swExtendedMode = MutableStateFlow(appPreferences.extendedMode)
     val swExtendedMode = _swExtendedMode.asStateFlow()
+    private val _swAutoConfirm = MutableStateFlow(appPreferences.autoConfirm)
+    val swAutoConfirm = _swAutoConfirm.asStateFlow()
     private val _swOverwriteBestScores = MutableStateFlow(appPreferences.overwriteBestScores)
     val swOverwriteBestScores = _swOverwriteBestScores.asStateFlow()
     private val _swPlaySounds = MutableStateFlow(appPreferences.playSounds)
@@ -24,6 +26,11 @@ class SettingsViewModel @Inject constructor(private val appPreferences: AppPrefe
     fun toggleExtendedMode() {
         appPreferences.extendedMode = !appPreferences.extendedMode
         _swExtendedMode.value = appPreferences.extendedMode
+    }
+
+    fun toggleAutoConfirm() {
+        appPreferences.autoConfirm = !appPreferences.autoConfirm
+        _swAutoConfirm.value = appPreferences.autoConfirm
     }
 
     fun toggleOverwriteBestScores() {

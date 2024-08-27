@@ -89,4 +89,6 @@
     <string name="round_complete">Round Completato!</string>
     <string name="round_code_valid">Codice round valido</string>
     <string name="round_code_invalid">Codice round non valido</string>
+    <string name="settings_auto_confirm">Risposte rapide</string>
+    <string name="settings_auto_confirm_desc">Salta il pulsante \"Avanti\"! Ti renderà più veloce, ma le risposte sbagliate ti costeranno punti</string>
 </resources>

@@ -26,7 +26,8 @@ fun Keyboard(
     onNumberClick: (digit: Char) -> Unit,
     modifier: Modifier = Modifier,
     onBackspaceClick: () -> Unit = {},
-    onNextClick: () -> Unit = {}
+    onNextClick: () -> Unit = {},
+    autoConfirm: Boolean = false
 ) {
     Column(
         modifier = modifier
@@ -60,7 +61,7 @@ fun Keyboard(
         ) {
             ActionButton(iconPainter = painterResource(id = R.drawable.ic_backspace), contentDescription = "Backspace", onClick = onBackspaceClick, modifier = Modifier.weight(1f))
             NumberButton(number = 0, onClick = onNumberClick, modifier = Modifier.weight(1f))
-            ActionButton(iconPainter = painterResource(id = R.drawable.ic_next), contentDescription = "Next", onClick = onNextClick, modifier = Modifier.weight(1f))
+            ActionButton(iconPainter = painterResource(id = R.drawable.ic_next), contentDescription = "Next", onClick = onNextClick, enabled = !autoConfirm, modifier = Modifier.weight(1f))
         }
     }
 }
@@ -95,10 +96,12 @@ private fun ActionButton(
     iconPainter: Painter,
     contentDescription: String,
     onClick: () -> Unit,
+    enabled: Boolean = true,
     modifier: Modifier = Modifier
 ) {
     Button(
         onClick = onClick,
+        enabled = enabled,
         modifier = modifier
             .padding(4.dp)
             .aspectRatio(1.4f)

@@ -16,6 +16,7 @@ interface AppPreferences {
     var maxTable: Int
     var playSounds: Boolean
     var extendedMode: Boolean
+    var autoConfirm: Boolean
     var overwriteBestScores: Boolean
     var useTimeLeft: Boolean
     var themeStyle: AppThemeStyle

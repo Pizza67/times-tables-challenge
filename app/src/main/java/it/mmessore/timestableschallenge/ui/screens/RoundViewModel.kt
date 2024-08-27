@@ -55,6 +55,8 @@ class RoundViewModel @Inject constructor(
     val roundState: StateFlow<RoundState> = _roundState
     private val _currentQuest = MutableStateFlow(quests[currentQuestIdx])
     val currentQuest: StateFlow<Quest> = _currentQuest
+    private val _submitAnswer = MutableStateFlow(NO_ANSWER)
+    val submitAnswer: StateFlow<String> = _submitAnswer
 
     private lateinit var timer: CountDownTimer
 
@@ -105,22 +107,34 @@ class RoundViewModel @Inject constructor(
     fun onAnswer(answer: String, playerSuccess: MediaPlayer, playerError: MediaPlayer) {
         if (_roundState.value != RoundState.IN_PROGRESS)
             return
-
         if (answer != NO_ANSWER && answer.toInt() == _currentQuest.value.answer()) {
             playSound(playerSuccess)
             _score.value++
-            if (currentQuestIdx == quests.size - 1) {
-                timer.cancel()
-                val timeleft = (timeLeftMillis - (System.currentTimeMillis() - lastTickTime)).toInt()
-                finishRound(quests.size, timeleft)
-            } else {
-                currentQuestIdx++
-                _currentQuest.value = quests[currentQuestIdx]
-            }
+            askNextQuestion()
         } else {
             playSound(playerError)
+            if (isAutoConfirmEnabled())
+                askNextQuestion()
         }
         _answer.value = NO_ANSWER
+    }
+
+    fun isRoundCompleted() = currentQuestIdx == quests.size - 1
+
+    private fun askNextQuestion() {
+        if (isRoundCompleted()) {
+            // Round completed (all questions answered)
+            timer.cancel()
+            // In case auto confirmation is enabled, time left is computed only
+            // if all questions are answered otherwise is 0
+            val timeLeft = if (isAutoConfirmEnabled() && _score.value < quests.size) 0 else (timeLeftMillis - (System.currentTimeMillis() - lastTickTime)).toInt()
+            val finalScore = if (isAutoConfirmEnabled()) _score.value else quests.size
+            finishRound(finalScore, timeLeft)
+        } else {
+            currentQuestIdx++
+            _currentQuest.value = quests[currentQuestIdx]
+        }
+        _submitAnswer.value = NO_ANSWER
     }
 
     fun onBackspace() {
@@ -131,10 +145,20 @@ class RoundViewModel @Inject constructor(
     }
 
     fun onNumberClick(number: Char) {
-        // Add the digit only if the answer size (except NO_ANSWER) is not yet met and the round is in progress
-        if (_answer.value.replace(NO_ANSWER, "").length < _currentQuest.value.answerLength() && _roundState.value == RoundState.IN_PROGRESS)
+        // Add the digit only if the answer size is not yet met and the round is in progress
+        if (!isAnswerLengthReached() && _roundState.value == RoundState.IN_PROGRESS)
             _answer.value = _answer.value.plus(number.toString()).replace(NO_ANSWER, "")
+
+        // If auto confirm mode is on and the answer is complete, submit the answer
+        if (isAutoConfirmEnabled() && isAnswerLengthReached())
+            _submitAnswer.value = _answer.value
     }
+
+    // Check if the answer length is reached (except NO_ANSWER)
+    fun isAnswerLengthReached() =
+        _answer.value.replace(NO_ANSWER, "").length >= _currentQuest.value.answerLength()
+
+    fun isAutoConfirmEnabled() = appPreferences.autoConfirm
 
     private fun playSound(player: MediaPlayer) {
         if (appPreferences.playSounds) {

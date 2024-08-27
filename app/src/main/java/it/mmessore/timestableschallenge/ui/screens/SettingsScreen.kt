@@ -83,6 +83,13 @@ fun SettingsScreen(
                 state = viewmodel.swUseTimeLeft.collectAsState(),
                 onClick = { viewmodel.toggleUseTimeLeft() }
             )
+            SettingsSwitchComp(
+                icon = painterResource(id = R.drawable.ic_auto_confirm_24),
+                name = R.string.settings_auto_confirm,
+                desc = R.string.settings_auto_confirm_desc,
+                state = viewmodel.swAutoConfirm.collectAsState(),
+                onClick = { viewmodel.toggleAutoConfirm() }
+            )
         }
 
         SettingsGroup(name = R.string.settings_look_and_feel_group) {

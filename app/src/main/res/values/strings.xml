@@ -90,4 +90,6 @@
     <string name="round_complete">Round Complete!</string>
     <string name="round_code_valid">Valid Round Id</string>
     <string name="round_code_invalid">Invalid Round ID</string>
+    <string name="settings_auto_confirm">Instant answers</string>
+    <string name="settings_auto_confirm_desc" >Skip the \"Next\" button! This makes the game faster, but wrong answers will cost you points</string>
 </resources>
