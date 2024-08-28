@@ -3,20 +3,22 @@ package it.mmessore.timestableschallenge
 import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.compose.ui.test.ExperimentalTestApi
+import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.assertIsNotEnabled
 import androidx.compose.ui.test.assertTextEquals
 import androidx.compose.ui.test.hasText
+import androidx.compose.ui.test.isDisplayed
 import androidx.compose.ui.test.junit4.AndroidComposeTestRule
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithTag
+import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import androidx.test.ext.junit.rules.ActivityScenarioRule
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
-import it.mmessore.timestableschallenge.data.FakeRoundGenerator
 import it.mmessore.timestableschallenge.data.FakeRepository
+import it.mmessore.timestableschallenge.data.FakeRoundGenerator
 import it.mmessore.timestableschallenge.data.Quest
 import it.mmessore.timestableschallenge.data.RoundGeneratorImpl
 import it.mmessore.timestableschallenge.data.persistency.FakeAppPreferences
@@ -29,46 +31,36 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
-import javax.inject.Inject
 
 @HiltAndroidTest
 @RunWith(AndroidJUnit4::class)
 class RoundScreenInstrumentedTest {
-    @get:Rule(order = 0)
-    var hiltRule = HiltAndroidRule(this)
-
-    @get:Rule(order = 1)
+    @get:Rule
     val composeTestRule = createAndroidComposeRule<ComponentActivity>()
-    @Inject lateinit var fakeRepository: FakeRepository
-    @Inject lateinit var fakeRoundGenerator: FakeRoundGenerator
     private lateinit var viewModel: RoundViewModel
 
+    private lateinit var fakePreferences: FakeAppPreferences
+    private lateinit var fakeRoundGenerator: FakeRoundGenerator
+
     private fun getViewModelBySettings(
-        roundTimeSeconds: Int = 10,
+        roundTimeSeconds: Int = FakeConstants().ROUND_TIME_SECONDS,
         extendedMode: Boolean = false,
         autoConfirm: Boolean = false
     ): RoundViewModel {
+        fakePreferences = FakeAppPreferences(extendedMode = extendedMode,autoConfirm = autoConfirm)
+        fakeRoundGenerator = FakeRoundGenerator(fakePreferences)
         return fakeRoundViewModel(
             activity = composeTestRule.activity,
             fakeRoundGenerator = fakeRoundGenerator,
-            fakeRepository = fakeRepository,
+            fakeRepository = FakeRepository(composeTestRule.activity),
             fakeConstants = FakeConstants(ROUND_TIME_SECONDS = roundTimeSeconds),
-            fakePreferences = FakeAppPreferences(
-                extendedMode = extendedMode,
-                autoConfirm = autoConfirm
-            )
+            fakePreferences = fakePreferences
         )
     }
 
     @Before
     fun setup() {
-        hiltRule.inject()
-        fakeRepository.setCurrentAchievement()
-        viewModel = fakeRoundViewModel(
-            activity = composeTestRule.activity,
-            fakeRoundGenerator = fakeRoundGenerator,
-            fakeRepository = fakeRepository
-        )
+        viewModel = getViewModelBySettings()
     }
 
     @Test
@@ -98,6 +90,26 @@ class RoundScreenInstrumentedTest {
             viewModel = viewModel,
             quests = fakeRoundGenerator.quests,
             targetScore = fakeRoundGenerator.quests.size / 2
+        )
+    }
+
+    @Test
+    fun roundCompleted_allQuestionsAnsweredButLast() {
+        testRound(
+            composeTestRule = composeTestRule,
+            viewModel = viewModel,
+            quests = fakeRoundGenerator.quests,
+            targetScore = fakeRoundGenerator.quests.size.minus(1)
+        )
+    }
+
+    @Test
+    fun roundCompleted_autoConfirm_allQuestionsAnsweredButLast() {
+        testRound(
+            composeTestRule = composeTestRule,
+            viewModel = getViewModelBySettings(autoConfirm = true),
+            quests = fakeRoundGenerator.quests,
+            targetScore = fakeRoundGenerator.quests.size.minus(1)
         )
     }
 
@@ -166,16 +178,18 @@ class RoundScreenInstrumentedTest {
         }
         // Check that the game is over
         composeTestRule.waitUntilAtLeastOneExists(
-            hasText(composeTestRule.activity.getString(
-                if (score < quests.size)
-                    R.string.game_over
-                else
-                    R.string.round_complete
-            )),
+            hasText(composeTestRule.activity.getString(R.string.game_over))
+                .or(hasText(composeTestRule.activity.getString(R.string.round_complete))),
             (viewModel.timeLeft.value.toLong() + 10) * 1000
         )
+        if (idx == answers.size)
+            composeTestRule.onNodeWithText(composeTestRule.activity.getString(R.string.round_complete)).assertIsDisplayed()
+        else
+            composeTestRule.onNodeWithText(composeTestRule.activity.getString(R.string.game_over)).assertIsDisplayed()
         // Check round info into viewmodel
         assert(RoundGeneratorImpl.serialize(quests) == viewModel.finishedRound?.roundId)
         assert(score == viewModel.finishedRound?.score)
+        // Check all requested answers have been answered
+        assert(score == targetScore)
     }
 }

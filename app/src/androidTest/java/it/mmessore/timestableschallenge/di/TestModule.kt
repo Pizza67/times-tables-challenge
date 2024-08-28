@@ -10,11 +10,8 @@ import it.mmessore.timestableschallenge.data.AppRepository
 import it.mmessore.timestableschallenge.data.FakeRepository
 import it.mmessore.timestableschallenge.data.FakeRoundGenerator
 import it.mmessore.timestableschallenge.data.RoundGenerator
-import it.mmessore.timestableschallenge.data.RoundGeneratorImpl
 import it.mmessore.timestableschallenge.data.persistency.AppPreferences
-import it.mmessore.timestableschallenge.data.persistency.AppPreferencesImpl
 import it.mmessore.timestableschallenge.data.persistency.Constants
-import it.mmessore.timestableschallenge.data.persistency.ConstantsImpl
 import it.mmessore.timestableschallenge.data.persistency.FakeAppPreferences
 import it.mmessore.timestableschallenge.data.persistency.FakeConstants
 import kotlinx.coroutines.CoroutineScope
@@ -28,25 +25,25 @@ import javax.inject.Singleton
 )
 object TestModule {
     @Provides
-    fun provideFakeRepository(@ApplicationContext context: Context): AppRepository {
+    fun provideAppRepository(@ApplicationContext context: Context): AppRepository {
         return FakeRepository(context)
     }
 
     @Provides
     @Singleton
-    fun provideFakePreferences(): AppPreferences {
+    fun provideAppPreferences(): AppPreferences {
         return FakeAppPreferences()
     }
 
     @Provides
     @Singleton
-    fun provideFakeConstants(): Constants {
+    fun provideConstants(): Constants {
         return FakeConstants()
     }
 
     @Provides
     @Singleton
-    fun provideFakeRoundGenerator(appPreferences: AppPreferences): RoundGenerator {
+    fun provideRoundGenerator(appPreferences: AppPreferences): RoundGenerator {
         return FakeRoundGenerator(appPreferences)
     }
 
