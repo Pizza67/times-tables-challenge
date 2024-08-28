@@ -33,6 +33,11 @@ class RoundViewModel @Inject constructor(
         FINISHED
     }
 
+    enum class FinishReason {
+        TIME_UP,
+        COMPLETED
+    }
+
     companion object {
         const val NO_ANSWER = "_"
         private const val DEFAULT_SCORE = 0
@@ -42,6 +47,7 @@ class RoundViewModel @Inject constructor(
     private var currentQuestIdx = 0
     private var timeLeftMillis: Long = 0
     private var lastTickTime: Long = 0
+    private var finishReason: FinishReason? = null
     var finishedRound: Round? = null
         private set
 
@@ -70,7 +76,8 @@ class RoundViewModel @Inject constructor(
                 }
 
                 override fun onFinish() {
-                    finishRound(_score.value)
+                    _timeLeft.value = 0
+                    finishRound(finalScore = _score.value, reason = FinishReason.TIME_UP)
                 }
             }
         }
@@ -90,6 +97,7 @@ class RoundViewModel @Inject constructor(
         _timeLeft.value = constants.ROUND_TIME_SECONDS
         _roundState.value = RoundState.STARTING
         currentQuestIdx = 0
+        finishReason = null
         quests = if (roundId != null) {
             RoundGeneratorImpl.deserialize(roundId)
         } else  {
@@ -119,17 +127,19 @@ class RoundViewModel @Inject constructor(
         _answer.value = NO_ANSWER
     }
 
-    fun isRoundCompleted() = currentQuestIdx == quests.size - 1
+    private fun isLastQuestion() = currentQuestIdx == quests.size - 1
+
+    fun getFinishReason() = finishReason
 
     private fun askNextQuestion() {
-        if (isRoundCompleted()) {
+        if (isLastQuestion()) {
             // Round completed (all questions answered)
             timer.cancel()
             // In case auto confirmation is enabled, time left is computed only
             // if all questions are answered otherwise is 0
             val timeLeft = if (isAutoConfirmEnabled() && _score.value < quests.size) 0 else (timeLeftMillis - (System.currentTimeMillis() - lastTickTime)).toInt()
             val finalScore = if (isAutoConfirmEnabled()) _score.value else quests.size
-            finishRound(finalScore, timeLeft)
+            finishRound(finalScore, timeLeft, FinishReason.COMPLETED)
         } else {
             currentQuestIdx++
             _currentQuest.value = quests[currentQuestIdx]
@@ -169,9 +179,14 @@ class RoundViewModel @Inject constructor(
         }
     }
 
-    private fun finishRound(finalScore: Int, timeLeft: Int = 0) {
+    private fun finishRound(
+        finalScore: Int,
+        timeLeft: Int = 0,
+        reason: FinishReason?
+    ) {
         viewModelScope.launch (context = coroutineScope.coroutineContext) {
             if (roundState.value == RoundState.IN_PROGRESS) {
+                finishReason = reason
                 _roundState.value = RoundState.FINISHED
                 finishedRound = Round(
                     timestamp = System.currentTimeMillis(),

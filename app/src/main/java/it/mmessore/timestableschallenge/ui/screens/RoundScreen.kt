@@ -84,10 +84,11 @@ fun RoundScreen(
                 ) {
                     Text(
                         text = stringResource(id =
-                            if (viewModel.isRoundCompleted())
-                                R.string.round_complete
-                            else
-                                R.string.game_over
+                            when (viewModel.getFinishReason()) {
+                                RoundViewModel.FinishReason.TIME_UP -> R.string.game_over
+                                RoundViewModel.FinishReason.COMPLETED -> R.string.round_complete
+                                else -> -1
+                            }
                         ),
                         style = MaterialTheme.typography.displayLarge,
                         textAlign = TextAlign.Center,
@@ -162,7 +163,7 @@ fun BlinkingText(text: State<String>, blinkValue: String, modifier: Modifier = M
         text = text.value,
         fontSize = 95.sp,
         style = MaterialTheme.typography.displayLarge,
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
             .heightIn(min = 150.dp)
             .padding(16.dp)
