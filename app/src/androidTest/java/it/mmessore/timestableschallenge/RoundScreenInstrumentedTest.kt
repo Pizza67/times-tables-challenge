@@ -43,11 +43,12 @@ class RoundScreenInstrumentedTest {
     private lateinit var fakeRoundGenerator: FakeRoundGenerator
 
     private fun getViewModelBySettings(
+        roundQuests: Int = 10,
         roundTimeSeconds: Int = FakeConstants().ROUND_TIME_SECONDS,
         extendedMode: Boolean = false,
         autoConfirm: Boolean = false
     ): RoundViewModel {
-        fakePreferences = FakeAppPreferences(extendedMode = extendedMode,autoConfirm = autoConfirm)
+        fakePreferences = FakeAppPreferences(numQuestions = roundQuests, extendedMode = extendedMode,autoConfirm = autoConfirm)
         fakeRoundGenerator = FakeRoundGenerator(fakePreferences)
         return fakeRoundViewModel(
             activity = composeTestRule.activity,

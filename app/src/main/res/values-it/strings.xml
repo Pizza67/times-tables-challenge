@@ -46,7 +46,7 @@
     <string name="current_rank">Livello attuale:</string>
     <string name="stats_round_level">Livello:</string>
     <string name="stats_round_score">Punti:</string>
-    <string name="stats_round_time_left">Tempo:</string>
+    <string name="stats_round_time_left">Bonus:</string>
     <string name="new_achievement">Nuovo traguardo</string>
     <string name="cancel">Annulla</string>
     <string name="details">Dettagli</string>
