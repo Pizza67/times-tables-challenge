@@ -36,9 +36,10 @@ _Remember, your performance in Challenge Mode rounds counts towards your overall
 ## Game variants
 Adjust certain game settings without altering the core path to leveling up and unlocking achievements.
 
-* **Go Beyond 9**: Extend the times tables up to 12 for an extra challenge. (Default: Times tables up to 9)
+* **Go Beyond 10**: Extend the times tables up to 12 for an extra challenge. (Default: Times tables up to 10)
 * **Self-Sabotage**: With this option enabled, your score for each round is permanently recorded, even if you replay it and get a lower score. (Default: Only your highest score for each round is saved)
 * **Track time left**: In this mode, your best round score will factor in the time you have remaining after answering all questions. The faster you are, the higher your potential score! (Default: Time remaining does not affect the score)
+* **Instant answers**: In this mode you'll not need to press the "Next" button to pass to the next question but wrong answers will cost you points 
 
 ## Motivations
 I created this app while working through the [Android Basics With Compose](https://developer.android.com/courses/android-basics-compose/course) course. One exercise challenged me to build a simple app from scratch using the knowledge I had gained up to that point. At that stage, I hadn't yet reached the lesson on fetching data from the internet. This sparked my curiosity about creating a polished and useful app without requiring the internet access permission (in fact, this app requests no permissions at all!).
