@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.ContextWrapper
 import android.content.pm.PackageManager
 import android.content.res.Configuration
+import android.os.Build
 import android.text.format.DateUtils.DAY_IN_MILLIS
 import android.text.format.DateUtils.FORMAT_ABBREV_RELATIVE
 import android.text.format.DateUtils.getRelativeTimeSpanString
@@ -49,11 +50,16 @@ fun formatNumber(number: Double, maximumFractionDigits: Int = 2, locale: Locale 
 }
 
 fun getAppVersion(context: Context): String {
-    try {
-        val packageInfo = context.packageManager.getPackageInfo(context.packageName, 0)
-        return packageInfo.versionName
+    return try {
+        val packageInfo = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            context.packageManager.getPackageInfo(context.packageName, PackageManager.PackageInfoFlags.of(0))
+        } else {
+            @Suppress("DEPRECATION")
+            context.packageManager.getPackageInfo(context.packageName, 0)
+        }
+        packageInfo.versionName ?: "Unknown" // Fallback se versionName è null
     } catch (e: PackageManager.NameNotFoundException) {
-        return "Unknown"
+        "Unknown" // Fallback se il package non viene trovato (molto improbabile per la tua app)
     }
 }
 
