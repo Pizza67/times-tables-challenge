@@ -9,12 +9,12 @@ plugins {
 
 android {
     namespace 'it.mmessore.timestableschallenge'
-    compileSdk 35
+    compileSdk 36
 
     defaultConfig {
         applicationId "it.mmessore.timestableschallenge"
         minSdk 26
-        targetSdk 35
+        targetSdk 36
         versionCode 11
         versionName "1.6"
 
