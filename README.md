@@ -63,7 +63,7 @@ The project uses [Jetpack Compose](https://developer.android.com/develop/ui/comp
 The main building blocks of the project are:
 
 * Android Gradle Plugin 9
-* [Compose Navigation 3](https://developer.android.com/guide/navigation)
+* [Compose Navigation 3](https://developer.android.com/guide/navigation/navigation-3)
 * [Jetpack ViewModel](https://developer.android.com/topic/libraries/architecture/viewmodel)
 * [Room Database](https://developer.android.com/training/data-storage/room)
 * [Dependency injection with Hilt](https://developer.android.com/training/dependency-injection/hilt-android)
