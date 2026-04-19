@@ -93,8 +93,9 @@ fun AppRootScreen(
             }
 
             entry<AppDestination.Round> {
+                val backNotAllowedMessage = stringResource(R.string.back_not_allowed)
                 BackHandler {
-                    Toast.makeText(context, context.getString(R.string.back_not_allowed), Toast.LENGTH_SHORT).show()
+                    Toast.makeText(context, backNotAllowedMessage, Toast.LENGTH_SHORT).show()
                 }
                 RoundScreen(
                     viewModel = roundViewModel,
