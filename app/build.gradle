@@ -16,8 +16,8 @@ android {
         applicationId "it.mmessore.timestableschallenge"
         minSdk 26
         targetSdk 36
-        versionCode 13
-        versionName "1.7"
+        versionCode 15
+        versionName "1.8"
 
         testInstrumentationRunner "it.mmessore.timestableschallenge.utils.CustomTestRunner"
         vectorDrawables {
