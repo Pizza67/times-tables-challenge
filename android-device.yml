@@ -28,3 +28,13 @@ galaxy-tab-a8:
       version: 34
       locale: 'en'
       orientation: portrait
+
+android-pixel-9:
+  type: instrumentation
+  app: app/build/outputs/apk/debug/app-debug.apk
+  test: app/build/outputs/apk/androidTest/debug/app-debug-androidTest.apk
+  device:
+    - model: tokay
+      version: 36
+      locale: 'en'
+      orientation: portrait
