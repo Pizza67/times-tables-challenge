@@ -45,7 +45,7 @@ class ShareScreenInstrumentedTest {
     var hiltRule = HiltAndroidRule(this)
 
     @get:Rule(order = 1)
-    val composeTestRule = createAndroidComposeRule<ComponentActivity>()
+    val composeTestRule = createAndroidComposeRule<HiltTestActivity>()
     private lateinit var context: Context
     @Inject lateinit var fakeRoundGenerator: FakeRoundGenerator
     private lateinit var fakePreferences: FakeAppPreferences

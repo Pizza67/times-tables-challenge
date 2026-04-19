@@ -16,6 +16,7 @@ import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import androidx.test.ext.junit.rules.ActivityScenarioRule
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import it.mmessore.timestableschallenge.data.FakeRepository
 import it.mmessore.timestableschallenge.data.FakeRoundGenerator
@@ -35,8 +36,11 @@ import org.junit.runner.RunWith
 @HiltAndroidTest
 @RunWith(AndroidJUnit4::class)
 class RoundScreenInstrumentedTest {
-    @get:Rule
-    val composeTestRule = createAndroidComposeRule<ComponentActivity>()
+    @get:Rule(order = 0)
+    var hiltRule = HiltAndroidRule(this)
+
+    @get:Rule(order = 1)
+    val composeTestRule = createAndroidComposeRule<HiltTestActivity>()
     private lateinit var viewModel: RoundViewModel
 
     private lateinit var fakePreferences: FakeAppPreferences
@@ -61,6 +65,7 @@ class RoundScreenInstrumentedTest {
 
     @Before
     fun setup() {
+        hiltRule.inject()
         viewModel = getViewModelBySettings()
     }
 
@@ -131,7 +136,7 @@ class RoundScreenInstrumentedTest {
 
     @OptIn(ExperimentalTestApi::class)
     fun testRound(
-        composeTestRule: AndroidComposeTestRule<ActivityScenarioRule<ComponentActivity>, ComponentActivity>,
+        composeTestRule: AndroidComposeTestRule<ActivityScenarioRule<HiltTestActivity>, HiltTestActivity>,
         viewModel: RoundViewModel,
         quests: List<Quest>,
         errorRatio: Float = 0f,

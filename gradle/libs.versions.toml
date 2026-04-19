@@ -2,6 +2,7 @@
 agp = "9.1.1"
 kotlin = "2.1.0"
 ksp = "2.1.0-1.0.29"
+serialization = "2.1.0"
 coreKtx = "1.13.1"
 junit = "4.13.2"
 junitVersion = "1.2.1"
@@ -9,8 +10,9 @@ junit-jupiter-api = "5.10.3"
 espressoCore = "3.6.1"
 lifecycleRuntimeKtx = "2.8.4"
 activityCompose = "1.9.1"
-composeBom = "2024.06.00"
-navigationCompose = "2.7.7"
+composeBom = "2025.12.00"
+nav3Core = "1.0.0"
+lifecycleViewmodelNav3 = "2.10.0-rc01"
 room = "2.7.2"
 hilt = "2.59.2"
 androidx-hilt = "1.2.0"
@@ -38,9 +40,12 @@ androidx-ui-test-manifest = { group = "androidx.compose.ui", name = "ui-test-man
 androidx-ui-test-junit4 = { group = "androidx.compose.ui", name = "ui-test-junit4" }
 androidx-ui-test-junit4-android = { group = "androidx.compose.ui", name = "ui-test-junit4-android", version.ref = "uiTestJunit4Android" }
 androidx-material3 = { group = "androidx.compose.material3", name = "material3" }
-androidx-navigation-runtime-ktx = { group = "androidx.navigation", name = "navigation-runtime-ktx", version.ref = "navigationCompose" }
-androidx-navigation-compose = { group = "androidx.navigation", name = "navigation-compose", version.ref = "navigationCompose" }
-androidx-navigation-testing = { group = "androidx.navigation", name = "navigation-testing", version.ref = "navigationCompose" }
+androidx-compose-material-icons-extended = { group = "androidx.compose.material", name = "material-icons-extended" }
+# Core Navigation 3 libraries
+androidx-navigation3-runtime = { module = "androidx.navigation3:navigation3-runtime", version.ref = "nav3Core" }
+androidx-navigation3-ui = { module = "androidx.navigation3:navigation3-ui", version.ref = "nav3Core" }
+# Add-on libraries (only add if you need them)
+androidx-lifecycle-viewmodel-navigation3 = { module = "androidx.lifecycle:lifecycle-viewmodel-navigation3", version.ref = "lifecycleViewmodelNav3" }
 androidx-viewmodel-compose = { group = "androidx.lifecycle", name = "lifecycle-viewmodel-compose" }
 androidx-room-runtime = { group = "androidx.room", name ="room-runtime", version.ref = "room" }
 androidx-room-runtime-ktx = { group = "androidx.room", name ="room-ktx", version.ref = "room" }
@@ -61,6 +66,7 @@ compose-fading-edges = { group = "com.github.GIGAMOLE", name = "ComposeFadingEdg
 android-application = { id = "com.android.application", version.ref = "agp" }
 jetbrains-kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
+kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "serialization" }
 ksp = {id = "com.google.devtools.ksp", version.ref = "ksp"}
 androidx-room = { id = "androidx.room", version.ref = "room" }
 android-hilt = { id = "com.google.dagger.hilt.android", version.ref = "hilt"}

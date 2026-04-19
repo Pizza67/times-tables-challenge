@@ -30,7 +30,7 @@ class SummaryScreenInstrumentedTest {
     var hiltRule = HiltAndroidRule(this)
 
     @get:Rule(order = 1)
-    val composeTestRule = createAndroidComposeRule<ComponentActivity>()
+    val composeTestRule = createAndroidComposeRule<HiltTestActivity>()
     private lateinit var fakePreferences: FakeAppPreferences
     private lateinit var fakeRepository: FakeRepository
     private lateinit var viewModel: SummaryViewModel
