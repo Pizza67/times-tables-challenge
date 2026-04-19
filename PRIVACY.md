@@ -1,6 +1,6 @@
-# Privacy policy
+# Times Table Race - Privacy policy
 
-This app does not collect or use any personal data from users. 
+The app [Times Table Race](https://play.google.com/store/apps/details?id=it.mmessore.timestableschallenge) does not collect or use any personal data from users. 
 
 This means that *we do not collect information such as name, email address, location, browsing history or any other type of information that could personally identify a user*.
 
